@@ -1,3 +1,6 @@
 A good tutorial on subtrees!
 
 https://medium.com/@v/git-subtrees-a-tutorial-6ff568381844#.56r0407ac
+
+git subtree pull —prefix=<LOCATION OF SUBTREE>  <SUBTREE REMOTE> <SUBTREE BRANCH>
+

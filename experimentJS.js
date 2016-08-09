@@ -1,7 +1,5 @@
-/**
- * Created by kai on 24/05/16.
- */
 (function( exports ){
+
 
 
     /**
@@ -18,10 +16,9 @@
      *
      * All other behaviour should be performed by another moduel that works with this one.
      * */
-
-
-    exports.buildExperiment = function(){
+     exports.buildExperiment = function(){
         buildTrials();
+        getPptInfo();
     };
 
     /** ~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs **/
@@ -60,6 +57,8 @@
         window.IVs[ivName][fieldName] = fieldVal;
     }
 
+
+
     /** TODO: an option to UNSET these thangs */
 
 
@@ -72,22 +71,23 @@
         //The type of that trial value will be the first non- array of arrays in the experiment
 
         setIVGeneric(ivname, "parserFunc", parserFunc);
-    };
 
-    /** ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS  ~~ **/
-    /** ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS  ~~ **/
-    /** ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS  ~~ **/
 
-    window.expRepeats = 1;
-    exports.setRepeats = function(nRepeats){
-        window.expRepeats = nRepeats;
-    };
 
-    var totalTrials = -1;
-    var allTrials = [];
-    function buildTrials()
-    {
-        var buildingTrial, temp;
+        /** ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS  ~~ **/
+        /** ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS  ~~ **/
+        /** ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS  ~~ **/
+
+        window.expRepeats = 1;
+        exports.setRepeats = function(nRepeats){
+            window.expRepeats = nRepeats;
+        };
+
+        var totalTrials = -1;
+        var allTrials = [];
+        function buildTrials()
+        {
+            var buildingTrial, temp;
 
         for(var iv in window.IVs ){ //Iterate over IVs
 
@@ -113,7 +113,7 @@
                     if (window.IVs[iv].hasOwnProperty("std_2AFC")){
                         curIVLevel.std_2AFC = window.IVs[iv].std_2AFC;
                     }
-                        
+
                     /** For 2AFC that is simultaneous (as opposed to the flipping kind)*/
                     if (window.IVs[iv].hasOwnProperty("std_2AFC_simultaneous_target")){
                         curIVLevel.std_2AFC_simultaneous_target = window.IVs[iv].std_2AFC_simultaneous_target;
@@ -126,8 +126,8 @@
                      2. .SetArgs - this changes a property of an object that can only be changed by calling a method
                      */
 
-                    /** Type 1 */
-                    if (window.IVs[iv].setOn !== undefined){
+                     /** Type 1 */
+                     if (window.IVs[iv].setOn !== undefined){
                         curIVLevel.setOn = window.IVs[iv].setOn;
                     }
                     /** Type 2 */
@@ -186,6 +186,7 @@
     }
 
     exports.pruneTrials = function(combosToKeep){
+        console.error("UNFINIED");
 
         if (allTrials.length === 0){
             error("No trials have been built!");
@@ -213,13 +214,13 @@
 
 
     };
-   
 
-    /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+    /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~           GETTING PPT DETAILS     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
     var pptName = "unnamed_ppt";
     var pptNo = 0;
-    // var isGettingPptInfo = false;
+
     exports.getPptInfo = function(){
 
         while (true){
@@ -242,15 +243,13 @@
             }
         }
 
-            console.log("Participant name: ", pptName, "\tParticipant number: ", pptNo);
+        console.log("Participant name: ", pptName, "\tParticipant number: ", pptNo);
         // }
     };
 
-    // exports.setGetPptInfo = function(value){
-    //     if (typeof(value)==='boolean'){
-    //         isGettingPptInfo = value;
-    //     }
-    // };
+    /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+
 
 
     /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ONE GAME LOOP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
@@ -258,9 +257,9 @@
     var pause = 500;
     exports.runNextTrial = function(settings){ // runNextTrial({shouldStoreResponse: true, dv_value: "inside"});
 
-        if (shouldRunNextTrial){
+    if (shouldRunNextTrial){
 
-            if (midTrialCallBack !== undefined){
+        if (midTrialCallBack !== undefined){
                 checkRunMidCallback(); //See if you need to run the callback yet
             }
 
@@ -315,20 +314,30 @@
 
     var isInterstimulusPause = false;
     function interstimulusPause(duration){
-        $("#interstimulus-pause").show();
-        isInterstimulusPause = true;
-        shouldRunNextTrial = false; /*Prevent button mashing while the pause runs*/
-        setTimeout(function(){
-            $("#interstimulus-pause").hide();
-            isInterstimulusPause = false;
-            shouldRunNextTrial = true;
-        },duration);
+        return new Promise(function(resolve, reject){
+            $("#interstimulus-pause").show();
+            isInterstimulusPause = true;
+            shouldRunNextTrial = false; /*Prevent button mashing while the pause runs*/
+            setTimeout(function(){
+                $("#interstimulus-pause").hide();
+                isInterstimulusPause = false;
+                shouldRunNextTrial = true;
+                resolve();                                              //Promise has resolved here
+            },duration);
+        });
     }
 
-    var shouldInterstimulusPause = true;
-    exports.setInterstimulusPause = function(value){
-        if (typeof(value)==='boolean') {
-            shouldInterstimulusPause = value;
+    exports.showInterstimulusPause = function(duration){
+        return new Promise(function(resolve, reject){
+            interstimulusPause(duration).then(function(){ resolve() });
+        });
+    };
+
+    exports.setPauseTime = function(value){
+        if (value === parseInt(value, 10)){
+            pause = value;
+        } else {
+            throw "setPauseTime only takes integers";
         }
     };
 
@@ -366,10 +375,6 @@
 
     }
 
-    //TODO - move to util file!
-    function isFloat(n){
-        return Number(n) === n && n % 1 !== 0;
-    }
 
     /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~GAME LOOP SUB FUNCTIONS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~GAME LOOP SUB FUNCTIONS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -380,30 +385,32 @@
         var nextTrial = allTrials[ allTrials.length-1 ]; //Always go from the back
         console.log("next trial:", nextTrial);
 
-        $("#messages-append").empty();
+        // $("#messages-append").empty();
 
         /** Iterate over each IV and set its pointer to its value for that trial */
         for (var i = 0 ; i < nextTrial.length; ++i){
 
             setObjectAppearanceProperties(nextTrial[i]);
 
-            /** DEBUG: Writing all variable values to screen*/
-                ///** Debug: write current settings to console */
 
-            $("#messages-append").append("<br> *************<br>");
-            $("#messages-append").append(nextTrial[i].description);
-            $("#messages-append").append("<br>");
-            $("#messages-append").append(nextTrial[i].target);
-            $("#messages-append").append("<br>");
 
-            /** Handling settigns as arrays or normal values. */
-            if (nextTrial[i].value.constructor === Array){
-                for (var j = 0; j < nextTrial[i].value.length; ++j){
-                    $("#messages-append").append(j.toString() +  ": " + nextTrial[i].value[j] + "<br>");
-                }
-            } else {
-                $("#messages-append").append(nextTrial[i].value);
-            }
+            // /** DEBUG: Writing all variable values to screen*/
+            //     ///** Debug: write current settings to console */
+
+            // $("#messages-append").append("<br> *************<br>");
+            // $("#messages-append").append(nextTrial[i].description);
+            // $("#messages-append").append("<br>");
+            // $("#messages-append").append(nextTrial[i].target);
+            // $("#messages-append").append("<br>");
+
+            // /** Handling settigns as arrays or normal values. */
+            // if (nextTrial[i].value.constructor === Array){
+            //     for (var j = 0; j < nextTrial[i].value.length; ++j){
+            //         $("#messages-append").append(j.toString() +  ": " + nextTrial[i].value[j] + "<br>");
+            //     }
+            // } else {
+            //     $("#messages-append").append(nextTrial[i].value);
+            // }
 
         }
     }
@@ -443,15 +450,15 @@
              *
              * NOTE: the 1st argument of .apply() is what `this` will point to within the called function
              */
-        }
+         }
 
-    }
-    /** TODO - make these changes generic enough for SET ON too...*/
-    /** TODO - make these changes generic enough for SET ON too...*/
-    /** TODO - make these changes generic enough for SET ON too...*/
-    /** TODO - make these changes generic enough for SET ON too...*/
+     }
+     /** TODO - make these changes generic enough for SET ON too...*/
+     /** TODO - make these changes generic enough for SET ON too...*/
+     /** TODO - make these changes generic enough for SET ON too...*/
+     /** TODO - make these changes generic enough for SET ON too...*/
 
-    function runSetArgsRecursive(setArgs, value){
+     function runSetArgsRecursive(setArgs, value){
         if (isArrayOfArrays(value)){
             for(var i = 0; i < value.length; ++i){
                 runSetArgsRecursive(setArgs, value[i]);
@@ -468,18 +475,6 @@
         }
     }
 
-    function isArrayOfArrays(elem){
-        if (!Array.isArray(elem)){
-            return false;
-        }
-        for(var i = 0; i < elem.length; i++){
-            if (!Array.isArray(elem[i])){
-                return false;
-            }
-        }
-
-        return true;
-    }
 
     function runSetOn(target, prop, value){
         target[ prop ] = value;
@@ -489,7 +484,45 @@
         target[ prop ].apply(target, value);
     }
 
-    /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ METHODS FOR HANDLING 2AFC EXPERIMENTS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+
+    /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ METHODS FOR HANDLING 2AFC FLIPPING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+    
+  /** 2AFC For SIMULTANEOUS presentation of the standard & target
+     *
+     * Cant use 'setObjectAppearanceProperties' because the 2AFC feature is outside hte normal flow of factors!s
+     * */
+     exports.set2AFCStd = function(){
+
+        if (!errorCheck2AFC()) return;
+
+        /** GET the IV used as the 2AFC*/
+        var curTargetLevel = get2AFCFromTrial();
+
+        // console.log("CUR TARGET 2AFC", curTargetLevel);
+
+        /** Iterate over all the simultaneous targets and set them (TODO: support both properties & methods!) */
+        if (curTargetLevel.hasOwnProperty("std_2AFC_simultaneous_target")){
+            for (var i = 0; i < curTargetLevel.std_2AFC_simultaneous_target.length; ++i){
+
+                var level = curTargetLevel.std_2AFC_simultaneous_target[i];
+
+                runSetOn(level.target, level.prop, curTargetLevel.std_2AFC); //Should write in set args
+                // level.target[ level.prop ] = curTargetLevel.std_2AFC;
+
+                console.log("LEVEL--->",level, "SET TO:", level.target[ level.prop ]);
+            }
+        }
+
+
+    };
+
+    var isUsing2AFC = false;
+    exports.isUsing2AFC = function(value){ //Just a setter
+        if (typeof(value)==="boolean"){
+            isUsing2AFC = value;
+        }
+    };
 
     function errorCheck2AFC(){
         if (didSet2AFC) return true;
@@ -513,7 +546,7 @@
     /** 2AFC For CONSECUTIVE presentation of standard & target
      *
      * Handles the flip: 1. Find the IV used in the 2AFC. 2. Set it based on `cur2AFCIsTarget` */
-    exports.flip2AFC = function(){
+     exports.flip2AFC = function(){
 
         if (!errorCheck2AFC()) return;
 
@@ -539,40 +572,15 @@
         $("#messages-text-six").text("Currently viewing the " + (cur2AFCIsTarget ? "target" : "standard") + " display");
     };
 
-    /** 2AFC For SIMULTANEOUS presentation of the standard & target
-     *
-     * Cant use 'setObjectAppearanceProperties' because the 2AFC feature is outside hte normal flow of factors!s
-     * */
-    exports.set2AFCStd = function(){
 
-        if (!errorCheck2AFC()) return;
-
-        /** GET the IV used as the 2AFC*/
-        var curTargetLevel = get2AFCFromTrial();
-
-        // console.log("CUR TARGET 2AFC", curTargetLevel);
-
-        /** Iterate over all the simultaneous targets and set them (TODO: support both properties & methods!) */
-        if (curTargetLevel.hasOwnProperty("std_2AFC_simultaneous_target")){
-            for (var i = 0; i < curTargetLevel.std_2AFC_simultaneous_target.length; ++i){
-
-                var level = curTargetLevel.std_2AFC_simultaneous_target[i];
-
-                runSetOn(level.target, level.prop, curTargetLevel.std_2AFC); //Should write in set args
-                // level.target[ level.prop ] = curTargetLevel.std_2AFC;
-
-                console.log("LEVEL--->",level, "SET TO:", level.target[ level.prop ]);
-            }
-        }
-
-
-    };
 
     var cur2AFCIsTarget;
     exports.isCur2AFCTarget = function(){ //Just a getter
         return cur2AFCIsTarget;
     };
-    
+
+
+
 
     /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~RESPONSES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
     /** This is where trials are removed from the array and the next trial is advanced to*/
@@ -644,6 +652,7 @@
         }
     }
 
+
     /**OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT **/
     /**OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT **/
     /**OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT **/
@@ -671,8 +680,8 @@
 
                 var value = allResponses[i][ keys[j] ];
                 console.log("writing this raw value ", value, keys[j]);
-                value = checkReturnProps( value, true ) || value;  //Parse out relevant object fields
-                console.log("Afer it was parsed:", value, "\n*********");
+                //value = checkReturnProps( value, true ) || value;  //Parse out relevant object fields
+                //console.log("Afer it was parsed:", value, "\n*********");
                 csvString += value + ", ";
             }
 
@@ -699,87 +708,34 @@
         a.click();
     }
 
-    /** Parsing functions for outputting class objects ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ **/
-    window.outputIVs = {};
 
-    /** Register the class and the specific values from it you want to write out in outputResponses()
-     *
-     * object = any javascript class
-     * propsToStore = a string array of property names
-     * */
-    exports.setClassOutput = function(object, propsToStore){
 
-        var classname = getClassName(object);
-        console.log("resolved a class of *", classname, "* for object:", object);
-        window.outputIVs[classname] = [];
 
-        /** Only add props if they exist on the object */
-        for (var i = 0; i < propsToStore.length; i++){
-            // console.log(propsToStore[i], object);
-            if (object.hasOwnProperty(propsToStore[i])){
-                window.outputIVs[classname].push(propsToStore[i]);
+    /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                      UTIL                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    //TODO - move to util file!
+    function isFloat(n){
+        return Number(n) === n && n % 1 !== 0;
+    }
+
+
+
+    function isArrayOfArrays(elem){
+        if (!Array.isArray(elem)){
+            return false;
+        }
+        for(var i = 0; i < elem.length; i++){
+            if (!Array.isArray(elem[i])){
+                return false;
             }
         }
 
-        console.log(window.outputIVs);
-
-    };
-
-    /** Get properties of the object and return them as a string or object*/
-    function checkReturnProps(object, isString){
-
-        var props = window.outputIVs[getClassName(object)];
-
-        if (props !== undefined){
-            var out = {};
-
-            for(var i = 0; i < props.length; ++i){
-                if (object.hasOwnProperty(props[i])){
-                    out[ props[i] ] = object[ props[i] ]; //Store each property and value in `out`
-                }
-            }
-
-            return isString ? kStringify(out) : out;
-
-        } else {
-            return null;
-        }
+        return true;
     }
 
-    function kStringify(object){
-        var out = "";
-        for(var key in object){
-            out += key + ": " + object[key] + "; "; //Pseudo JSON
-        }
-        return out;
-    }
+    
 
-    function getClassName(object){
-        var classname;
-        if (object.type !== undefined){
-            classname = object.type;
-        } else {
-            classname = $.type(object); //This will overwrite other objects
-        }
-
-        return classname;
-    }
-
-    exports.temp = function(){
-        displayNextTrial();
-        exports.flip2AFC();
-    };
-
-
-})( this.Experiment = {} );
-
-
-
-
-
-
-Array.prototype.shuffle = function(){
-    var currentIndex = this.length, temporaryValue, randomIndex;
+    Array.prototype.shuffle = function(){
+        var currentIndex = this.length, temporaryValue, randomIndex;
 
     // While there remain elements to shuffle...
     while (0 !== currentIndex) {

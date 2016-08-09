@@ -4,6 +4,9 @@
 
     /*jslint es5: true, camelcase: false, quotmark: false */
 
+    exports.test = function(){
+        alert("testing!");
+    };
 
     /**
      * TODO: Take all 2AFC out of the main file and put it in its own submodule that can be 'added on'...
@@ -761,6 +764,6 @@
     function camelToSentenceCase(str) {
         return str.split(/(?=[A-Z])/).join(' ').toLowerCase();
     }
-})( this.Experiment = {} );
+})( this.ExperimentJS = {} );
 
 

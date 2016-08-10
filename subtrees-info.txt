@@ -1,3 +1,40 @@
 A good tutorial on subtrees!
 
 https://medium.com/@v/git-subtrees-a-tutorial-6ff568381844#.56r0407ac
+
+
+
+
+
+
+
+
+
+
+
+
+
+UPDATING A SUBTREE
+
+Considering that you already set your subtree in your app (git remote add subtree_name git@github.com:user/subtree_proj.git) your have to:
+
+1- Subtree split
+
+git subtree split -P lib -b new_branch_to_split where the lib is the path to your subtree project and the new_branch_to_split will only contain your lib code and will be pushed to your lib repo.
+
+2- Subtree push
+
+git push subtree_name new_branch_to_split:original_subtree_branch(i.e. master)
+
+or
+
+git push subtree_name new_branch_to_split:master
+
+3- Always delete the temporary branch
+
+git branch -D new_branch_to_split
+
+4- Pull the changes in your other project that's using the subtree project
+
+git subtree pull -P lib subtree_name original_subtree_branch(i.e. master)
+

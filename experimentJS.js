@@ -50,8 +50,7 @@
     };
 
 
-
-
+    
     /** TODO: an option to UNSET these thangs */
 
 
@@ -76,7 +75,7 @@
 
     var totalTrials = -1;
     var allTrials = [];
-
+    var didBuildTrials = false;
     function buildTrials() {
         var buildingTrial, temp;
 
@@ -173,6 +172,7 @@
         allTrials.shuffle();
 
         totalTrials = allTrials.length; //Used to determine where you are in the trial process
+        didBuildTrials = true;
     }
 
     /**
@@ -187,7 +187,6 @@
      * */
     exports.buildExperiment = function () {
         buildTrials();
-        exports.getPptInfo();
     };
 
 
@@ -260,6 +259,11 @@
     var shouldRunNextTrial = true;
     var pause = 500;
     exports.runNextTrial = function (settings) { // runNextTrial({shouldStoreResponse: true, dv_value: 'inside'});
+
+        if (!didBuildTrials){
+            throw new Error("runNextTrial(): Trial were not built");
+            return;
+        }
 
         if (shouldRunNextTrial) {
 
@@ -432,18 +436,36 @@
 
     /** This sets the appearance of each individual element in the display. CHanging via either props or methods */
     function setObjectAppearanceProperties(curProp) {
+
+
+
         /** TYPE 1: Variables that must be SET*/
         if (curProp.hasOwnProperty('setOn')) {
+
+
+
             /*Set on can be an array or a single object reference*/
             var setOn = curProp.setOn;
 
 
+            // if (Array.isArray(setOn)) {
+            //     for (var k = 0; k < setOn.length; k++) {
+            //         runSetOn(setOn[k].target, setOn[k].prop, curProp.value);// setOn[k].target[ setOn[k].prop ] = curProp.value;
+            //     }
+            // } else { //Could remove this and always make set on an array
+            //     runSetOn(curProp.setOn.target, curProp.setOn.prop, curProp.value); //curProp.setOn.target[ curProp.setOn.prop ] = curProp.value;
+            // }
+
+
             if (Array.isArray(setOn)) {
-                for (var k = 0; k < setOn.length; k++) {
-                    runSetOn(setOn[k].target, setOn[k].prop, curProp.value);// setOn[k].target[ setOn[k].prop ] = curProp.value;
-                }
-            } else { //Could remove this and always make set on an array
-                runSetOn(curProp.setOn.target, curProp.setOn.prop, curProp.value); //curProp.setOn.target[ curProp.setOn.prop ] = curProp.value;
+
+                //runSetArgsRecursive(setArgs, curProp.value); //TODO - write tests
+                runSetterRecursive(setOn, curProp.value, runSetOn); //TODO - write tests
+            } else {
+
+
+                runSetOn(setOn.target, setOn.prop, curProp.value);
+                // setArgs.target[ setArgs.prop ].apply( setArgs.target, curProp.value);
             }
 
         }
@@ -453,7 +475,8 @@
             var setArgs = curProp.setArgs;
 
             if (Array.isArray(setArgs)) {
-                runSetArgsRecursive(setArgs, curProp.value); //TODO - write tests
+                //runSetArgsRecursive(setArgs, curProp.value); //TODO - write tests
+                runSetterRecursive(setArgs, curProp.value, runSetArgs); //TODO - write tests
             } else {
                 runSetArgs(setArgs.target, setArgs.prop, curProp.value);
                 // setArgs.target[ setArgs.prop ].apply( setArgs.target, curProp.value);
@@ -473,31 +496,74 @@
     /** TODO - make these changes generic enough for SET ON too...*/
     /** TODO - make these changes generic enough for SET ON too...*/
 
-    function runSetArgsRecursive(setArgs, value) {
+    function runSetterRecursive(target_and_property, value, baseSetterFunc) {
         if (isArrayOfArrays(value)) {
             for (var i = 0; i < value.length; ++i) {
-                runSetArgsRecursive(setArgs, value[i]);
+                runSetterRecursive(target_and_property, value[i]);
             }
         } else {
-            runSetArgsBase(setArgs, value);
+            console.log("REACHED BASE!", target_and_property, "value: ", value);
+            runSetterBase(target_and_property, value, baseSetterFunc);
         }
     }
 
-    function runSetArgsBase(setArgs, value) { //This code was originally used as the main
-        for (var k = 0; k < setArgs.length; k++) {
-            runSetArgs(setArgs[k].target, setArgs[k].prop, value);
-            // setArgs[k].target[ setArgs[k].prop ].apply(setArgs[k].target, curProp.value);
+    // function runSetArgsRecursive(setArgs, value) {
+    //     if (isArrayOfArrays(value)) {
+    //         for (var i = 0; i < value.length; ++i) {
+    //             runSetArgsRecursive(setArgs, value[i]);
+    //         }
+    //     } else {
+    //         runSetArgsBase(setArgs, value);
+    //     }
+    // }
+
+    function runSetterBase(target_and_prop, value, baseSetterFunc){
+        if (Array.isArray(target_and_prop)){
+            for (var k = 0; k < setArgs.length; k++) {
+                baseSetterFunc(target_and_prop[k].target, target_and_prop[k].prop, value);
+            }
+        } else {
+            baseSetterFunc(target_and_prop.target, target_and_prop.prop, value);
         }
     }
+
+    // function runSetArgsBase(setArgs, value) { //This code was originally used as the main
+    //     if (Array.isArray(setArgs)){
+    //         for (var k = 0; k < setArgs.length; k++) {
+    //             runSetArgs(setArgs[k].target, setArgs[k].prop, value);
+    //             // setArgs[k].target[ setArgs[k].prop ].apply(setArgs[k].target, curProp.value);
+    //         }
+    //     } else {
+    //         runSetArgs(setArgs.target, setArgs.prop, value);
+    //     }
+    // }
+    //
+    // function runSetOnBase(setOn, value) { //This code was originally used as the main
+    //
+    //     if (Array.isArray(setOn)){
+    //         for (var k = 0; k < setOn.length; k++) {
+    //             runSetOn(setOn[k].target, setOn[k].prop, value);
+    //             // setOn[k].target[ setOn[k].prop ].apply(setOn[k].target, curProp.value);
+    //         }
+    //     } else {
+    //         runSetOn(setOn.target, setOn.prop, value);
+    //     }
+    //
+    // }
+
+
+
+    function runSetArgs(target, prop, value) {
+        target[prop].apply(target, value);
+    }
+
 
 
     function runSetOn(target, prop, value) {
         target[prop] = value;
     }
 
-    function runSetArgs(target, prop, value) {
-        target[prop].apply(target, value);
-    }
+
 
 
     /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ METHODS FOR HANDLING 2AFC FLIPPING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
@@ -600,6 +666,7 @@
     function storeResponse(options) {
 
         var lastTrial = allTrials.pop();
+
 
         var responseFormatted = {};
 

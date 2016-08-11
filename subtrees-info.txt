@@ -4,3 +4,24 @@ https://medium.com/@v/git-subtrees-a-tutorial-6ff568381844#.56r0407ac
 
 git subtree pull —prefix=<LOCATION OF SUBTREE>  <SUBTREE REMOTE> <SUBTREE BRANCH>
 
+
+
+
+
+
+
+
+
+
+
+
+UPDATING A SUBTREE (force some shit)
+https://stackoverflow.com/questions/10081681/git-subtree-push-changes-back-to-subtree-project
+
+(in Master)
+$ git subtree split --prefix=lib/slave -b split-branch
+$ git push <bare Slave repo> split-branch:master
+$ git branch -d split-branch
+$ cd /path/to/Slave/working/copy
+$ git pull  # (now in Slave)
+

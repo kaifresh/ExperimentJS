@@ -59,8 +59,10 @@
     /** ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER */
     exports.setIVTrialParserFunc = function (ivname, parserFunc) {
         //The trial value will always be passed in as the first argument
-        //The type of that trial value will be the first non- array of arrays in the experiment
-
+        //The type of that trial value will be the first non array-of-arrays in the experiment
+        //parserFuncs are passed args in this order (trialIV, i)
+        //parserFuncs must return the formatted value
+        //This assumes you know the content of the trial value, which you should....
         setIVGeneric(ivname, 'parserFunc', parserFunc);
     };
 
@@ -412,7 +414,6 @@
 
             setObjectAppearanceProperties(nextTrial[i]);
 
-
             // /** DEBUG: Writing all variable values to screen*/
             //     ///** Debug: write current settings to console */
 
@@ -670,28 +671,28 @@
 
         var responseFormatted = {};
 
-        /** Store the IV -> Write out each IV to a field */
+        /** Store the IV -> Write out each IV (1 IV per array element) to a field */
         for (var i = 0; i < lastTrial.length; ++i) {
             var ivNum = 'IV' + i;
 
-            if (lastTrial[i].value.constructor === Array) {
+            if (lastTrial[i].parserFunc !== undefined && $.isFunction(lastTrial[i].parserFunc)){
+                console.log("THESE CHANGES ARE REAL PLEASE GOD ARE THEY REAL");
+                var stdName = ivNum + '_' + lastTrial[i].description + '_value';
+                responseFormatted[stdName] = lastTrial[i].parserFunc(lastTrial[i], i);
+
+            } else if (lastTrial[i].value.constructor === Array) { //Consider these to be defaults for javascript primitive types
                 /*Manually write out each array entry to a field in the object*/
                 for (var j = 0; j < lastTrial[i].value.length; ++j) {
                     var char = j.toString();
 
 
-                    responseFormatted[ivNum + '_' + char + '_' + lastTrial[i].description + '_value'] = optionallyParseTrialValue(lastTrial[i].parserFunc, lastTrial[i].value[j]);
-                    // if (lastTrial[i].parserFunc !== undefined){
-                    //     responseFormatted[ivNum+"_"+char+"_"+lastTrial[i].description+"_value"] = lastTrial[i].parserFunc(lastTrial[i].value[j]);
-                    // } else {
-                    //     responseFormatted[ivNum+"_"+char+"_"+lastTrial[i].description+"_value"] = lastTrial[i].value[j];
-                    // }
+                    responseFormatted[ivNum + '_' + char + '_' + lastTrial[i].description + '_value'] =  lastTrial[i].value[j];//optionallyParseTrialValue(lastTrial[i].parserFunc, lastTrial[i].value[j]);
 
                 }
 
             } else {
 
-                responseFormatted[ivNum + '_' + lastTrial[i].description + '_value'] = optionallyParseTrialValue(lastTrial[i].parserFunc, lastTrial[i].value);
+                responseFormatted[ivNum + '_' + lastTrial[i].description + '_value'] = lastTrial[i].value;// = optionallyParseTrialValue(lastTrial[i].parserFunc, lastTrial[i].value);
                 // responseFormatted[ivNum+"_"+lastTrial[i].description+"_value"] = lastTrial[i].value;
             }
 
@@ -702,7 +703,7 @@
         }
 
         /** Check that a 2afc std value was added - if not you want to add a null value or it will fuck up the csv write*/
-        if (!responseFormatted.hasOwnProperty('std_2AFC')) {
+        if (!responseFormatted.hasOwnProperty('std_2AFC') && didSet2AFC) {
             responseFormatted['std_2AFC'] = 'null';
         }
 
@@ -722,13 +723,6 @@
         // console.log("response constructed from: ", lastTrial);
     }
 
-    function optionallyParseTrialValue(parserFunc, value) {
-        if (parserFunc !== undefined) {
-            return parserFunc(value);
-        } else {
-            return value;
-        }
-    }
 
 
     /**OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT **/

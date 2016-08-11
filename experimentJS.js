@@ -348,6 +348,7 @@
             background: 'black'
         }
     });
+    
     $(document.body).append(blackOut);
     $('#interstimulus-pause').hide();
 

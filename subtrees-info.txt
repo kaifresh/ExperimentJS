@@ -9,7 +9,7 @@ git subtree pull —prefix=<LOCATION OF SUBTREE>  <SUBTREE REMOTE> <SUBTREE BRAN
 
 
 
-
+Always remember to push to the SUBTREE REMOTE!!!!!
 
 
 

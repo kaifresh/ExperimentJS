@@ -18,6 +18,8 @@
     /** ~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs **/
 
     function setIVGeneric(ivName, fieldName, fieldVal) {
+        csvFodderCheck(ivName);
+        csvFodderCheck(fieldName);
         if (!window.IVs.hasOwnProperty(ivName)) { //If IV doenst exists make it as a raw object
             window.IVs[ivName] = {};
         }
@@ -57,14 +59,40 @@
     /** ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER */
     /** ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER */
     /** ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER */
+    /*
+    The trial value will always be passed in as the first argument
+    The type of that trial value will be the first non array-of-arrays in the experiment
+    parserFuncs are passed args in this order (trialIV, i)
+    parserFuncs must return the formatted value
+    This assumes you know the content of the trial value, which you should....
+    */
     exports.setIVTrialParserFunc = function (ivname, parserFunc) {
-        //The trial value will always be passed in as the first argument
-        //The type of that trial value will be the first non array-of-arrays in the experiment
-        //parserFuncs are passed args in this order (trialIV, i)
-        //parserFuncs must return the formatted value
-        //This assumes you know the content of the trial value, which you should....
         setIVGeneric(ivname, 'parserFunc', parserFunc);
     };
+
+    /** ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME */
+    /** ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME */
+    /** ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME */
+    var _dvName;
+    exports.setDVName = function(dvName){
+        if (typeof dvName === "string"){
+            csvFodderCheck(dvName);
+            _dvName = dvName;
+        } else {
+            throw  new Error("The supplied DV name must be of type String");
+        }
+    };
+
+    function csvFodderCheck(string){
+
+        if (typeof string !== "string"){
+            throw new Error("You must supply a variable of type String for this method");
+        }
+
+        if (string.indexOf(",") !== -1){
+            throw new Error("Strings used by ExperimentJS may not contain commas: " + string);
+        }
+    }
 
     /** ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS  ~~ **/
     /** ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS  ~~ **/
@@ -75,7 +103,7 @@
         window.expRepeats = nRepeats;
     };
 
-    var totalTrials = -1;
+    var _totalTrials = -1;
     var allTrials = [];
     var didBuildTrials = false;
     function buildTrials() {
@@ -173,7 +201,7 @@
 
         allTrials.shuffle();
 
-        totalTrials = allTrials.length; //Used to determine where you are in the trial process
+        _totalTrials = allTrials.length; //Used to determine where you are in the trial process
         didBuildTrials = true;
     }
 
@@ -380,15 +408,15 @@
     function checkRunMidCallback() {
 
         //One trial as a percentage. Have * 0.5 coz ur taking the Math.abs() difference (i.e. the two sided tail)
-        var fudgeFactor = 1 / totalTrials * 0.5; //Could make this a private instance var of Experiment?
+        var fudgeFactor = 1 / _totalTrials * 0.5; //Could make this a private instance var of Experiment?
 
         for (var i = 0; i < mid.length; i++) {
 
             var curMid = Math.min(1.0, Math.max(1.0 - mid[i], 0.0)); //Clamping difference between 0.0 & 1.0.
 
-            var diff = Math.abs((allTrials.length / totalTrials).toFixed(3) - curMid);
+            var diff = Math.abs((allTrials.length / _totalTrials).toFixed(3) - curMid);
 
-            // console.log("determine presence of breaks. Cur pos =", (allTrials.length/totalTrials).toFixed(3), "havea break at:", curMid, "diff:", diff, 'threshold:', fudgeFactor/2);
+            // console.log("determine presence of breaks. Cur pos =", (allTrials.length/_totalTrials).toFixed(3), "havea break at:", curMid, "diff:", diff, 'threshold:', fudgeFactor/2);
 
             if (diff < fudgeFactor / 2) { //Fudge factor
                 midTrialCallBack();
@@ -668,7 +696,6 @@
 
         var lastTrial = allTrials.pop();
 
-
         var responseFormatted = {};
 
         /** Store the IV -> Write out each IV (1 IV per array element) to a field */
@@ -709,9 +736,10 @@
 
         /** Store the DV*/
         if (options !== undefined && options.hasOwnProperty('dv_value')) {
-            responseFormatted['DV_value'] = options.dv_value;
+            var value = _dvName || 'value';
+            responseFormatted['DV_'+value] = options.dv_value;
         } else {
-            alert('no DV was supplied');
+            alert('No DV was supplied by the calling code. This is an error.');
             responseFormatted['DV_value'] = 'ERROR - No DV supplied';
         }
 

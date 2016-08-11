@@ -5,11 +5,14 @@ https://medium.com/@v/git-subtrees-a-tutorial-6ff568381844#.56r0407ac
 git subtree pull —prefix=<LOCATION OF SUBTREE>  <SUBTREE REMOTE> <SUBTREE BRANCH>
 
 
-
-
-
+1. Add/Commit/Push all changes on parent
+2. git subtree push <SUBTREE REMOTE> <SUBTREE BRANCH> --prefix
+3. git subtree pull / git pull on the original
 
 Always remember to push to the SUBTREE REMOTE!!!!!
+
+
+
 
 
 

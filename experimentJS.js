@@ -766,7 +766,6 @@
 
         /** Help out a machine today*/
         var csvContent = encodeURI('data:text/csv;charset=utf-8,' + csvString);
-
         var a = createDownloadLink('results (' + pptName + ', ' + pptNo.toString() + ').csv', csvContent);
         document.body.appendChild(a);
         a.click();

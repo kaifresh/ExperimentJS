@@ -50,7 +50,7 @@
     };
 
 
-    
+
     /** TODO: an option to UNSET these thangs */
 
 
@@ -774,23 +774,27 @@
         /** Help out a machine today*/
         var csvContent = encodeURI('data:text/csv;charset=utf-8,' + csvString);
 
-        ////http://stackoverflow.com/questions/17836273/export-javascript-data-to-csv-file-without-server-interaction
-        var a = document.createElement('a');
-        a.href = csvContent;
-        a.target = '_blank';
-        a.download = 'results (' + pptName + ', ' + pptNo.toString() + ').csv';
-        a.innerHTML = "<h4>Click to download results!</h4> <p>(if they didn't download already)</p>";
-
-        a.className += ' results-download';
-
-        document.getElementById('interstimulus-pause').appendChild(a);
+        var a = createDownloadLink('results (' + pptName + ', ' + pptNo.toString() + ').csv', csvContent);
         document.body.appendChild(a);
-
         a.click();
     }
 
 
     /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                      UTIL                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+    function createDownloadLink(filename, data){
+        ////http://stackoverflow.com/questions/17836273/export-javascript-data-to-csv-file-without-server-interaction
+        var a = document.createElement('a');
+        a.href = data;
+        a.target = '_blank';
+        a.download = filename; //'results (' + pptName + ', ' + pptNo.toString() + ').csv';
+        a.innerHTML = "<h4>Click to download results!</h4> <p>(if they didn't download already)</p>";
+
+        a.className += ' results-download';
+        // document.getElementById('interstimulus-pause').appendChild(a);
+        return a;
+    }
+
     //TODO - move to util file!
     function isFloat(n) {
         return Number(n) === n && n % 1 !== 0;

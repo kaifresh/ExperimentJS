@@ -676,7 +676,6 @@
             var ivNum = 'IV' + i;
 
             if (lastTrial[i].parserFunc !== undefined && $.isFunction(lastTrial[i].parserFunc)){
-                console.log("THESE CHANGES ARE REAL PLEASE GOD ARE THEY REAL");
                 var stdName = ivNum + '_' + lastTrial[i].description + '_value';
                 responseFormatted[stdName] = lastTrial[i].parserFunc(lastTrial[i], i);
 

@@ -106,7 +106,7 @@
     var _totalTrials = -1;
     var allTrials = [];
     var didBuildTrials = false;
-    function buildTrials() {
+    function buildTrials(printTrials) {
         var buildingTrial, temp;
 
         for (var iv in window.IVs) { //Iterate over IVs
@@ -191,13 +191,16 @@
 
 
         console.log("There are ", allTrials.length, "trials (using", repeats, "repeats)");
-        // for (var i = 0; i < allTrials.length; i++){
-        //    console.log("TRIAL ", i);
-        //    for (var j = 0; j < allTrials[i].length; j++){
-        //        console.log( allTrials[i][j] );
-        //    }
-        //    console.log("******* ******* ******* *******");
-        // }
+        if (printTrials){
+            for (var i = 0; i < allTrials.length; i++){
+                console.log("TRIAL ", i);
+                for (var j = 0; j < allTrials[i].length; j++){
+                    console.log( allTrials[i][j] );
+                }
+                console.log("******* ******* ******* *******");
+            }
+        }
+
 
         allTrials.shuffle();
 
@@ -215,8 +218,8 @@
      *
      * All other behaviour should be performed by another moduel that works with this one.
      * */
-    exports.buildExperiment = function () {
-        buildTrials();
+    exports.buildExperiment = function (printTrials) {
+        buildTrials( (printTrials === undefined) ? false : printTrials );
     };
 
 
@@ -549,7 +552,7 @@
 
     function runSetterBase(target_and_prop, value, baseSetterFunc){
         if (Array.isArray(target_and_prop)){
-            for (var k = 0; k < setArgs.length; k++) {
+            for (var k = 0; k < target_and_prop.length; k++) {
                 baseSetterFunc(target_and_prop[k].target, target_and_prop[k].prop, value);
             }
         } else {

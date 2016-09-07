@@ -111,7 +111,7 @@
 
         for (var iv in window.IVs) { //Iterate over IVs
 
-            console.log('Extending all trials array with:", iv, ". Levels =", window.IVs[iv].levels.length');
+            console.log('Extending all trials array with:', iv, '. Levels =', window.IVs[iv].levels.length);
 
             temp = [];
 
@@ -535,7 +535,6 @@
                 runSetterRecursive(target_and_property, value[i]);
             }
         } else {
-            console.log("REACHED BASE!", target_and_property, "value: ", value);
             runSetterBase(target_and_property, value, baseSetterFunc);
         }
     }
@@ -706,18 +705,15 @@
         for (var i = 0; i < lastTrial.length; ++i) {
             var ivNum = 'IV' + i;
 
-            if (lastTrial[i].parserFunc !== undefined && $.isFunction(lastTrial[i].parserFunc)){
+            if (lastTrial[i].parserFunc !== undefined && $.isFunction(lastTrial[i].parserFunc)){ //If a parserfunction is defined
                 var stdName = ivNum + '_' + lastTrial[i].description + '_value';
-                responseFormatted[stdName] = lastTrial[i].parserFunc(lastTrial[i], i);
+                responseFormatted[stdName] = lastTrial[i].parserFunc(lastTrial[i], i); //Last Trial, i
 
             } else if (lastTrial[i].value.constructor === Array) { //Consider these to be defaults for javascript primitive types
                 /*Manually write out each array entry to a field in the object*/
                 for (var j = 0; j < lastTrial[i].value.length; ++j) {
                     var char = j.toString();
-
-
                     responseFormatted[ivNum + '_' + char + '_' + lastTrial[i].description + '_value'] =  lastTrial[i].value[j];//optionallyParseTrialValue(lastTrial[i].parserFunc, lastTrial[i].value[j]);
-
                 }
 
             } else {

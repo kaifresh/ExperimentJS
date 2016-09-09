@@ -695,6 +695,8 @@
     /** This is where trials are removed from the array and the next trial is advanced to*/
     var responses = [];
 
+
+
     function storeResponse(options) {
 
         var lastTrial = allTrials.pop();
@@ -755,6 +757,10 @@
     /**OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT **/
     /**OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT **/
     /**OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT **/
+    exports.forceOutputResponses = function(){
+        outputResponses(responses, true);
+    };
+
     function outputResponses(allResponses, log) {
 
         if (allResponses.length === 0) return;

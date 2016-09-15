@@ -592,6 +592,9 @@
 
 
     function runSetOn(target, prop, value) {
+        console.log("target", target);
+        console.log("prop", prop);
+        console.log("value", value);
         target[prop] = value;
     }
 

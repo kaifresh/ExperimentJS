@@ -773,14 +773,14 @@
         /** Make the header*/
         csvString += 'Participant Name, Participant Number, '; //Manually add header
         for (var i = 0; i < keys.length; i++) {
-            csvString += keys[i] + ', ';
+            csvString += keys[i] + ',';
         }
         csvString = csvString.slice(0, -1) + '\n';//Cut trailing comma and put in a new row/line
 
         /** Fill the data - This time its an array of arrays not array of dictionaries */
         for (i = 0; i < allResponses.length; i++) {
 
-            csvString += pptName + ', ' + pptNo + ','; //Manaully add content
+            csvString += pptName + ',' + pptNo + ','; //Manaully add content
 
             for (var j = 0; j < keys.length; j++) { //Iterate over the keys to get teh values
 

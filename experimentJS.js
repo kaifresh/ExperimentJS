@@ -592,9 +592,6 @@
 
 
     function runSetOn(target, prop, value) {
-        console.log("target", target);
-        console.log("prop", prop);
-        console.log("value", value);
         target[prop] = value;
     }
 
@@ -783,7 +780,7 @@
         /** Fill the data - This time its an array of arrays not array of dictionaries */
         for (i = 0; i < allResponses.length; i++) {
 
-            csvString += pptName + ', ' + pptNo + ', '; //Manaully add content
+            csvString += pptName + ', ' + pptNo + ','; //Manaully add content
 
             for (var j = 0; j < keys.length; j++) { //Iterate over the keys to get teh values
 
@@ -791,7 +788,7 @@
                 console.log('writing this raw value ', value, keys[j]);
                 //value = checkReturnProps( value, true ) || value;  //Parse out relevant object fields
                 //console.log('Afer it was parsed:', value, '\n*********');
-                csvString += value + ', ';
+                csvString += value + ',';
             }
 
             csvString = csvString.slice(0, -1) + '\n'; //Cut trailing comma and put in a new row/line

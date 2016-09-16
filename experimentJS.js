@@ -558,26 +558,12 @@
 
     /** This sets the appearance of each individual element in the display. CHanging via either props or methods */
     function setObjectAppearanceProperties(curProp) {
-
-
-
+        
         /** TYPE 1: Variables that must be SET*/
         if (curProp.hasOwnProperty('setOn')) {
 
-
-
             /*Set on can be an array or a single object reference*/
             var setOn = curProp.setOn;
-
-
-            // if (Array.isArray(setOn)) {
-            //     for (var k = 0; k < setOn.length; k++) {
-            //         runSetOn(setOn[k].target, setOn[k].prop, curProp.value);// setOn[k].target[ setOn[k].prop ] = curProp.value;
-            //     }
-            // } else { //Could remove this and always make set on an array
-            //     runSetOn(curProp.setOn.target, curProp.setOn.prop, curProp.value); //curProp.setOn.target[ curProp.setOn.prop ] = curProp.value;
-            // }
-
 
             if (Array.isArray(setOn)) {
 
@@ -613,11 +599,7 @@
 
     }
 
-    /** TODO - make these changes generic enough for SET ON too...*/
-    /** TODO - make these changes generic enough for SET ON too...*/
-    /** TODO - make these changes generic enough for SET ON too...*/
-    /** TODO - make these changes generic enough for SET ON too...*/
-
+    /** Recursing over arrays of arrays */
     function runSetterRecursive(target_and_property, value, baseSetterFunc) {
         if (isArrayOfArrays(value)) {
             for (var i = 0; i < value.length; ++i) {
@@ -628,16 +610,7 @@
         }
     }
 
-    // function runSetArgsRecursive(setArgs, value) {
-    //     if (isArrayOfArrays(value)) {
-    //         for (var i = 0; i < value.length; ++i) {
-    //             runSetArgsRecursive(setArgs, value[i]);
-    //         }
-    //     } else {
-    //         runSetArgsBase(setArgs, value);
-    //     }
-    // }
-
+    /** BASE WRAPPER - Handling Arrrays */
     function runSetterBase(target_and_prop, value, baseSetterFunc){
         if (Array.isArray(target_and_prop)){
             for (var k = 0; k < target_and_prop.length; k++) {
@@ -648,36 +621,10 @@
         }
     }
 
-    // function runSetArgsBase(setArgs, value) { //This code was originally used as the main
-    //     if (Array.isArray(setArgs)){
-    //         for (var k = 0; k < setArgs.length; k++) {
-    //             runSetArgs(setArgs[k].target, setArgs[k].prop, value);
-    //             // setArgs[k].target[ setArgs[k].prop ].apply(setArgs[k].target, curProp.value);
-    //         }
-    //     } else {
-    //         runSetArgs(setArgs.target, setArgs.prop, value);
-    //     }
-    // }
-    //
-    // function runSetOnBase(setOn, value) { //This code was originally used as the main
-    //
-    //     if (Array.isArray(setOn)){
-    //         for (var k = 0; k < setOn.length; k++) {
-    //             runSetOn(setOn[k].target, setOn[k].prop, value);
-    //             // setOn[k].target[ setOn[k].prop ].apply(setOn[k].target, curProp.value);
-    //         }
-    //     } else {
-    //         runSetOn(setOn.target, setOn.prop, value);
-    //     }
-    //
-    // }
-
-
-
+    /** BASE FUNCTIONS */
     function runSetArgs(target, prop, value) {
         target[prop].apply(target, value);
     }
-
 
 
     function runSetOn(target, prop, value) {

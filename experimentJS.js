@@ -60,15 +60,17 @@
     /** ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER */
     /** ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER */
     /*
-    The trial value will always be passed in as the first argument
-    The type of that trial value will be the first non array-of-arrays in the experiment
-    parserFuncs are passed args in this order (trialIV, i)
-    parserFuncs must return the formatted value
-    This assumes you know the content of the trial value, which you should....
-    */
+     The trial value will always be passed in as the first argument
+     The type of that trial value will be the first non array-of-arrays in the experiment
+     parserFuncs are passed args in this order (trialIV, i)
+     parserFuncs must return the formatted value
+     This assumes you know the content of the trial value, which you should....
+     */
     exports.setIVTrialParserFunc = function (ivname, parserFunc) {
         setIVGeneric(ivname, 'parserFunc', parserFunc);
     };
+
+
 
     /** ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME */
     /** ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME */
@@ -201,6 +203,17 @@
             }
         }
 
+        /** RUn a small shitty test */
+        for (var i = 0; i < allTrials.length; i++){
+            for (var j = 0; j < allTrials[i].length; j++){
+                if ( allTrials[i][j].value === undefined ){
+                    throw new Error();
+                }
+            }
+        }
+
+
+
 
         allTrials.shuffle();
 
@@ -223,36 +236,112 @@
     };
 
 
-    exports.pruneTrials = function (combosToKeep) {
-        console.error('UNFINIED');
+    /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TRIAL PRUNING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TRIAL PRUNING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TRIAL PRUNING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-        if (allTrials.length === 0) {
-            error('No trials have been built!');
-            return;
+    /**
+     * Combos to kill is an array of objects representing trial types you want to destroy
+     *
+     * You 'OR' the COMBOS togehter so that if the current trial matches any, it gets deleted.
+     *
+     * Must have this structure
+     **
+     *  {
+            lh: "unwrapOrigLeft",       //Same as ID used on variable
+            rh: "unwrapDblRight",
+            op: function,                   //ops are "eq" "lt" "gt" & can be prefixed w "!"
+            and: {
+                isExpression: true,
+                lh: "waveOffsetLeft",
+                rh: "waveOffsetRight",
+                op: function,
+                and: undefined... (could do more)
+            }
         }
 
-        for (var i = allTrials.length - 1; i >= 0; --i) {
-            console.log('trial ', i, ':', allTrials[i]);
+     Combos can be recursively chained together using the **.and** field
 
-            var trial = allTrials[i];
 
-            /** Go through each trial and check if any of its vars match with the keeper combo*/
-            var didMatch = false;
-            for (var j = 0; j < trial.length; j++) {
-                console.log(trial[j]);
+     How EXPRESSION EVALUATION works:
+     Note:     This only works for "AND", OR is each combo
+     PHASE 1 - create a `contitions` array of values & operators. Recurse through
+     PHASE 2 - evaluate each condition
 
-                /** Go through the valid combos*/
-                for (var k = 0; k < combosToKeep.length; k++) {
-                    var keys = Object.keys(combosToKeep[k]);
-                    console.log('keeper combo: ', combosToKeep[k], keys);
+     * */
+    exports.pruneTrials = function (allRemovalCombos) {
+
+        if (!didBuildTrials) throw new Error("Trials are not built yet");
+
+        /** Apply all combos to all trials using 'OR' -> if any trial matches any combo it will be pruned */
+        for (var i = allTrials.length - 1; i >= 0; --i){
+            for (var j = 0; j < allRemovalCombos.length; j++){
+                // var deepClone = $.extend(true, [], allTrials[i] );
+                if ( evaluateOneCombo(  allTrials[i], allRemovalCombos[j] ) ){
+                    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Pruning trial ", i);
+                    for (var k = 0; k < allTrials[i].length; k++)    console.log(allTrials[i][k].value);
+                    allTrials.splice(i, 1); //Remove 1 item at i;
                 }
             }
-
         }
-
-
     };
 
+    function evaluateOneCombo(trial, combo){
+
+        //Phase 1 - Get conditions to be ANDED
+        var conditions = formatAllTestConditions(trial, combo);
+
+        //Phase 2 - AND the conditions together
+        var lh, rh, temp, result;
+        // var result = undefined;
+        for (var i =0; i < conditions.length; i++){
+
+            lh = trial[conditions[i].lhPos];
+            rh = trial[conditions[i].rhPos];
+
+            temp = conditions[i].op(lh.value, rh.value);
+
+            result = (result === undefined) ? temp : (result && temp);
+        }
+
+        return result;
+    }
+
+
+    /** ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ PRUNING PHASE 1 - Transform from Array to object structure~ ~ ~ ~ ~ ~ ~ ~ ~ ~ */
+
+    function formatAllTestConditions(trial, combo){
+
+        var conditions = [];
+
+        combo._lh = camelToSentenceCase(combo.lh);
+        combo._rh = camelToSentenceCase(combo.rh);
+
+        var lhPos = -1;
+        var rhPos = -1;
+
+        for (var i = 0; i < trial.length; i ++){
+            if (trial[i].description === combo._lh) lhPos = i;
+            if (trial[i].description === combo._rh) rhPos = i;
+        }
+
+        /** Store these */
+        conditions.push(
+            {
+                lhPos: lhPos,
+                rhPos: rhPos,
+                op: combo.op
+            }
+        );
+
+        /** ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ Recurse to get ANDs ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ */
+
+        if ( combo.and !== null && typeof combo.and === 'object' ) {
+            conditions = conditions.concat( formatAllTestConditions(trial, combo.and) );
+        }
+
+        return conditions;
+    }
 
     /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~           GETTING PPT DETAILS     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
@@ -351,7 +440,7 @@
             background: 'black'
         }
     });
-    
+
     $(document.body).append(blackOut);
     $('#interstimulus-pause').hide();
 

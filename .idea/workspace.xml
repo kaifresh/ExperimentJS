@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="15a95f82-d721-497f-925e-739aed3019c5" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/experimentJS.js" afterPath="$PROJECT_DIR$/experimentJS.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ExperimentJS.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -55,17 +55,17 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="experimentJS.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="experimentJS.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/experimentJS.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="318">
-              <caret line="677" column="63" selection-start-line="677" selection-start-column="63" selection-end-line="677" selection-end-column="63" />
+            <state relative-caret-position="978">
+              <caret line="765" column="0" selection-start-line="765" selection-start-column="0" selection-end-line="765" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="subtrees-info.txt" pinned="false" current-in-tab="true">
+      <file leaf-file-name="subtrees-info.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/subtrees-info.txt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="405">
@@ -241,12 +241,12 @@
       <workItem from="1470724234147" duration="1225000" />
       <workItem from="1470823978418" duration="11000" />
       <workItem from="1470824148877" duration="24000" />
-      <workItem from="1470875834864" duration="467000" />
+      <workItem from="1470875834864" duration="2514000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5114000" />
+    <option name="totallyTimeSpent" value="7161000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1280" y="-1577" width="1280" height="1577" extended-state="0" />
@@ -463,18 +463,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/experimentJS.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="318">
-          <caret line="677" column="63" selection-start-line="677" selection-start-column="63" selection-end-line="677" selection-end-column="63" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/subtrees-info.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
           <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/experimentJS.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="978">
+          <caret line="765" column="0" selection-start-line="765" selection-start-column="0" selection-end-line="765" selection-end-column="0" />
           <folding />
         </state>
       </provider>

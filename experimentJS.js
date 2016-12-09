@@ -60,15 +60,17 @@
     /** ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER */
     /** ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER */
     /*
-    The trial value will always be passed in as the first argument
-    The type of that trial value will be the first non array-of-arrays in the experiment
-    parserFuncs are passed args in this order (trialIV, i)
-    parserFuncs must return the formatted value
-    This assumes you know the content of the trial value, which you should....
-    */
+     The trial value will always be passed in as the first argument
+     The type of that trial value will be the first non array-of-arrays in the experiment
+     parserFuncs are passed args in this order (trialIV, i)
+     parserFuncs must return the formatted value
+     This assumes you know the content of the trial value, which you should....
+     */
     exports.setIVTrialParserFunc = function (ivname, parserFunc) {
         setIVGeneric(ivname, 'parserFunc', parserFunc);
     };
+
+
 
     /** ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME */
     /** ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME */
@@ -106,12 +108,12 @@
     var _totalTrials = -1;
     var allTrials = [];
     var didBuildTrials = false;
-    function buildTrials() {
+    function buildTrials(printTrials) {
         var buildingTrial, temp;
 
         for (var iv in window.IVs) { //Iterate over IVs
 
-            console.log('Extending all trials array with:", iv, ". Levels =", window.IVs[iv].levels.length');
+            console.log('Extending all trials array with:', iv, '. Levels =', window.IVs[iv].levels.length);
 
             temp = [];
 
@@ -191,13 +193,27 @@
 
 
         console.log("There are ", allTrials.length, "trials (using", repeats, "repeats)");
-        // for (var i = 0; i < allTrials.length; i++){
-        //    console.log("TRIAL ", i);
-        //    for (var j = 0; j < allTrials[i].length; j++){
-        //        console.log( allTrials[i][j] );
-        //    }
-        //    console.log("******* ******* ******* *******");
-        // }
+        if (printTrials){
+            for (var i = 0; i < allTrials.length; i++){
+                console.log("TRIAL ", i);
+                for (var j = 0; j < allTrials[i].length; j++){
+                    console.log( allTrials[i][j] );
+                }
+                console.log("******* ******* ******* *******");
+            }
+        }
+
+        /** RUn a small shitty test */
+        for (var i = 0; i < allTrials.length; i++){
+            for (var j = 0; j < allTrials[i].length; j++){
+                if ( allTrials[i][j].value === undefined ){
+                    throw new Error();
+                }
+            }
+        }
+
+
+
 
         allTrials.shuffle();
 
@@ -215,41 +231,117 @@
      *
      * All other behaviour should be performed by another moduel that works with this one.
      * */
-    exports.buildExperiment = function () {
-        buildTrials();
+    exports.buildExperiment = function (printTrials) {
+        buildTrials( (printTrials === undefined) ? false : printTrials );
     };
 
 
-    exports.pruneTrials = function (combosToKeep) {
-        console.error('UNFINIED');
+    /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TRIAL PRUNING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TRIAL PRUNING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TRIAL PRUNING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-        if (allTrials.length === 0) {
-            error('No trials have been built!');
-            return;
+    /**
+     * Combos to kill is an array of objects representing trial types you want to destroy
+     *
+     * You 'OR' the COMBOS togehter so that if the current trial matches any, it gets deleted.
+     *
+     * Must have this structure
+     **
+     *  {
+            lh: "unwrapOrigLeft",       //Same as ID used on variable
+            rh: "unwrapDblRight",
+            op: function,                   //ops are "eq" "lt" "gt" & can be prefixed w "!"
+            and: {
+                isExpression: true,
+                lh: "waveOffsetLeft",
+                rh: "waveOffsetRight",
+                op: function,
+                and: undefined... (could do more)
+            }
         }
 
-        for (var i = allTrials.length - 1; i >= 0; --i) {
-            console.log('trial ', i, ':', allTrials[i]);
+     Combos can be recursively chained together using the **.and** field
 
-            var trial = allTrials[i];
 
-            /** Go through each trial and check if any of its vars match with the keeper combo*/
-            var didMatch = false;
-            for (var j = 0; j < trial.length; j++) {
-                console.log(trial[j]);
+     How EXPRESSION EVALUATION works:
+     Note:     This only works for "AND", OR is each combo
+     PHASE 1 - create a `contitions` array of values & operators. Recurse through
+     PHASE 2 - evaluate each condition
 
-                /** Go through the valid combos*/
-                for (var k = 0; k < combosToKeep.length; k++) {
-                    var keys = Object.keys(combosToKeep[k]);
-                    console.log('keeper combo: ', combosToKeep[k], keys);
+     * */
+    exports.pruneTrials = function (allRemovalCombos) {
+
+        if (!didBuildTrials) throw new Error("Trials are not built yet");
+
+        /** Apply all combos to all trials using 'OR' -> if any trial matches any combo it will be pruned */
+        for (var i = allTrials.length - 1; i >= 0; --i){
+            for (var j = 0; j < allRemovalCombos.length; j++){
+                // var deepClone = $.extend(true, [], allTrials[i] );
+                if ( evaluateOneCombo(  allTrials[i], allRemovalCombos[j] ) ){
+                    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Pruning trial ", i);
+                    for (var k = 0; k < allTrials[i].length; k++)    console.log(allTrials[i][k].value);
+                    allTrials.splice(i, 1); //Remove 1 item at i;
                 }
             }
-
         }
-
-
     };
 
+    function evaluateOneCombo(trial, combo){
+
+        //Phase 1 - Get conditions to be ANDED
+        var conditions = formatAllTestConditions(trial, combo);
+
+        //Phase 2 - AND the conditions together
+        var lh, rh, temp, result;
+        // var result = undefined;
+        for (var i =0; i < conditions.length; i++){
+
+            lh = trial[conditions[i].lhPos];
+            rh = trial[conditions[i].rhPos];
+
+            temp = conditions[i].op(lh.value, rh.value);
+
+            result = (result === undefined) ? temp : (result && temp);
+        }
+
+        return result;
+    }
+
+
+    /** ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ PRUNING PHASE 1 - Transform from Array to object structure~ ~ ~ ~ ~ ~ ~ ~ ~ ~ */
+
+    function formatAllTestConditions(trial, combo){
+
+        var conditions = [];
+
+        combo._lh = camelToSentenceCase(combo.lh);
+        combo._rh = camelToSentenceCase(combo.rh);
+
+        var lhPos = -1;
+        var rhPos = -1;
+
+        for (var i = 0; i < trial.length; i ++){
+            if (trial[i].description === combo._lh) lhPos = i;
+            if (trial[i].description === combo._rh) rhPos = i;
+        }
+
+        /** Store these */
+        conditions.push(
+            {
+                lhPos: lhPos,
+                rhPos: rhPos,
+                op: combo.op
+            }
+        );
+
+        /** ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ Recurse to get ANDs ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ */
+
+        if ( combo.and !== null && typeof combo.and === 'object' ) {
+            conditions = conditions.concat( formatAllTestConditions(trial, combo.and) );
+        }
+
+        return conditions;
+    }
 
     /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~           GETTING PPT DETAILS     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
@@ -348,6 +440,7 @@
             background: 'black'
         }
     });
+
     $(document.body).append(blackOut);
     $('#interstimulus-pause').hide();
 
@@ -465,26 +558,12 @@
 
     /** This sets the appearance of each individual element in the display. CHanging via either props or methods */
     function setObjectAppearanceProperties(curProp) {
-
-
-
+        
         /** TYPE 1: Variables that must be SET*/
         if (curProp.hasOwnProperty('setOn')) {
 
-
-
             /*Set on can be an array or a single object reference*/
             var setOn = curProp.setOn;
-
-
-            // if (Array.isArray(setOn)) {
-            //     for (var k = 0; k < setOn.length; k++) {
-            //         runSetOn(setOn[k].target, setOn[k].prop, curProp.value);// setOn[k].target[ setOn[k].prop ] = curProp.value;
-            //     }
-            // } else { //Could remove this and always make set on an array
-            //     runSetOn(curProp.setOn.target, curProp.setOn.prop, curProp.value); //curProp.setOn.target[ curProp.setOn.prop ] = curProp.value;
-            // }
-
 
             if (Array.isArray(setOn)) {
 
@@ -520,35 +599,21 @@
 
     }
 
-    /** TODO - make these changes generic enough for SET ON too...*/
-    /** TODO - make these changes generic enough for SET ON too...*/
-    /** TODO - make these changes generic enough for SET ON too...*/
-    /** TODO - make these changes generic enough for SET ON too...*/
-
+    /** Recursing over arrays of arrays */
     function runSetterRecursive(target_and_property, value, baseSetterFunc) {
         if (isArrayOfArrays(value)) {
             for (var i = 0; i < value.length; ++i) {
                 runSetterRecursive(target_and_property, value[i]);
             }
         } else {
-            console.log("REACHED BASE!", target_and_property, "value: ", value);
             runSetterBase(target_and_property, value, baseSetterFunc);
         }
     }
 
-    // function runSetArgsRecursive(setArgs, value) {
-    //     if (isArrayOfArrays(value)) {
-    //         for (var i = 0; i < value.length; ++i) {
-    //             runSetArgsRecursive(setArgs, value[i]);
-    //         }
-    //     } else {
-    //         runSetArgsBase(setArgs, value);
-    //     }
-    // }
-
+    /** BASE WRAPPER - Handling Arrrays */
     function runSetterBase(target_and_prop, value, baseSetterFunc){
         if (Array.isArray(target_and_prop)){
-            for (var k = 0; k < setArgs.length; k++) {
+            for (var k = 0; k < target_and_prop.length; k++) {
                 baseSetterFunc(target_and_prop[k].target, target_and_prop[k].prop, value);
             }
         } else {
@@ -556,36 +621,10 @@
         }
     }
 
-    // function runSetArgsBase(setArgs, value) { //This code was originally used as the main
-    //     if (Array.isArray(setArgs)){
-    //         for (var k = 0; k < setArgs.length; k++) {
-    //             runSetArgs(setArgs[k].target, setArgs[k].prop, value);
-    //             // setArgs[k].target[ setArgs[k].prop ].apply(setArgs[k].target, curProp.value);
-    //         }
-    //     } else {
-    //         runSetArgs(setArgs.target, setArgs.prop, value);
-    //     }
-    // }
-    //
-    // function runSetOnBase(setOn, value) { //This code was originally used as the main
-    //
-    //     if (Array.isArray(setOn)){
-    //         for (var k = 0; k < setOn.length; k++) {
-    //             runSetOn(setOn[k].target, setOn[k].prop, value);
-    //             // setOn[k].target[ setOn[k].prop ].apply(setOn[k].target, curProp.value);
-    //         }
-    //     } else {
-    //         runSetOn(setOn.target, setOn.prop, value);
-    //     }
-    //
-    // }
-
-
-
+    /** BASE FUNCTIONS */
     function runSetArgs(target, prop, value) {
         target[prop].apply(target, value);
     }
-
 
 
     function runSetOn(target, prop, value) {
@@ -692,6 +731,8 @@
     /** This is where trials are removed from the array and the next trial is advanced to*/
     var responses = [];
 
+
+
     function storeResponse(options) {
 
         var lastTrial = allTrials.pop();
@@ -702,18 +743,15 @@
         for (var i = 0; i < lastTrial.length; ++i) {
             var ivNum = 'IV' + i;
 
-            if (lastTrial[i].parserFunc !== undefined && $.isFunction(lastTrial[i].parserFunc)){
+            if (lastTrial[i].parserFunc !== undefined && $.isFunction(lastTrial[i].parserFunc)){ //If a parserfunction is defined
                 var stdName = ivNum + '_' + lastTrial[i].description + '_value';
-                responseFormatted[stdName] = lastTrial[i].parserFunc(lastTrial[i], i);
+                responseFormatted[stdName] = lastTrial[i].parserFunc(lastTrial[i], i); //Last Trial, i
 
             } else if (lastTrial[i].value.constructor === Array) { //Consider these to be defaults for javascript primitive types
                 /*Manually write out each array entry to a field in the object*/
                 for (var j = 0; j < lastTrial[i].value.length; ++j) {
                     var char = j.toString();
-
-
                     responseFormatted[ivNum + '_' + char + '_' + lastTrial[i].description + '_value'] =  lastTrial[i].value[j];//optionallyParseTrialValue(lastTrial[i].parserFunc, lastTrial[i].value[j]);
-
                 }
 
             } else {
@@ -755,6 +793,10 @@
     /**OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT **/
     /**OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT **/
     /**OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT **/
+    exports.forceOutputResponses = function(){
+        outputResponses(responses, true);
+    };
+
     function outputResponses(allResponses, log) {
 
         if (allResponses.length === 0) return;
@@ -767,14 +809,14 @@
         /** Make the header*/
         csvString += 'Participant Name, Participant Number, '; //Manually add header
         for (var i = 0; i < keys.length; i++) {
-            csvString += keys[i] + ', ';
+            csvString += keys[i] + ',';
         }
         csvString = csvString.slice(0, -1) + '\n';//Cut trailing comma and put in a new row/line
 
         /** Fill the data - This time its an array of arrays not array of dictionaries */
         for (i = 0; i < allResponses.length; i++) {
 
-            csvString += pptName + ', ' + pptNo + ', '; //Manaully add content
+            csvString += pptName + ',' + pptNo + ','; //Manaully add content
 
             for (var j = 0; j < keys.length; j++) { //Iterate over the keys to get teh values
 
@@ -782,7 +824,7 @@
                 console.log('writing this raw value ', value, keys[j]);
                 //value = checkReturnProps( value, true ) || value;  //Parse out relevant object fields
                 //console.log('Afer it was parsed:', value, '\n*********');
-                csvString += value + ', ';
+                csvString += value + ',';
             }
 
             csvString = csvString.slice(0, -1) + '\n'; //Cut trailing comma and put in a new row/line

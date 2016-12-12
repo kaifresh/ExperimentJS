@@ -1,9 +1,8 @@
 
-//MERGED 
+//MERGED
 (function( exports ) {
 
     /*jslint es5: true, camelcase: false, quotmark: false */
-
     exports.test = function(){
         alert("testing!");
     };
@@ -11,7 +10,6 @@
     /**
      * TODO: Take all 2AFC out of the main file and put it in its own submodule that can be 'added on'...
      * */
-
 
     /** ~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs **/
     /** ~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs **/
@@ -29,20 +27,29 @@
 
     window.IVs = {};
 
+    //Functions are stored here, keyed by their IV name (i.e. .description)
+    window.setFuncs = {};
+
     /** Every IV requires 2 steps: creating the levels and then, setting the target */
     exports.setIVLevels = function (ivname, levels) {
         setIVGeneric(ivname, 'levels', levels);
     };
 
-    exports.setIVSetOn = function (ivname, setOn) {
-        setIVGeneric(ivname, 'setOn', setOn);
-    };
-    exports.setIVSetArgs = function (ivname, setArgs) {
-        setIVGeneric(ivname, 'setArgs', setArgs);
-    };
     exports.setIVsetFunc = function(ivname, setFunc) {
-        setIVGeneric(ivname, 'setFunc', setFunc);
+
+        //This is now a flag to notify ExperimentJS that you're using functions
+        setIVGeneric(ivname, 'setFunc', true);
+
+        //Functions are now stored in their own map, keyed by ivname
+        setSetFunc(ivname, setFunc);
     };
+
+    function setSetFunc(ivname, setfunc){
+        window.setFuncs[ivname] = setfunc;
+    }
+
+
+    /** ~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~*/
 
     var didSet2AFC = false;
     exports.setIV2AFCStd = function (ivname, std_2AFC) { //Levels for 2AFC (move to separate file somehow)
@@ -55,7 +62,6 @@
     };
 
 
-
     /** TODO: an option to UNSET these thangs */
 
 
@@ -63,12 +69,12 @@
     /** ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER */
     /** ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER ~~~~~~ CUSTOM TRIAL PARSER */
     /*
-    The trial value will always be passed in as the first argument
-    The type of that trial value will be the first non array-of-arrays in the experiment
-    parserFuncs are passed args in this order (trialIV, i)
-    parserFuncs must return the formatted value
-    This assumes you know the content of the trial value, which you should....
-    */
+     The trial value will always be passed in as the first argument
+     The type of that trial value will be the first non array-of-arrays in the experiment
+     parserFuncs are passed args in this order (trialIV, i)
+     parserFuncs must return the formatted value
+     This assumes you know the content of the trial value, which you should....
+     */
     exports.setIVTrialParserFunc = function (ivname, parserFunc) {
         setIVGeneric(ivname, 'parserFunc', parserFunc);
     };
@@ -116,6 +122,8 @@
 
             console.log("Extending all trials array with:", iv, ". Levels =", window.IVs[iv].levels.length);
 
+            if (window.setFuncs[iv] === undefined) throw new Error("SetFunc not defined for " + iv);
+
             temp = [];
 
             var len = allTrials.length === 0 ? 1 : allTrials.length; // For the first pass
@@ -129,7 +137,7 @@
 
                     /** Set the value & description of the current IV obj 4 the current Level */
                     var curIVLevel = {};
-                    curIVLevel.description = camelToSentenceCase(iv);
+                    curIVLevel.description = iv; //camelToSentenceCase(iv);
                     curIVLevel.value = window.IVs[iv].levels[j];
 
                     /** Store 2AFC std with each trial (if present) */
@@ -142,26 +150,11 @@
                         curIVLevel.std_2AFC_simultaneous_target = window.IVs[iv].std_2AFC_simultaneous_target;
                     }
 
-                    /** IVs - Options for how to communicate with the display:
-                     1. .SetOn - This sets the value for a property on an object - Specifically, this set value is looked
-                     at by the external code in the render loop
-
-                     2. .SetArgs - this changes a property of an object that can only be changed by calling a method
-                     */
-
-                    /** Type 1 */
-                    if (window.IVs[iv].setOn !== undefined) {
-                        curIVLevel.setOn = window.IVs[iv].setOn;
-                    }
-                    /** Type 2 */
-                    if (window.IVs[iv].setArgs !== undefined) {
-                        curIVLevel.setArgs = window.IVs[iv].setArgs;
-                    }
-                    /** Type 3*/
-                    if (window.IVs[iv].setFunc !== undefined) {
-                        curIVLevel.setFunc = window.IVs[iv].setFunc;
-                    }
-
+                    /** SETTER FUNTIONS - Setting display properties via a function
+                     * These are only storing a boolean True flag. */
+                    // if (window.IVs[iv].setFunc !== undefined) {
+                    //     curIVLevel.setFunc = window.IVs[iv].setFunc;
+                    // }
 
                     /** Parser function*/
                     if (window.IVs[iv].parserFunc !== undefined) {
@@ -214,49 +207,146 @@
         didBuildTrials = true;
     }
 
-    exports.saveBuiltTrials = function(key){
+    exports.clearSaves = function(){
+        localStorage.removeItem("experimentJSsaves");/////
+    };
 
-        if (typeof(Storage) !== "undefined"){
+    exports.saveBuiltTrialsAndResponses = function(key) {
 
+        // localStorage.clear();
 
-            localStorage.BALLS = 187;
+        errorCheckSavingParsers();
 
-            console.log(localStorage.BALLS);
+        if (typeof(Storage) !== "undefined") {
 
-            // if (localStorage.experimentJSsaves === undefined){
-            //     localStorage.experimentJSsaves = {};
-            // }
+            // localStorage.experimentJSsaves = undefined;
+
+            //Parse your trials, using the custom serializer..
+            var trialsForSaving = exports.parseTrialsForSaving(allTrials);
+            var responsesForSaving = exports.parseResponsesForSaving(responses);
+
+            //JSONify the trials and responses
+            var experimentJSsaves = {};
+            experimentJSsaves['trials'] = trialsForSaving;
+            experimentJSsaves['responses'] = responsesForSaving;
+
+            var msg = prompt("Add a message to this save!");
+
+            if (msg === null){
+                alert("Trials will not be saved");
+                return;
+            }
 
             var dateKey = (new Date()).toUTCString(); //Very clear date
 
-            var experimentJSsaves = {};
-            experimentJSsaves[dateKey] = {};
-            experimentJSsaves[dateKey]['trials'] = allTrials;
-            // experimentJSsaves[dateKey]['responses'] = responses;
-            console.log(allTrials);
+            //Make a new dictionary or get the old one
+            var keyed_by_dates = (localStorage.experimentJSsaves === undefined) ? {} : JSON.parse(localStorage.experimentJSsaves);
 
+            //save to it
+            keyed_by_dates[msg + " - " +dateKey] = experimentJSsaves;
 
-            localStorage.experimentJSsaves = JSON.stringify(experimentJSsaves);
-            console.log(localStorage.experimentJSsaves);
+            //serialize!
+            localStorage.experimentJSsaves = JSON.stringify(keyed_by_dates);
 
-
-            // //Store trials by their date
-            // localStorage.experimentJSsaves[dateKey] = {};
-            //
-            // localStorage.experimentJSsaves['test'] = "HEY";
-            // console.log(">>>", localStorage.experimentJSsaves['test']);
-            // // alert("someting is undefiend lolool.");
-            // console.log(dateKey);
-            // console.log( Object.keys(localStorage.experimentJSsaves) );
-            // // console.log( Object.keys(localStorage['experimentJSsaves']["0"]) );
-            // //
-            // // localStorage['experimentJSsaves'][dateKey]['trials'] = allTrials; //Store remaining trials
-            // // localStorage['experimentJSsaves'][dateKey]['responses'] = responses; //Store responses so far
-            // //
-            // //
-            // // console.log(localStorage['experimentJSsaves']);
+            console.log("SAVED THE HSIT", JSON.parse(localStorage.experimentJSsaves));
         }
     };
+
+    exports.setSavedTrialsAndResponses = function(){
+        errorCheckSavingParsers();
+
+        var all_saves = JSON.parse(localStorage.experimentJSsaves);
+        
+        console.log("all saves+ ", all_saves);
+
+
+        var select_bits = createDropDownSelect(all_saves);
+        select_bits.button.click(function(){
+
+            var temp_using = select_bits.select.find(":selected").text();
+
+            temp_using = all_saves[temp_using];
+
+            allTrials = exports.unparseSavedTrials(temp_using['trials']);
+            responses = exports.unparseSavedResponses(temp_using['responses']);
+            if (responses === undefined || responses === null) responses = [];
+
+            console.log("restored all trials: ", allTrials);
+            console.log("restored all responses: ", responses);
+
+            exports.runNextTrial();
+
+
+            //Remove select from dom
+            select_bits.wrap.remove();
+        });
+
+        select_bits.button_clear.click(function(){
+
+            if (confirm("Are you sure you want to delete all saved experiments?")){
+                exports.clearSaves();
+            }
+
+            //Remove select from dom
+            select_bits.wrap.remove();
+        });
+
+    };
+
+    exports.parseTrialsForSaving = undefined;
+    exports.parseResponsesForSaving = undefined;
+    exports.unparseSavedTrials = undefined;
+    exports.unparseSavedResponses = undefined;
+
+    function errorCheckSavingParsers(){
+        if (exports.parseTrialsForSaving === undefined) throw new Error("Cannot restore trials without parsing function");
+        if (exports.parseResponsesForSaving === undefined) throw new Error("Cannot restore responses without parsing function");
+        if (exports.unparseSavedTrials === undefined) throw new Error("Cannot restore trials without UNparsing function");
+        if (exports.unparseSavedResponses === undefined) throw new Error("Cannot restore responses without UNparsing function");
+    }
+
+    function createDropDownSelect(all_saves){
+
+       var div = $("<div>", {
+            id: "saved_info"
+        });
+
+        //Make a select to choose from the saves
+        var sel = $('<select>');
+        Object.keys(all_saves).map(function(elem, i, all){
+            //Use the index as the key
+            sel.append($("<option>").attr("value",i).text(elem));
+        });
+
+
+        //Button - no functionality here, just view
+        var b = $("<button>").text("Choose");
+        var b_clear = $("<button>").text("Clear");
+
+        div.append(sel);
+        div.append($("<br>"));
+        div.append(b);
+        div.append(b_clear);
+        $(document.body).append(div);
+
+        div.css({
+            position: "fixed",
+            top: "45vh",
+            left: "25vw",
+            width: "50vw",
+            height: "5vh",
+            background: "white",
+            border: "2vw",
+            "text-align": "center"
+        });
+
+        return {
+            select: sel,
+            button: b,
+            button_clear: b_clear,
+            wrap: div
+        }
+    }
 
     /**
      * NOTE: We no longer handle appearance or input. These are out of the scope of this module.
@@ -477,7 +567,7 @@
             background: 'black'
         }
     });
-    
+
     $(document.body).append(blackOut);
     $('#interstimulus-pause').hide();
 
@@ -595,136 +685,113 @@
 
     /** This sets the appearance of each individual element in the display. CHanging via either props or methods */
     function setObjectAppearanceProperties(curProp) {
-        
-        /** TYPE 1: Variables that must be SET*/
-        if (curProp.hasOwnProperty('setOn')) {
 
-            /*Set on can be an array or a single object reference*/
-            var setOn = curProp.setOn;
-
-
-            // if (Array.isArray(setOn)) {
-            //     for (var k = 0; k < setOn.length; k++) {
-            //         runSetOn(setOn[k].target, setOn[k].prop, curProp.value);// setOn[k].target[ setOn[k].prop ] = curProp.value;
-            //     }
-            // } else { //Could remove this and always make set on an array
-            //     runSetOn(curProp.setOn.target, curProp.setOn.prop, curProp.value); //curProp.setOn.target[ curProp.setOn.prop ] = curProp.value;
-            // }
-
-
-            if (Array.isArray(setOn)) {
-
-                //runSetArgsRecursive(setArgs, curProp.value); //TODO - write tests
-                runSetterRecursive(setOn, curProp.value, runSetOn); //TODO - write tests
-            } else {
-
-
-                runSetOn(setOn.target, setOn.prop, curProp.value);
-                // setArgs.target[ setArgs.prop ].apply( setArgs.target, curProp.value);
-            }
-
-        }
-        /** TYPE 2: Variables SET via a method on the Target*/
-        else if (curProp.hasOwnProperty('setArgs')) {
-
-            var setArgs = curProp.setArgs;
-
-            if (Array.isArray(setArgs)) {
-                //runSetArgsRecursive(setArgs, curProp.value); //TODO - write tests
-                runSetterRecursive(setArgs, curProp.value, runSetArgs); //TODO - write tests
-            } else {
-                runSetArgs(setArgs.target, setArgs.prop, curProp.value);
-                // setArgs.target[ setArgs.prop ].apply( setArgs.target, curProp.value);
-            }
-
-            /** .apply() lets you pass args in as an array.
-             * NOTE: With args .prop is a **method** on .target you are calling via apply() - and passing arguments that way
-             *
-             * NOTE: the 1st argument of .apply() is what `this` will point to within the called function
-             */
-        }
         /** TYPE 3: Using a FUNCTION to set the display*/
-        else if (curProp.hasOwnProperty('setFunc')) {
-            runSetFunc(curProp.setFunc, curProp.value); //
-        }
-        
-    }
-
-    /** TODO - make these changes generic enough for SET ON too...*/
-    /** TODO - make these changes generic enough for SET ON too...*/
-    /** TODO - make these changes generic enough for SET ON too...*/
-    /** TODO - make these changes generic enough for SET ON too...*/
-
-    function runSetterRecursive(target_and_property, value, baseSetterFunc) {
-        if (isArrayOfArrays(value)) {
-            for (var i = 0; i < value.length; ++i) {
-                runSetterRecursive(target_and_property, value[i]);
-            }
+        if ( window.setFuncs[curProp.description] !== undefined ) {
+            window.setFuncs[curProp.description].apply(null, curProp.value);
         } else {
-            console.log("REACHED BASE!", target_and_property, "value: ", value);
-            runSetterBase(target_and_property, value, baseSetterFunc);
+            throw new Error("No setter function supplied by");
+            console.log(curProp);
         }
+
+
+        /**
+         *
+         *              ABANDON SETON & SETARGS in an upcoming version. SETFUNC is much simpler
+         *
+         *
+         *
+         * */
+
+        // /** TYPE 1: Variables that must be SET*/
+        // if (curProp.hasOwnProperty('setOn')) {
+        //
+        //     /*Set on can be an array or a single object reference*/
+        //     var setOn = curProp.setOn;
+        //
+        //
+        //     // if (Array.isArray(setOn)) {
+        //     //     for (var k = 0; k < setOn.length; k++) {
+        //     //         runSetOn(setOn[k].target, setOn[k].prop, curProp.value);// setOn[k].target[ setOn[k].prop ] = curProp.value;
+        //     //     }
+        //     // } else { //Could remove this and always make set on an array
+        //     //     runSetOn(curProp.setOn.target, curProp.setOn.prop, curProp.value); //curProp.setOn.target[ curProp.setOn.prop ] = curProp.value;
+        //     // }
+        //
+        //
+        //     if (Array.isArray(setOn)) {
+        //
+        //         //runSetArgsRecursive(setArgs, curProp.value); //TODO - write tests
+        //         runSetterRecursive(setOn, curProp.value, runSetOn); //TODO - write tests
+        //     } else {
+        //
+        //
+        //         runSetOn(setOn.target, setOn.prop, curProp.value);
+        //         // setArgs.target[ setArgs.prop ].apply( setArgs.target, curProp.value);
+        //     }
+        //
+        // }
+        // /** TYPE 2: Variables SET via a method on the Target*/
+        // else if (curProp.hasOwnProperty('setArgs')) {
+        //
+        //     var setArgs = curProp.setArgs;
+        //
+        //     if (Array.isArray(setArgs)) {
+        //         //runSetArgsRecursive(setArgs, curProp.value); //TODO - write tests
+        //         runSetterRecursive(setArgs, curProp.value, runSetArgs); //TODO - write tests
+        //     } else {
+        //         runSetArgs(setArgs.target, setArgs.prop, curProp.value);
+        //         // setArgs.target[ setArgs.prop ].apply( setArgs.target, curProp.value);
+        //     }
+        //
+        //     /** .apply() lets you pass args in as an array.
+        //      * NOTE: With args .prop is a **method** on .target you are calling via apply() - and passing arguments that way
+        //      *
+        //      * NOTE: the 1st argument of .apply() is what `this` will point to within the called function
+        //      */
+        // }
+
+
     }
 
-    // function runSetArgsRecursive(setArgs, value) {
+    /** TODO - REMOVE THESE.*/
+    /** TODO - REMOVE THESE.*/
+    /** TODO - REMOVE THESE.*/
+    /** TODO - REMOVE THESE.*/
+    /** TODO - REMOVE THESE.*/
+
+    //
+    // function runSetterRecursive(target_and_property, value, baseSetterFunc) {
     //     if (isArrayOfArrays(value)) {
     //         for (var i = 0; i < value.length; ++i) {
-    //             runSetArgsRecursive(setArgs, value[i]);
+    //             runSetterRecursive(target_and_property, value[i]);
     //         }
     //     } else {
-    //         runSetArgsBase(setArgs, value);
-    //     }
-    // }
-
-    function runSetterBase(target_and_prop, value, baseSetterFunc){
-        if (Array.isArray(target_and_prop)){
-            for (var k = 0; k < target_and_prop.length; k++) {
-                baseSetterFunc(target_and_prop[k].target, target_and_prop[k].prop, value);
-            }
-        } else {
-            baseSetterFunc(target_and_prop.target, target_and_prop.prop, value);
-        }
-    }
-
-    // function runSetArgsBase(setArgs, value) { //This code was originally used as the main
-    //     if (Array.isArray(setArgs)){
-    //         for (var k = 0; k < setArgs.length; k++) {
-    //             runSetArgs(setArgs[k].target, setArgs[k].prop, value);
-    //             // setArgs[k].target[ setArgs[k].prop ].apply(setArgs[k].target, curProp.value);
-    //         }
-    //     } else {
-    //         runSetArgs(setArgs.target, setArgs.prop, value);
+    //         console.log("REACHED BASE!", target_and_property, "value: ", value);
+    //         runSetterBase(target_and_property, value, baseSetterFunc);
     //     }
     // }
     //
-    // function runSetOnBase(setOn, value) { //This code was originally used as the main
-    //
-    //     if (Array.isArray(setOn)){
-    //         for (var k = 0; k < setOn.length; k++) {
-    //             runSetOn(setOn[k].target, setOn[k].prop, value);
-    //             // setOn[k].target[ setOn[k].prop ].apply(setOn[k].target, curProp.value);
+    // function runSetterBase(target_and_prop, value, baseSetterFunc){
+    //     if (Array.isArray(target_and_prop)){
+    //         for (var k = 0; k < target_and_prop.length; k++) {
+    //             baseSetterFunc(target_and_prop[k].target, target_and_prop[k].prop, value);
     //         }
     //     } else {
-    //         runSetOn(setOn.target, setOn.prop, value);
+    //         baseSetterFunc(target_and_prop.target, target_and_prop.prop, value);
     //     }
+    // }
     //
+
+    //TODO - remove these
+    // function runSetArgs(target, prop, value) {
+    //     target[prop].apply(target, value);
+    // }
+    //
+    // function runSetOn(target, prop, value) {
+    //     target[prop] = value;
     // }
 
-
-
-    function runSetArgs(target, prop, value) {
-        target[prop].apply(target, value);
-    }
-
-
-
-    function runSetOn(target, prop, value) {
-        target[prop] = value;
-    }
-
-    function runSetFunc(func, args){
-        func.apply(null, args);
-    }
 
 
 
@@ -734,6 +801,8 @@
      *
      * Cant use 'setObjectAppearanceProperties' because the 2AFC feature is outside hte normal flow of factors!s
      * */
+
+    console.log("using setFUnc breaks 2AFC methods....correct this");
     exports.set2AFCStd = function () {
 
         if (!errorCheck2AFC()) return;
@@ -748,6 +817,10 @@
             for (var i = 0; i < curTargetLevel.std_2AFC_simultaneous_target.length; ++i) {
 
                 var level = curTargetLevel.std_2AFC_simultaneous_target[i];
+
+                // if (curProp.hasOwnProperty('setFunc')) {
+                //     curProp.setFunc.apply(null, curProp.value);
+                // }
 
                 runSetOn(level.target, level.prop, curTargetLevel.std_2AFC); //Should write in set args
                 // level.target[ level.prop ] = curTargetLevel.std_2AFC;
@@ -835,24 +908,35 @@
         for (var i = 0; i < lastTrial.length; ++i) {
             var ivNum = 'IV' + i;
 
+            //If a parser is defined use its output as the value of the response
             if (lastTrial[i].parserFunc !== undefined && $.isFunction(lastTrial[i].parserFunc)){
                 var stdName = ivNum + '_' + lastTrial[i].description + '_value';
                 responseFormatted[stdName] = lastTrial[i].parserFunc(lastTrial[i], i);
 
             } else if (lastTrial[i].value.constructor === Array) { //Consider these to be defaults for javascript primitive types
-                /*Manually write out each array entry to a field in the object*/
-                for (var j = 0; j < lastTrial[i].value.length; ++j) {
-                    var char = j.toString();
 
+                /** Manually write out each argument (from an array) to a field in the object
+                *  Only append a number if there are >1 arguments passed in */
 
-                    responseFormatted[ivNum + '_' + char + '_' + lastTrial[i].description + '_value'] =  lastTrial[i].value[j];//optionallyParseTrialValue(lastTrial[i].parserFunc, lastTrial[i].value[j]);
+                if (lastTrial[i].value.length > 1){
+
+                    //If using a setFunc function with multiple args -> use the arg names to describe the values written to the response
+                    var arg_names, arg_name;
+                    if ( lastTrial[i].hasOwnProperty("setFunc") ) arg_names = getParamNames( window.setFuncs[lastTrial[i].description] );
+
+                    for (var j = 0; j < lastTrial[i].value.length; ++j) {
+                        arg_name = lastTrial[i].hasOwnProperty("setFunc") ? arg_names[j] : j.toString();
+                        responseFormatted[ivNum + '_' + lastTrial[i].description + '_value_' + arg_name ] =  lastTrial[i].value[j];
+                    }
+
+                } else {
+
+                    responseFormatted[ ivNum + '_' + lastTrial[i].description + '_value' ] =  lastTrial[i].value[0];
 
                 }
 
             } else {
-
-                responseFormatted[ivNum + '_' + lastTrial[i].description + '_value'] = lastTrial[i].value;// = optionallyParseTrialValue(lastTrial[i].parserFunc, lastTrial[i].value);
-                // responseFormatted[ivNum+"_"+lastTrial[i].description+"_value"] = lastTrial[i].value;
+                responseFormatted[ivNum + '_' + lastTrial[i].description + '_value'] = lastTrial[i].value;
             }
 
             /** Add a value of the 2afc std (for the relevant IV) */
@@ -878,6 +962,7 @@
 
 
         console.log('STORED THIS RESPONSE: ', responseFormatted);
+
         responses.push(responseFormatted);
 
         // console.log("response constructed from: ", lastTrial);
@@ -918,7 +1003,7 @@
             for (var j = 0; j < keys.length; j++) { //Iterate over the keys to get teh values
 
                 var value = allResponses[i][keys[j]];
-                console.log('writing this raw value ', value, keys[j]);
+                // console.log('writing this raw value ', value, keys[j]);
                 //value = checkReturnProps( value, true ) || value;  //Parse out relevant object fields
                 //console.log('Afer it was parsed:', value, '\n*********');
                 csvString += value + ',';
@@ -933,7 +1018,7 @@
 
         /** Help out a machine today*/
         var csvContent = encodeURI('data:text/csv;charset=utf-8,' + csvString);
-        var a = createDownloadLink('results (' + pptName + ', ' + pptNo.toString() + ').csv', csvContent);
+        var a = createDownloadLink('results (' + pptName + ',' + pptNo.toString() + ').csv', csvContent);
         document.body.appendChild(a);
         a.click();
     }
@@ -994,6 +1079,23 @@
     function camelToSentenceCase(str) {
         return str.split(/(?=[A-Z])/).join(' ').toLowerCase();
     }
+    
+    function getParamNames(fn){
+        //wrap these so as not to pollute the namespace
+        var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
+        var ARGUMENT_NAMES = /([^\s,]+)/g;
+        function _getParamNames(func) {
+            var fnStr = func.toString().replace(STRIP_COMMENTS, '');
+            var result = fnStr.slice(fnStr.indexOf('(')+1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
+            if(result === null)
+                result = [];
+            return result;
+        }
+
+       return _getParamNames(fn);
+    }
+    
+
 })( this.ExperimentJS = {} );
 
 

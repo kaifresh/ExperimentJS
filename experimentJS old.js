@@ -248,7 +248,7 @@
             //serialize!
             localStorage.experimentJSsaves = JSON.stringify(keyed_by_dates);
 
-            console.log("SAVED THE SHIT", JSON.parse(localStorage.experimentJSsaves));
+            console.log("SAVED THE HSIT", JSON.parse(localStorage.experimentJSsaves));
         }
     };
 
@@ -642,7 +642,9 @@
                 midTrialCallBack();
             }
         }
+
     }
+
 
     /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~GAME LOOP SUB FUNCTIONS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~GAME LOOP SUB FUNCTIONS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -691,7 +693,107 @@
             throw new Error("No setter function supplied by");
             console.log(curProp);
         }
+
+
+        /**
+         *
+         *              ABANDON SETON & SETARGS in an upcoming version. SETFUNC is much simpler
+         *
+         *
+         *
+         * */
+
+        // /** TYPE 1: Variables that must be SET*/
+        // if (curProp.hasOwnProperty('setOn')) {
+        //
+        //     /*Set on can be an array or a single object reference*/
+        //     var setOn = curProp.setOn;
+        //
+        //
+        //     // if (Array.isArray(setOn)) {
+        //     //     for (var k = 0; k < setOn.length; k++) {
+        //     //         runSetOn(setOn[k].target, setOn[k].prop, curProp.value);// setOn[k].target[ setOn[k].prop ] = curProp.value;
+        //     //     }
+        //     // } else { //Could remove this and always make set on an array
+        //     //     runSetOn(curProp.setOn.target, curProp.setOn.prop, curProp.value); //curProp.setOn.target[ curProp.setOn.prop ] = curProp.value;
+        //     // }
+        //
+        //
+        //     if (Array.isArray(setOn)) {
+        //
+        //         //runSetArgsRecursive(setArgs, curProp.value); //TODO - write tests
+        //         runSetterRecursive(setOn, curProp.value, runSetOn); //TODO - write tests
+        //     } else {
+        //
+        //
+        //         runSetOn(setOn.target, setOn.prop, curProp.value);
+        //         // setArgs.target[ setArgs.prop ].apply( setArgs.target, curProp.value);
+        //     }
+        //
+        // }
+        // /** TYPE 2: Variables SET via a method on the Target*/
+        // else if (curProp.hasOwnProperty('setArgs')) {
+        //
+        //     var setArgs = curProp.setArgs;
+        //
+        //     if (Array.isArray(setArgs)) {
+        //         //runSetArgsRecursive(setArgs, curProp.value); //TODO - write tests
+        //         runSetterRecursive(setArgs, curProp.value, runSetArgs); //TODO - write tests
+        //     } else {
+        //         runSetArgs(setArgs.target, setArgs.prop, curProp.value);
+        //         // setArgs.target[ setArgs.prop ].apply( setArgs.target, curProp.value);
+        //     }
+        //
+        //     /** .apply() lets you pass args in as an array.
+        //      * NOTE: With args .prop is a **method** on .target you are calling via apply() - and passing arguments that way
+        //      *
+        //      * NOTE: the 1st argument of .apply() is what `this` will point to within the called function
+        //      */
+        // }
+
+
     }
+
+    /** TODO - REMOVE THESE.*/
+    /** TODO - REMOVE THESE.*/
+    /** TODO - REMOVE THESE.*/
+    /** TODO - REMOVE THESE.*/
+    /** TODO - REMOVE THESE.*/
+
+    //
+    // function runSetterRecursive(target_and_property, value, baseSetterFunc) {
+    //     if (isArrayOfArrays(value)) {
+    //         for (var i = 0; i < value.length; ++i) {
+    //             runSetterRecursive(target_and_property, value[i]);
+    //         }
+    //     } else {
+    //         console.log("REACHED BASE!", target_and_property, "value: ", value);
+    //         runSetterBase(target_and_property, value, baseSetterFunc);
+    //     }
+    // }
+    //
+    // function runSetterBase(target_and_prop, value, baseSetterFunc){
+    //     if (Array.isArray(target_and_prop)){
+    //         for (var k = 0; k < target_and_prop.length; k++) {
+    //             baseSetterFunc(target_and_prop[k].target, target_and_prop[k].prop, value);
+    //         }
+    //     } else {
+    //         baseSetterFunc(target_and_prop.target, target_and_prop.prop, value);
+    //     }
+    // }
+    //
+
+    //TODO - remove these
+    // function runSetArgs(target, prop, value) {
+    //     target[prop].apply(target, value);
+    // }
+    //
+    // function runSetOn(target, prop, value) {
+    //     target[prop] = value;
+    // }
+
+
+
 
     /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ METHODS FOR HANDLING 2AFC FLIPPING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
@@ -820,10 +922,10 @@
 
                     //If using a setFunc function with multiple args -> use the arg names to describe the values written to the response
                     var arg_names, arg_name;
-                     arg_names = getParamNames( window.setFuncs[lastTrial[i].description] );
+                    if ( lastTrial[i].hasOwnProperty("setFunc") ) arg_names = getParamNames( window.setFuncs[lastTrial[i].description] );
 
                     for (var j = 0; j < lastTrial[i].value.length; ++j) {
-                        arg_name = arg_names[j];
+                        arg_name = lastTrial[i].hasOwnProperty("setFunc") ? arg_names[j] : j.toString();
                         responseFormatted[ivNum + '_' + lastTrial[i].description + '_value_' + arg_name ] =  lastTrial[i].value[j];
                     }
 

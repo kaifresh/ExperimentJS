@@ -14,7 +14,8 @@
     /** ~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs **/
     /** ~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs **/
     /** ~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs~~ ** SET IVs and DVs **/
-
+    
+    // <<ported>>
     function setIVGeneric(ivName, fieldName, fieldVal) {
         csvFodderCheck(ivName);
         csvFodderCheck(fieldName);
@@ -25,16 +26,20 @@
         window.IVs[ivName][fieldName] = fieldVal;
     }
 
+    // <<ported>>
     window.IVs = {};
 
+    // <<ported>>
     //Functions are stored here, keyed by their IV name (i.e. .description)
     window.setFuncs = {};
 
+    // <<ported>>
     /** Every IV requires 2 steps: creating the levels and then, setting the target */
     exports.setIVLevels = function (ivname, levels) {
         setIVGeneric(ivname, 'levels', levels);
     };
 
+    // <<ported>>
     exports.setIVsetFunc = function(ivname, setFunc) {
 
         //This is now a flag to notify ExperimentJS that you're using functions
@@ -44,6 +49,7 @@
         setSetFunc(ivname, setFunc);
     };
 
+    // <<ported>>
     function setSetFunc(ivname, setfunc){
         window.setFuncs[ivname] = setfunc;
     }
@@ -92,6 +98,7 @@
         }
     };
 
+    // <<ported>>
     function csvFodderCheck(string){
 
         if (typeof string !== "string"){

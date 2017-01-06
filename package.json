@@ -1,24 +1,28 @@
 {
   "name": "experimentJS",
   "version": "0.0.1",
-  "description": "A experiment framework",
+  "description": "An experiment framework",
   "files": [
     "src"
   ],
   "scripts": {
     "demo": "echo lol",
     "build": "rollup -c",
-    "build-uglify": "rollup -c && uglifyjs build/three.js -cm --preamble \"// threejs.org/license\" > build/three.min.js",
+    "build-uglify-old": "rollup -c && uglifyjs build/three.js -cm --preamble \"// threejs.org/license\" > build/three.min.js",
+    "build-uglify": "rollup -c && uglifyjs build/experimentJS.js > build/experimentJS.min.js",
     "build-closure": "rollup -c && java -jar utils/build/compiler/closure-compiler-v20160713.jar --warning_level=VERBOSE --jscomp_off=globalThis --jscomp_off=checkTypes --externs utils/build/externs.js --language_in=ECMASCRIPT5_STRICT --js build/three.js --js_output_file build/three.min.js",
     "dev": "rollup -c -w",
     "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
+    "concat-map": "0.0.1",
     "eslint": "^3.12.2",
     "eslint-config-mdcs": "^4.2.2",
+    "os-homedir": "^1.0.2",
     "rollup": "^0.36.4",
     "rollup-watch": "^2.5.0",
+    "strip-ansi": "^3.0.1",
     "uglify-js": "^2.6.0"
   }
 }

@@ -10,14 +10,14 @@ var expRepeats = 1;
 
 /** Every IV requires 2 steps: creating the levels and then, setting the target */
 Trials.setIVLevels = function (ivname, levels) {
-    _setIVGeneric(ivname, 'levels', levels);
+    _setIVGeneric(ivname, "levels", levels);
 };
 
 
 Trials.setIVsetFunc = function(ivname, setFunc) {
 
-    //This is now a flag to notify ExperimentJS that you're using functions
-    _setIVGeneric(ivname, 'setFunc', true);
+    //This is now a flag to notify ExperimentJS that you"re using functions
+    _setIVGeneric(ivname, "setFunc", true);
 
     //Functions are now stored in their own map, keyed by ivname
     _setSetFunc(ivname, setFunc);
@@ -26,7 +26,7 @@ Trials.setIVsetFunc = function(ivname, setFunc) {
 export var _dvName;
 Trials.setDVName = function(dvName){
     if (typeof dvName === "string"){
-        _csvFodderCheck(dvName);
+        _csvIllegalCharCheck(dvName);
         _dvName = dvName;
     } else {
         throw  new Error("The supplied DV name must be of type String");
@@ -41,7 +41,7 @@ Trials.setDVName = function(dvName){
  This assumes you know the content of the trial value, which you should....
  */
 Trials.setIVTrialParserFunc = function (ivname, parserFunc) {
-    _setIVGeneric(ivname, 'parserFunc', parserFunc);
+    _setIVGeneric(ivname, "parserFunc", parserFunc);
 };
 
 
@@ -56,8 +56,8 @@ Trials.setRepeats = function (nRepeats) {
 /*
 * */
 export function _setIVGeneric(ivName, fieldName, fieldVal) { //used by 2AFC.js
-    _csvFodderCheck(ivName);
-    _csvFodderCheck(fieldName);
+    _csvIllegalCharCheck(ivName);
+    _csvIllegalCharCheck(fieldName);
     if (!IVs.hasOwnProperty(ivName)) { //If IV doenst exists make it as a raw object
         IVs[ivName] = {};
     }
@@ -74,14 +74,19 @@ function _setSetFunc(ivname, setfunc){
 //                                      Trials - Building
 // - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
 
-var _totalTrials = -1;
+var _totalTrials = -1;                                          //Assigned but never used
 export var _allTrials = [];
 export function _setAllTrials(alltrials){
     if (alltrials.constructor === Array){
-        _allTrials = alltrials
+        _allTrials = alltrials;
     }
 }
 
+Trials.getTrials = function(){
+    if (_allTrials.length > 0){
+        return $.extend(true, [], _allTrials);
+    }
+};
 
 export var _didBuildTrials = false;
 function _buildTrials(printTrials) {
@@ -111,21 +116,15 @@ function _buildTrials(printTrials) {
                 curIVLevel.value = IVs[iv].levels[j];
 
                 /** Store 2AFC std with each trial (if present) */
-                if (IVs[iv].hasOwnProperty('std_2AFC')) {
+                if (IVs[iv].hasOwnProperty("std_2AFC")) {
                     curIVLevel.std_2AFC = IVs[iv].std_2AFC;
                 }
 
                 /** For 2AFC that is simultaneous (as opposed to the flipping kind)*/
-                if (IVs[iv].hasOwnProperty('std_2AFC_simultaneous_target')) {
+                if (IVs[iv].hasOwnProperty("std_2AFC_simultaneous_target")) {
                     curIVLevel.std_2AFC_simultaneous_target = IVs[iv].std_2AFC_simultaneous_target;
                 }
-
-                /** SETTER FUNTIONS - Setting display properties via a function
-                 * These are only storing a boolean True flag. */
-                // if (IVs[iv].setFunc !== undefined) {
-                //     curIVLevel.setFunc = IVs[iv].setFunc;
-                // }
-
+                
                 /** Parser function*/
                 if (IVs[iv].parserFunc !== undefined) {
                     curIVLevel.parserFunc = IVs[iv].parserFunc; //Could write a copying method for all of these (that handles deep copying)
@@ -146,7 +145,7 @@ function _buildTrials(printTrials) {
             }
         }
 
-        /** Replace your previous trials with Temp (don't know who to do this in place) */
+        /** Replace your previous trials with Temp (don"t know who to do this in place) */
         _allTrials = temp;
     }
 
@@ -154,7 +153,7 @@ function _buildTrials(printTrials) {
     /** Duplicate the current factorial trials */
     var repeats = expRepeats;
     temp = [];
-    for (var i = 0; i < repeats; i++) {
+    for (i = 0; i < repeats; i++) {
         temp = temp.concat(_allTrials);
     }
     _allTrials = temp;
@@ -162,9 +161,9 @@ function _buildTrials(printTrials) {
 
     console.log("There are ", _allTrials.length, "trials (using", repeats, "repeats)");
     if (printTrials){
-        for (var i = 0; i < _allTrials.length; i++){
+        for (i = 0; i < _allTrials.length; i++){
             console.log("TRIAL ", i);
-            for (var j = 0; j < _allTrials[i].length; j++){
+            for (j = 0; j < _allTrials[i].length; j++){
                 console.log( _allTrials[i][j] );
             }
             console.log("******* ******* ******* *******");
@@ -195,7 +194,7 @@ Trials.buildExperiment = function (printTrials) {
 // - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
 //                                      Trials (subfunctions)
 // - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
-function _csvFodderCheck(string){
+function _csvIllegalCharCheck(string){
 
     if (typeof string !== "string"){
         throw new Error("You must supply a variable of type String for this method");
@@ -205,21 +204,5 @@ function _csvFodderCheck(string){
         throw new Error("Strings used by ExperimentJS may not contain commas: " + string);
     }
 }
-
-// Trials.prototype = Object.assign( Object.create )
-
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
-//
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
-
-// var Trials = {
-//     IVs: IVs,
-//     setFuncs: setFuncs,
-//     setIVGeneric: _setIVGeneric,
-//     setIVLevels: setIVLevels,
-//     setSetFunc: _setSetFunc,
-//     csvFodderCHeck: _csvFodderCheck
-// };
-
 
 export { Trials };

@@ -1,14 +1,11 @@
-/**
- * Created by kai on 5/1/17.
- */
-import { Trials,_allTrials, _setAllTrials, _didBuildTrials} from './Trials.js';
+import { Trials,_allTrials, _setAllTrials, _didBuildTrials} from "./Trials.js";
 import { _responses, _setResponses } from "./RunExperiment.js";
 
 
 var Saves = {};
 
-Saves.parseTrialsForSaving = undefined;
-Saves.parseResponsesForSaving = undefined;
+Saves.parseTrialsForSaving = undefined; //interface is (_allTrials)
+Saves.parseResponsesForSaving = undefined; //interface is (_responses)
 Saves.unparseSavedTrials = undefined;
 Saves.unparseSavedResponses = undefined;
 
@@ -20,16 +17,13 @@ function errorCheckSavingParsers(){
 }
 
 
-
 Saves.clearSaves = function(){
     localStorage.removeItem("experimentJSsaves");/////
 };
 
 
-Saves.saveBuiltTrialsAndResponses = function(key) {
-
-    // localStorage.clear();
-
+Saves.saveBuiltTrialsAndResponses = function() {
+    
     errorCheckSavingParsers();
 
     if (typeof(Storage) !== "undefined") {
@@ -37,13 +31,13 @@ Saves.saveBuiltTrialsAndResponses = function(key) {
         // localStorage.experimentJSsaves = undefined;
 
         //Parse your trials, using the custom serializer..
-        var trialsForSaving = exports.parseTrialsForSaving(_allTrials);
-        var responsesForSaving = exports.parseResponsesForSaving(_responses);
+        var trialsForSaving = Saves.parseTrialsForSaving(_allTrials);
+        var responsesForSaving = Saves.parseResponsesForSaving(_responses);
 
         //JSONify the trials and _responses
         var experimentJSsaves = {};
-        experimentJSsaves['trials'] = trialsForSaving;
-        experimentJSsaves['responses'] = responsesForSaving;
+        experimentJSsaves["trials"] = trialsForSaving;
+        experimentJSsaves["responses"] = responsesForSaving;
 
         var msg = prompt("Add a message to this save!");
 
@@ -63,7 +57,7 @@ Saves.saveBuiltTrialsAndResponses = function(key) {
         //serialize!
         localStorage.experimentJSsaves = JSON.stringify(keyed_by_dates);
 
-        console.log("SAVED THE SHIT", JSON.parse(localStorage.experimentJSsaves));
+        console.log("Saved Trials", JSON.parse(localStorage.experimentJSsaves));
     }
 };
 
@@ -83,8 +77,8 @@ Saves.setSavedTrialsAndResponses = function(){
 
         temp_using = all_saves[temp_using];
 
-        _setAllTrials( Saves.unparseSavedTrials(temp_using['trials']) );
-        _setResponses( Saves.unparseSavedResponses(temp_using['responses']) );
+        _setAllTrials( Saves.unparseSavedTrials(temp_using["trials"]) );
+        _setResponses( Saves.unparseSavedResponses(temp_using["responses"]) );
         if (_responses === undefined || _responses === null) _setResponses( [] );
 
         console.log("restored all trials: ", _allTrials);
@@ -99,7 +93,7 @@ Saves.setSavedTrialsAndResponses = function(){
     select_bits.button_clear.click(function(){
 
         if (confirm("Are you sure you want to delete all saved experiments?")){
-            exports.clearSaves();
+            Saves.clearSaves();
         }
 
         //Remove select from dom
@@ -116,7 +110,7 @@ function _createDropDownSelect(all_saves){
     });
 
     //Make a select to choose from the saves
-    var sel = $('<select>');
+    var sel = $("<select>");
     Object.keys(all_saves).map(function(elem, i, all){
         //Use the index as the key
         sel.append($("<option>").attr("value",i).text(elem));
@@ -149,7 +143,7 @@ function _createDropDownSelect(all_saves){
         button: b,
         button_clear: b_clear,
         wrap: div
-    }
+    };
 }
 
 

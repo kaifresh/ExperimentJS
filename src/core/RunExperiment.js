@@ -2,6 +2,7 @@
 import { Trials, setFuncs, _allTrials, _didBuildTrials, _dvName } from "./Trials.js";
 import { _interstimulusPause, _shouldInterstimulusPause } from "./InterstimulusPause.js";
 import { createDownloadLink } from "../utils/CreateDownloadLink.js";
+import { getParamNames } from "../utils/StringUtils.js";
 
 // - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
 //                                      Run Experiment - Get Participant Info
@@ -60,7 +61,7 @@ Trials.runNextTrial = function (settings) { // usage -> runNextTrial({shouldStor
 
         // TODO: Change the implementation of the mid callback - Just check the length of the _responses array vs the alltrials array..
 
-        if (_shouldRunMidCallback()) {
+        if (_shouldRunMidCallback() && _midCallback !== null) {
             _midCallback();
         }
 
@@ -101,7 +102,7 @@ Trials.runNextTrial = function (settings) { // usage -> runNextTrial({shouldStor
 
 
 var _didRunMidCallback = false;
-var _midCallback;
+var _midCallback = null;
 Trials.setMidCallback = function (value) {
     if (typeof value === "function"){
         _midCallback = value;
@@ -111,7 +112,6 @@ Trials.setMidCallback = function (value) {
 };
 
 function _shouldRunMidCallback() {
-
     if (_didRunMidCallback) return false;
 
     //Mid point = there are as many responses as trials (or a difference of one for odd number of trials)
@@ -124,14 +124,13 @@ function _shouldRunMidCallback() {
 // - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
 //                                  Run Experiment - End Callback
 // - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
-var _endCallBack;
+var _endCallBack = null;
 Trials.setEndCallback = function (value) {
     if (typeof value === "function"){
         _endCallBack = value;
     }   else {
         throw new Error("Only functions may be assigned to the end callback");
     }
-
 };
 
 
@@ -187,7 +186,8 @@ function _storeResponse(options) {
         //If a parser is defined use its output as the value of the response
         if (lastTrial[i].parserFunc !== undefined && $.isFunction(lastTrial[i].parserFunc)){
             var stdName = ivNum + "_" + lastTrial[i].description + "_value";
-            responseFormatted[stdName] = lastTrial[i].parserFunc(lastTrial[i], i);
+
+            responseFormatted[stdName] = lastTrial[i].parserFunc.apply(this, lastTrial[i].value.concat(i) ); //The args are passed to the parser func with the index as the last arg
 
         } else if (lastTrial[i].value.constructor === Array) { //Consider these to be defaults for javascript primitive types
 
@@ -223,7 +223,6 @@ function _storeResponse(options) {
     // if (!responseFormatted.hasOwnProperty("std_2AFC") && didSet2AFC) {
     //     responseFormatted["std_2AFC"] = "null";
     // }
-
     
 
     /** Store the DV*/
@@ -290,7 +289,7 @@ function _outputResponses(allResponses, log) {
     /** Help out a machine today*/
     var csvContent = encodeURI("data:text/csv;charset=utf-8," + csvString);
     var a = createDownloadLink("results (" + _pptName + "," + _pptNo.toString() + ").csv", csvContent);
-    a.innerHTML = "<h4>Click to download results!</h4> <p>(if they didn't download already)</p>";
+    a.innerHTML = "<h4>Click to download results!</h4>";
     a.className += " results-download";
     document.body.appendChild(a);
     a.click();

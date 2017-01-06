@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ExperimentJS Tests</title>
+    <style>
+
+        #a {
+            position: fixed;
+            left: 12.5vw;
+            top: 25vw;
+            width: 25vw;
+            height: 25vw;
+            background: red;
+        }
+
+        #b {
+            position: fixed;
+            right: 12.5vw;
+            top: 25vw;
+            width: 25vw;
+            height: 25vw;
+            background: green;
+        }
+
+
+    </style>
+</head>
+<body>
+<h1>Basic Experiment JS example...</h1>
+
+
+<div id="a"></div>
+<div id="b"></div>
+
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script src="../build/experimentJS.js"></script>
+
+<script>
+
+    var colours = [ [255, 0, 0], [0, 255, 0] ];
+
+    ExperimentJS.Trials.setIVLevels("Colors for A", colours);
+    ExperimentJS.Trials.setIVsetFunc("Colors for A", function(r, g, b){
+        var colstring = "rgb(" + r + ", " + g + ", " + b + ")";
+        $("#a").css("background", colstring);
+    });
+
+    ExperimentJS.Trials.setIVLevels("Colors for B", colours);
+    ExperimentJS.Trials.setIVsetFunc("Colors for B", function(r, g, b){
+        var colstring = "rgb(" + r + ", " + g + ", " + b + ")";
+        $("#b").css("background", colstring);
+    });
+
+    var sides = [true, false].map(function(e){return [e]});
+    ExperimentJS.Trials.setIVLevels("A on left", sides);
+    ExperimentJS.Trials.setIVsetFunc("A on left", function(a_is_on_left){
+        if (a_is_on_left) {
+            $("#a").css("left", "12.5vw");
+            $("#b").css("right", "12.5vw");
+
+            $("#a").css("right", "");
+            $("#b").css("left", "");
+        } else {
+            $("#a").css("right", "12.5vw");
+            $("#b").css("left", "12.5vw");
+
+            $("#a").css("left", "");
+            $("#b").css("right", "");
+        }
+    });
+
+
+
+    var colorParser = function(r, g, b){
+        console.log("PARSER: ", arguments);
+        return r + " " + g + " " + b;
+    };
+    ExperimentJS.Trials.setIVTrialParserFunc("Colors for A", colorParser);
+    ExperimentJS.Trials.setIVTrialParserFunc("Colors for B", colorParser);
+
+    ExperimentJS.Trials.setRepeats(1);
+    ExperimentJS.Trials.buildExperiment(true); //true logs trials to console
+    ExperimentJS.Trials.runNextTrial();
+
+    $(window).keydown(function(event){
+
+        console.log(event.which);
+
+        if (event.which === 37){ //left arrow
+            ExperimentJS.Trials.runNextTrial({shouldStoreResponse: true, dv_value: 'left'});
+        }
+        else if (event.which === 39){ //right arrow
+            ExperimentJS.Trials.runNextTrial({shouldStoreResponse: true, dv_value: 'right'});
+        }
+
+    });
+
+
+    console.log("Module:", ExperimentJS);
+
+
+
+
+
+</script>
+
+
+
+</body>
+</html>

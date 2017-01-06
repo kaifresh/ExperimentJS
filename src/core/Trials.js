@@ -91,11 +91,16 @@ Trials.getTrials = function(){
 export var _didBuildTrials = false;
 function _buildTrials(printTrials) {
 
+    console.log("IVS:", IVs);
+
     var buildingTrial, temp;
 
     for (var iv in IVs) { //Iterate over IVs
 
-        console.log("Extending all trials array with:", iv, ". Levels =", IVs[iv].levels.length);
+        if (IVs[iv].levels === undefined)  throw new Error("Levels not supplied for " + iv);
+        if (IVs[iv].setFunc === undefined) throw new Error("Setter function not supplied for " + iv);
+
+        console.log("Extending all trials array with: " + iv + " (" + IVs[iv].levels.length + " levels)");
 
         if (setFuncs[iv] === undefined) throw new Error("SetFunc not defined for " + iv);
 
@@ -170,7 +175,8 @@ function _buildTrials(printTrials) {
         }
     }
 
-    _allTrials.shuffle();
+    if (_shouldShuffle)     _allTrials.shuffle();
+
 
     _totalTrials = _allTrials.length; //Used to determine where you are in the trial process
     _didBuildTrials = true;
@@ -189,6 +195,16 @@ function _buildTrials(printTrials) {
  * */
 Trials.buildExperiment = function (printTrials) {
     _buildTrials( (printTrials === undefined) ? false : printTrials );
+};
+
+
+var _shouldShuffle = true;
+Trials.setShuffle = function(shouldShuffle){
+    if (typeof(shouldShuffle) === "boolean"){
+        _shouldShuffle =  shouldShuffle;
+    } else {
+        throw new Error("setShuffle only accepts boolean argument");
+    }
 };
 
 // - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -

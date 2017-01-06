@@ -721,8 +721,8 @@
         //
         //     if (Array.isArray(setOn)) {
         //
-        //         //runSetArgsRecursive(setArgs, curProp.value); //TODO - write tests
-        //         runSetterRecursive(setOn, curProp.value, runSetOn); //TODO - write tests
+        //         //runSetArgsRecursive(setArgs, curProp.value); //TODO - write test
+        //         runSetterRecursive(setOn, curProp.value, runSetOn); //TODO - write test
         //     } else {
         //
         //
@@ -737,8 +737,8 @@
         //     var setArgs = curProp.setArgs;
         //
         //     if (Array.isArray(setArgs)) {
-        //         //runSetArgsRecursive(setArgs, curProp.value); //TODO - write tests
-        //         runSetterRecursive(setArgs, curProp.value, runSetArgs); //TODO - write tests
+        //         //runSetArgsRecursive(setArgs, curProp.value); //TODO - write test
+        //         runSetterRecursive(setArgs, curProp.value, runSetArgs); //TODO - write test
         //     } else {
         //         runSetArgs(setArgs.target, setArgs.prop, curProp.value);
         //         // setArgs.target[ setArgs.prop ].apply( setArgs.target, curProp.value);

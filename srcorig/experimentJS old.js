@@ -225,7 +225,7 @@
             var trialsForSaving = exports.parseTrialsForSaving(allTrials);
             var responsesForSaving = exports.parseResponsesForSaving(responses);
 
-            //JSONify the trials and responses
+            //JSONify the trials and _responses
             var experimentJSsaves = {};
             experimentJSsaves['trials'] = trialsForSaving;
             experimentJSsaves['responses'] = responsesForSaving;
@@ -272,7 +272,7 @@
             if (responses === undefined || responses === null) responses = [];
 
             console.log("restored all trials: ", allTrials);
-            console.log("restored all responses: ", responses);
+            console.log("restored all _responses: ", responses);
 
             exports.runNextTrial();
 
@@ -300,9 +300,9 @@
 
     function errorCheckSavingParsers(){
         if (exports.parseTrialsForSaving === undefined) throw new Error("Cannot restore trials without parsing function");
-        if (exports.parseResponsesForSaving === undefined) throw new Error("Cannot restore responses without parsing function");
+        if (exports.parseResponsesForSaving === undefined) throw new Error("Cannot restore _responses without parsing function");
         if (exports.unparseSavedTrials === undefined) throw new Error("Cannot restore trials without UNparsing function");
-        if (exports.unparseSavedResponses === undefined) throw new Error("Cannot restore responses without UNparsing function");
+        if (exports.unparseSavedResponses === undefined) throw new Error("Cannot restore _responses without UNparsing function");
     }
 
     function createDropDownSelect(all_saves){
@@ -354,7 +354,7 @@
      * - taking IVs
      * - building all trials
      * - setting the display (according to the supplied IVs)
-     * - storing & outputting responses
+     * - storing & outputting _responses
      *
      * All other behaviour should be performed by another moduel that works with this one.
      * */
@@ -525,7 +525,7 @@
             }
 
             if (settings !== undefined && settings.hasOwnProperty('shouldStoreResponse') && settings.shouldStoreResponse) {
-                storeResponse(settings); //Settings contains a field 'dv_value' which is also read by storeResponse
+                storeResponse(settings); //Settings contains a field 'dv_value' which is also read by _storeResponse
             }
 
             if (allTrials.length > 0) {
@@ -975,7 +975,7 @@
     /**OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT **/
 
     exports.forceOutputResponses = function(){
-        console.log("Forcing output of responses");
+        console.log("Forcing output of _responses");
         outputResponses(responses, true);
     };
 
@@ -1031,7 +1031,7 @@
         var a = document.createElement('a');
         a.href = data;
         a.target = '_blank';
-        a.download = filename; //'results (' + pptName + ', ' + pptNo.toString() + ').csv';
+        a.download = filename; //'results (' + _pptName + ', ' + _pptNo.toString() + ').csv';
         a.innerHTML = "<h4>Click to download results!</h4> <p>(if they didn't download already)</p>";
 
         a.className += ' results-download';
@@ -1058,7 +1058,7 @@
         return true;
     }
 
-
+    // <<ported>>
     Array.prototype.shuffle = function () {
         var currentIndex = this.length, temporaryValue, randomIndex;
 
@@ -1076,10 +1076,12 @@
         }
     };
 
+    // <<ported>>
     function camelToSentenceCase(str) {
         return str.split(/(?=[A-Z])/).join(' ').toLowerCase();
     }
-    
+
+    // <<ported>>
     function getParamNames(fn){
         //wrap these so as not to pollute the namespace
         var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;

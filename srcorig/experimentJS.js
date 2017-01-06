@@ -57,12 +57,14 @@
 
     /** ~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~~  ~ ~ ~*/
 
+    // <<ported>>
     var didSet2AFC = false;
     exports.setIV2AFCStd = function (ivname, std_2AFC) { //Levels for 2AFC (move to separate file somehow)
         setIVGeneric(ivname, 'std_2AFC', std_2AFC);
         didSet2AFC = true; //
     };
-
+    
+    // <<ported>>
     exports.set2AFCSimultaneousTarget = function (ivname, targetref) { //This is the method that is called & this is passed in
         setIVGeneric(ivname, 'std_2AFC_simultaneous_target', targetref);
     };
@@ -81,6 +83,7 @@
      parserFuncs must return the formatted value
      This assumes you know the content of the trial value, which you should....
      */
+    // <<ported>>
     exports.setIVTrialParserFunc = function (ivname, parserFunc) {
         setIVGeneric(ivname, 'parserFunc', parserFunc);
     };
@@ -88,6 +91,8 @@
     /** ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME */
     /** ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME */
     /** ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME ~~~~~~~~~~~~~~~~~~~~ DV NAME */
+
+    // <<ported>>
     var _dvName;
     exports.setDVName = function(dvName){
         if (typeof dvName === "string"){
@@ -114,11 +119,13 @@
     /** ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS  ~~ **/
     /** ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS ~~ ** BUILD ALL TRIALS  ~~ **/
 
+    // <<ported>>
     window.expRepeats = 1;
     exports.setRepeats = function (nRepeats) {
         window.expRepeats = nRepeats;
     };
 
+    // <<ported>>
     var _totalTrials = -1;
     var allTrials = [];
     var didBuildTrials = false;
@@ -214,10 +221,13 @@
         didBuildTrials = true;
     }
 
+    ///// SAVES ///// SAVES ///// SAVES ///// SAVES ///// SAVES v
+    //<<ported>>
     exports.clearSaves = function(){
         localStorage.removeItem("experimentJSsaves");/////
     };
 
+    //<<ported>>
     exports.saveBuiltTrialsAndResponses = function(key) {
 
         // localStorage.clear();
@@ -232,7 +242,7 @@
             var trialsForSaving = exports.parseTrialsForSaving(allTrials);
             var responsesForSaving = exports.parseResponsesForSaving(responses);
 
-            //JSONify the trials and responses
+            //JSONify the trials and _responses
             var experimentJSsaves = {};
             experimentJSsaves['trials'] = trialsForSaving;
             experimentJSsaves['responses'] = responsesForSaving;
@@ -259,6 +269,7 @@
         }
     };
 
+    //<<ported>>
     exports.setSavedTrialsAndResponses = function(){
         errorCheckSavingParsers();
 
@@ -279,7 +290,7 @@
             if (responses === undefined || responses === null) responses = [];
 
             console.log("restored all trials: ", allTrials);
-            console.log("restored all responses: ", responses);
+            console.log("restored all _responses: ", responses);
 
             exports.runNextTrial();
 
@@ -307,9 +318,9 @@
 
     function errorCheckSavingParsers(){
         if (exports.parseTrialsForSaving === undefined) throw new Error("Cannot restore trials without parsing function");
-        if (exports.parseResponsesForSaving === undefined) throw new Error("Cannot restore responses without parsing function");
+        if (exports.parseResponsesForSaving === undefined) throw new Error("Cannot restore _responses without parsing function");
         if (exports.unparseSavedTrials === undefined) throw new Error("Cannot restore trials without UNparsing function");
-        if (exports.unparseSavedResponses === undefined) throw new Error("Cannot restore responses without UNparsing function");
+        if (exports.unparseSavedResponses === undefined) throw new Error("Cannot restore _responses without UNparsing function");
     }
 
     function createDropDownSelect(all_saves){
@@ -361,10 +372,11 @@
      * - taking IVs
      * - building all trials
      * - setting the display (according to the supplied IVs)
-     * - storing & outputting responses
+     * - storing & outputting _responses
      *
      * All other behaviour should be performed by another moduel that works with this one.
      * */
+    // <<ported>>
     exports.buildExperiment = function (printTrials) {
         buildTrials( (printTrials === undefined) ? false : printTrials );
     };
@@ -479,9 +491,11 @@
 
     /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~           GETTING PPT DETAILS     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+    //<<ported>>
     var pptName = 'unnamed_ppt';
     var pptNo = 0;
 
+    //<<ported>>
     exports.getPptInfo = function () {
 
         while (true) {
@@ -512,6 +526,7 @@
 
 
     /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ONE GAME LOOP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+    // <<ported >>
     var shouldRunNextTrial = true;
     var pause = 500;
     exports.runNextTrial = function (settings) { // runNextTrial({shouldStoreResponse: true, dv_value: 'inside'});
@@ -532,7 +547,7 @@
             }
 
             if (settings !== undefined && settings.hasOwnProperty('shouldStoreResponse') && settings.shouldStoreResponse) {
-                storeResponse(settings); //Settings contains a field 'dv_value' which is also read by storeResponse
+                storeResponse(settings); //Settings contains a field 'dv_value' which is also read by _storeResponse
             }
 
             if (allTrials.length > 0) {
@@ -563,6 +578,7 @@
 
 
     /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ INTERSTIMULUS PAUSE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    //<<ported>>
     var blackOut = $('<div>', {
         id: 'interstimulus-pause',
         css: {
@@ -579,7 +595,7 @@
     $('#interstimulus-pause').hide();
 
     var isInterstimulusPause = false;
-
+    //<<ported>>
     function interstimulusPause(duration) {
         return new Promise(function (resolve, reject) {
             $('#interstimulus-pause').show();
@@ -594,7 +610,7 @@
             }, duration);
         });
     }
-
+    //<<ported>>
     exports.showInterstimulusPause = function (duration) {
         return new Promise(function (resolve, reject) {
             interstimulusPause(duration).then(function () {
@@ -602,7 +618,7 @@
             });
         });
     };
-
+    //<<ported>>
     exports.setPauseTime = function (value) {
         if (value === parseInt(value, 10)) {
             pause = value;
@@ -611,6 +627,7 @@
         }
     };
 
+    //<<ported>>
     var shouldInterstimulusPause = true;
     exports.setShouldInterstimulusPause = function(value){
         if (typeof  value === 'boolean'){
@@ -619,6 +636,7 @@
     };
 
     /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ FUNCTION CALLED MID TRIAL ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    //<<not used>>
     var mid = [];
     var midTrialCallBack;
     exports.setMidCallback = function (trial, callback) {
@@ -631,7 +649,7 @@
         midTrialCallBack = callback;
     };
 
-
+    //<<ported>>
     function checkRunMidCallback() {
 
         //One trial as a percentage. Have * 0.5 coz ur taking the Math.abs() difference (i.e. the two sided tail)
@@ -655,6 +673,7 @@
     /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~GAME LOOP SUB FUNCTIONS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~GAME LOOP SUB FUNCTIONS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
+    //<<ported>>
     /** Where view-level elements are set - this is like the CONTROLLER method interfacing between MODEL and VIEW*/
     function displayNextTrial() {
         var nextTrial = allTrials[allTrials.length - 1]; //Always go from the back
@@ -688,7 +707,9 @@
         }
     }
 
+
     /** This sets the appearance of each individual element in the display. CHanging via either props or methods */
+    //<<ported>>
     function setObjectAppearanceProperties(curProp) {
 
         /** TYPE 3: Using a FUNCTION to set the display*/
@@ -707,6 +728,7 @@
      * Cant use 'setObjectAppearanceProperties' because the 2AFC feature is outside hte normal flow of factors!s
      * */
 
+    //<<ported>>
     console.log("using setFUnc breaks 2AFC methods....correct this");
     exports.set2AFCStd = function () {
 
@@ -737,19 +759,22 @@
 
     };
 
+    //<<ported>>
     var isUsing2AFC = false;
     exports.isUsing2AFC = function (value) { //Just a setter
         if (typeof(value) === 'boolean') {
             isUsing2AFC = value;
         }
     };
-
+    
+//<<ported>>
     function errorCheck2AFC() {
         if (didSet2AFC) return true;
         console.error('You are attempting to call a 2AFC method, but variable levels for the 2AFC std were not registered with the experiment. Called by: *', arguments.callee.caller.name, '*');
         return false;
     }
 
+    //<<ported>>
     function get2AFCFromTrial() {
         /** Find the first IV used as the 2afc standard/target comparison */
         var curTargetLevel = allTrials[allTrials.length - 1];
@@ -766,6 +791,7 @@
     /** 2AFC For CONSECUTIVE presentation of standard & target
      *
      * Handles the flip: 1. Find the IV used in the 2AFC. 2. Set it based on `cur2AFCIsTarget` */
+    //<<ported>>
     exports.flip2AFC = function () {
 
         if (!errorCheck2AFC()) return;
@@ -793,16 +819,19 @@
     };
 
 
+    //<<ported>>
     var cur2AFCIsTarget;
     exports.isCur2AFCTarget = function () { //Just a getter
         return cur2AFCIsTarget;
     };
 
+    //<<ported>>
 
     /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~RESPONSES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
     /** This is where trials are removed from the array and the next trial is advanced to*/
-    var responses = [];
 
+    //<<ported>>
+    var responses = [];
     function storeResponse(options) {
 
         var lastTrial = allTrials.pop();
@@ -878,12 +907,13 @@
     /**OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT **/
     /**OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT **/
     /**OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT OUTPUT **/
-
+    //<<ported>>
     exports.forceOutputResponses = function(){
-        console.log("Forcing output of responses");
+        console.log("Forcing output of _responses");
         outputResponses(responses, true);
     };
 
+    //<<ported>>
     function outputResponses(allResponses, log) {
 
         if (allResponses.length === 0) return;
@@ -930,19 +960,19 @@
 
 
     /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                      UTIL                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
+    //<<ported>>
     function createDownloadLink(filename, data){
         ////http://stackoverflow.com/questions/17836273/export-javascript-data-to-csv-file-without-server-interaction
         var a = document.createElement('a');
         a.href = data;
         a.target = '_blank';
-        a.download = filename; //'results (' + pptName + ', ' + pptNo.toString() + ').csv';
+        a.download = filename; //'results (' + _pptName + ', ' + _pptNo.toString() + ').csv';
         a.innerHTML = "<h4>Click to download results!</h4> <p>(if they didn't download already)</p>";
 
         a.className += ' results-download';
         // document.getElementById('interstimulus-pause').appendChild(a);
         return a;
-    }
+    }//<<ported>>
 
     //TODO - move to util file!
     function isFloat(n) {
@@ -963,7 +993,7 @@
         return true;
     }
 
-
+    // <<ported>>
     Array.prototype.shuffle = function () {
         var currentIndex = this.length, temporaryValue, randomIndex;
 
@@ -981,10 +1011,12 @@
         }
     };
 
+    // <<ported>>
     function camelToSentenceCase(str) {
         return str.split(/(?=[A-Z])/).join(' ').toLowerCase();
     }
-    
+
+    // <<ported>>
     function getParamNames(fn){
         //wrap these so as not to pollute the namespace
         var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;

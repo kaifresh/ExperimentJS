@@ -27,8 +27,9 @@
     </style>
 </head>
 <body>
-<h1>Basic Experiment JS example...</h1>
 
+<h1> 2AFC Experiment example...</h1>
+<h3> Select the green square </h3>
 
 <div id="a"></div>
 <div id="b"></div>
@@ -55,21 +56,18 @@
         $("#b").css("background", colstring);
     });
 
+    var start =  $(window).width() * 0.2;
+    var offset = $(window).width() * 0.3;
     var sides = [true, false].map(function(e){return [e]});
     ExperimentJS.Trials.setIVLevels("A on left", sides);
     ExperimentJS.Trials.setIVsetFunc("A on left", function(a_is_on_left){
         if (a_is_on_left) {
-            $("#a").css("left", "12.5vw");
-            $("#b").css("right", "12.5vw");
+            $("#a").offset({ left: start + offset });
+            $("#b").offset({ left: start });
 
-            $("#a").css("right", "");
-            $("#b").css("left", "");
         } else {
-            $("#a").css("right", "12.5vw");
-            $("#b").css("left", "12.5vw");
-
-            $("#a").css("left", "");
-            $("#b").css("right", "");
+            $("#a").offset({ left: start });
+            $("#b").offset({ left: start + offset });
         }
     });
 

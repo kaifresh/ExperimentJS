@@ -1,10 +1,11 @@
-import { _shouldRunNextTrial, _setShouldRunNextTrial } from "./RunExperiment.js";
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
-//                                      Interstimulus Pause
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
 
-    
-    
+
+import { _shouldRunNextTrial, _setShouldRunNextTrial } from "./RunExperiment.js";
+
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                                      Interstimulus Pause
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
 var Pause = {};
 
 Pause.showInterstimulusPause = function (duration) {
@@ -24,7 +25,7 @@ Pause.setPauseTime = function (value) {
     }
 };
 
-export var _shouldInterstimulusPause = true;             //used in: RunExperiment.js
+export var _shouldInterstimulusPause = true;                        //used in: RunExperiment.js
 Pause.setShouldInterstimulusPause = function(value){
     if (typeof  value === "boolean"){
         _shouldInterstimulusPause = value;
@@ -44,25 +45,26 @@ var _blackOut = $("<div>", {
 });
 
 $(document.body).append(_blackOut);
+
 $("#interstimulus-pause").hide();
 
 var _isInterstimulusPause = false;
-export function _interstimulusPause(duration) {         //used in: RunExperiment.js
+export function _interstimulusPause(duration) {                     // used in: RunExperiment.js
 
-    duration = duration === undefined ? _pause : duration; //Default to pause time unless an argument is supplied
+    duration = duration === undefined ? _pause : duration;          //Default to pause time unless an argument is supplied
 
     return new Promise(function (resolve, reject) {
         $("#interstimulus-pause").show();
         _isInterstimulusPause = true;
         _setShouldRunNextTrial(false);
 
-        /*Prevent button mashing while the pause runs*/
+        /* Prevent button mashing while the pause runs */
         setTimeout(function () {
             $("#interstimulus-pause").hide();
             _isInterstimulusPause = false;
-            _setShouldRunNextTrial(true);           //Cannot reassign imported values, so you need a setter
+            _setShouldRunNextTrial(true);                           // Cannot reassign imported values, so you need a setter
 
-            resolve();                                              //Promise has resolved here
+            resolve();                                              // Promise has resolved here
         }, duration);
     });
 }

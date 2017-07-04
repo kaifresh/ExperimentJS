@@ -8,11 +8,11 @@
 //      - Outputting responses
 //      - Mid/end callbacks
 
+
 import { Trials, setFuncs, _allTrials, _didBuildTrials, _dvName } from "./Trials.js";
 import { _interstimulusPause, _shouldInterstimulusPause } from "./InterstimulusPause.js";
 import { createDownloadLink } from "../utils/CreateDownloadLink.js";
 import { getParamNames } from "../utils/StringUtils.js";
-
 
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -48,7 +48,7 @@ Trials.getPptInfo = function () {
 };
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                                  Experiment Lifecycle - Start & Game Loop
+//                         Experiment Lifecycle - Start & Game Loop
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 //Cannot reassign imported values, so you need a setter (used in InterstimlusPause.js)

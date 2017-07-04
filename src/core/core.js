@@ -1,7 +1,7 @@
 //Order is important
 
 import { Trials } from  "./Trials.js"; //Needs ./ to treat it as an internal (not external dependency)
-import "./RunExperiment.js";
+import "./RunExperiment.js";            // Extends the functionality of the Trials object
 //import "./2AFC.js";
 
 import { Pause } from  "./InterstimulusPause.js";

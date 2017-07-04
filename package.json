@@ -18,13 +18,12 @@
     "concat-map": "0.0.1",
     "eslint": "^3.12.2",
     "eslint-config-mdcs": "^4.2.2",
+    "jquery": "^3.2.1",
     "os-homedir": "^1.0.2",
     "rollup": "^0.36.4",
     "rollup-watch": "^2.5.0",
     "strip-ansi": "^3.0.1",
     "uglify-js": "^2.6.0"
   },
-  "dependencies": {
-    "jquery": "^3.2.1"
-  }
+  "dependencies": {}
 }

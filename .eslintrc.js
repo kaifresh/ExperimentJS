@@ -2,8 +2,6 @@ module.exports = {
     "env": {
         "browser": true,
         "es6": true,
-        "jquery": true,
-        "$": true,
     },
     "extends": "eslint:recommended",
     "parserOptions": {
@@ -26,9 +24,5 @@ module.exports = {
             "error",
             "always"
         ]
-    },
-    "globals": {
-        "define": true,
-        "confirm": true,
     }
 };

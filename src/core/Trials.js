@@ -1,5 +1,5 @@
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                                      Trials - Setting IV Levels & Functions
+//                                 Trials - Setting IV Levels & Functions
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 var Trials = {};
@@ -49,9 +49,9 @@ Trials.setRepeats = function (nRepeats) {
 };
 
 
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
-//                                      Trials - Creation (private)
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                            Trials - Setting IV Levels & Functions (private)
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 /*
 * */
 export function _setIVGeneric(ivName, fieldName, fieldVal) { //used by 2AFC.js
@@ -69,9 +69,9 @@ function _setSetFunc(ivname, setfunc){
     setFuncs[ivname] = setfunc;
 }
 
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                                      Trials - Building
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 var _totalTrials = -1;                                          //Assigned but never used
 export var _allTrials = [];
@@ -183,15 +183,11 @@ function _buildTrials(printTrials) {
 
 
 /**
- * NOTE: We no longer handle appearance or input. These are out of the scope of this module.
- * This module now only handles the game loop of
- * - taking IVs
- * - building all trials
- * - setting the display (according to the supplied IVs)
- * - storing & outputting _responses
- *
- * All other behaviour should be performed by another moduel that works with this one.
- * */
+ * NOTE: This module does not longer handle appearance or input
+ * This module now only handles:
+    * - taking IVs
+    * - building all trials
+ */
 Trials.buildExperiment = function (printTrials) {
     _buildTrials( (printTrials === undefined) ? false : printTrials );
 };
@@ -206,9 +202,9 @@ Trials.setShuffle = function(shouldShuffle){
     }
 };
 
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                                      Trials (subfunctions)
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 function _csvIllegalCharCheck(string){
 
     if (typeof string !== "string"){

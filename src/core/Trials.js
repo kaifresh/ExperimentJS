@@ -1,6 +1,6 @@
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
-//                                      Trials - Creation
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                                      Trials - Setting IV Levels & Functions
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 var Trials = {};
 export var IVs = {};
@@ -12,7 +12,6 @@ var expRepeats = 1;
 Trials.setIVLevels = function (ivname, levels) {
     _setIVGeneric(ivname, "levels", levels);
 };
-
 
 Trials.setIVsetFunc = function(ivname, setFunc) {
 
@@ -91,7 +90,7 @@ Trials.getTrials = function(){
 export var _didBuildTrials = false;
 function _buildTrials(printTrials) {
 
-    console.log("IVS:", IVs);
+    console.log("Build Trials. IVS:", IVs);
 
     var buildingTrial, temp;
 

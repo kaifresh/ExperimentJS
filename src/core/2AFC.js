@@ -1,5 +1,5 @@
 import { _setIVGeneric, Trials, _allTrials } from "./Trials.js";
-import { _setObjectAppearanceProperties } from "./RunExperiment.js";
+import { _fireIVSetFuncWithArgs } from "./RunExperiment.js";
 // - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
 //                                      2AFC
 // - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
@@ -71,11 +71,11 @@ Trials.flip2AFC = function () {
         flipToStandard.value = flipToStandard.std_2AFC;
         console.log("Flipping from target to 2afc standard:", flipToStandard.value, flipToStandard);
 
-        _setObjectAppearanceProperties(flipToStandard);
+        _fireIVSetFuncWithArgs(flipToStandard);
         _cur2AFCIsTarget = false;
 
     } else {
-        _setObjectAppearanceProperties(curTargetLevel);
+        _fireIVSetFuncWithArgs(curTargetLevel);
         _cur2AFCIsTarget = true;
         //console.log('Flip2AFC() -> Flipping from standard to target:', curTargetLevel.value);
     }

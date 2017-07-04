@@ -1,12 +1,23 @@
 
+// RunExperiment.js
+// Add core functionality facilitating the experimental life cycle to the Trials Object.
+// Such as:
+//      - Getting participant info
+//      - Running the next trial (setting IVs etc)
+//      - Storing a response
+//      - Outputting responses
+//      - Mid/end callbacks
+
 import { Trials, setFuncs, _allTrials, _didBuildTrials, _dvName } from "./Trials.js";
 import { _interstimulusPause, _shouldInterstimulusPause } from "./InterstimulusPause.js";
 import { createDownloadLink } from "../utils/CreateDownloadLink.js";
 import { getParamNames } from "../utils/StringUtils.js";
 
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
-//                                      Run Experiment - Get Participant Info
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
+
+
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                      Experiment Lifecycle - Get Participant Info
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 var _pptName = "unnamed_ppt";
 var _pptNo = 0;
@@ -36,9 +47,9 @@ Trials.getPptInfo = function () {
     console.log("Participant name: ", _pptName, "\tParticipant number: ", _pptNo);
 };
 
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
-//                                      Run Experiment - Game Loop
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                                  Experiment Lifecycle - Start & Game Loop
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 //Cannot reassign imported values, so you need a setter (used in InterstimlusPause.js)
 export function _setShouldRunNextTrial(value){
@@ -65,7 +76,6 @@ Trials.runNextTrial = function (settings) { // usage -> runNextTrial({shouldStor
             _midCallback();
         }
 
-
         if (_shouldInterstimulusPause) {
             _interstimulusPause();
         }
@@ -90,16 +100,14 @@ Trials.runNextTrial = function (settings) { // usage -> runNextTrial({shouldStor
 
             if (_endCallBack !== undefined) _endCallBack();
 
-
         }
     }
 
 };
 
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
-//                  Run Experiment - Mid Point Callback (i.e. the "take a break" message)
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
-
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                  Experiment Lifecycle - Mid Point Callback (i.e. the "take a break" message)
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 var _didRunMidCallback = false;
 var _midCallback = null;
@@ -121,9 +129,9 @@ function _shouldRunMidCallback() {
     }
 }
 
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
-//                                  Run Experiment - End Callback
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//             Experiment Lifecycle - End Callback (a behaviour at the end of the experiment)
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 var _endCallBack = null;
 Trials.setEndCallback = function (value) {
     if (typeof value === "function"){
@@ -134,36 +142,37 @@ Trials.setEndCallback = function (value) {
 };
 
 
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
-//                                 Run Experiment - Displaying The Next Trial
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                                 Experiment Lifecycle - Displaying The Next Trial
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 /** Where view-level elements are set - this is like the CONTROLLER method interfacing between MODEL and VIEW*/
 function _displayNextTrial() {
     var nextTrial = _allTrials[_allTrials.length - 1]; //Always go from the back
-    console.log("next trial:", nextTrial);
+    console.log("Displaying next trial:", nextTrial);
 
     /** Iterate over each IV and set its pointer to its value for that trial */
     for (var i = 0; i < nextTrial.length; ++i) {
-        _setObjectAppearanceProperties(nextTrial[i]);
+        var cur_iv = nextTrial[i];
+        _fireIVSetFuncWithArgs(cur_iv);
 
     }
 }
 
-export function _setObjectAppearanceProperties(curProp) {
+export function _fireIVSetFuncWithArgs(cur_iv) {
 
     /** Using a FUNCTION to set the display*/
-    if ( setFuncs[curProp.description] !== undefined ) {
-        setFuncs[curProp.description].apply(null, curProp.value);
+    if ( setFuncs[cur_iv.description] !== undefined ) {
+        setFuncs[cur_iv.description].apply(null, cur_iv.value);
     } else {
-        throw new Error("No setter function supplied by: " + curProp);
+        throw new Error("No setter function supplied by: " + cur_iv);
     }
 }
 
 
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
-//                                 Run Experiment - Store Response
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                                 Experiment Lifecycle - Store Response
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 export var _responses = [];
 export function _setResponses(responses){
     if (responses.constructor === Array){
@@ -239,9 +248,9 @@ function _storeResponse(options) {
     _responses.push(responseFormatted);
 }
 
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
-//                                 Run Experiment - Output Responses
-// - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                                 Experiment Lifecycle - Output Responses
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 Trials.forceOutputResponses = function(){
     console.log("Forcing output of _responses");

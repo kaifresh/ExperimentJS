@@ -1,3 +1,4 @@
+
 import { Trials,_allTrials, _setAllTrials, _didBuildTrials} from "./Trials.js";
 import { _responses, _setResponses } from "./RunExperiment.js";
 
@@ -92,7 +93,7 @@ Saves.setSavedTrialsAndResponses = function(){
 
     select_bits.button_clear.click(function(){
 
-        if (confirm("Are you sure you want to delete all saved experiments?")){
+        if (window.confirm("Are you sure you want to delete all saved experiments?")){
             Saves.clearSaves();
         }
 

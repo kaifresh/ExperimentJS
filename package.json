@@ -23,5 +23,8 @@
     "rollup-watch": "^2.5.0",
     "strip-ansi": "^3.0.1",
     "uglify-js": "^2.6.0"
+  },
+  "dependencies": {
+    "jquery": "^3.2.1"
   }
 }

@@ -24,7 +24,7 @@ export var setFuncs = {};
 var expRepeats = 1;
 
 /** Every IV requires 2 steps: creating the levels and then, setting the target */
-Trials.setIVLevels = function (ivname, levels) {
+Trials.setIVLevels = function ( ivname, levels) {
 
     if (Array.isArray(levels)){                                     // Enforce the type system: Levels must be an array of arrays
 
@@ -46,6 +46,10 @@ Trials.setIVLevels = function (ivname, levels) {
 
 Trials.setIVsetFunc = function(ivname, setFunc) {
 
+    if (typeof setFunc !== "function"){
+        throw new Error("[ setIVsetFunc Error ] - parser function for "+ivname+" was not a function");
+    }
+
     //This is now a flag to notify ExperimentJS that you"re using functions
     _setIVGeneric(ivname, "setFunc", true);
 
@@ -63,23 +67,33 @@ Trials.setDVName = function(dvName){
     }
 };
 
-/*
- The trial value will always be passed in as the first argument
- The type of that trial value will be the first non array-of-arrays in the experiment
- parserFuncs are passed args in this order (trialIV, i)
- parserFuncs must return the formatted value
- This assumes you know the content of the trial value, which you should....
- */
-// Interface for a parser function is function(trial
+
+/**
+ * Parser function interface:
+ *                  function ( args_passed_to_this_IV_for_this_trial..., index) {}
+ *                  return
+ *                          string -    processed/formatted version of the data
+ *                          object -    values are the processed version of parts of the data,
+ *                                      keys are names given to each portion of the parsed data
+ * */
 Trials.setIVResponseParserFunc = function (ivname, parserFunc) {
+
+    if (typeof parserFunc !== "function"){
+        throw new Error("[ setIVResponseParserFunc Error ] - parser function for "+ivname+" was not a function");
+    }
+
     _setIVGeneric(ivname, "parserFunc", parserFunc);
 };
 
 
 Trials.setRepeats = function (nRepeats) {
+
+    if (!Number.isInteger(nRepeats)){
+        throw new Error("[ setRepeats Error ] - 1st argument to this function must be an integer");
+    }
+
     expRepeats = nRepeats;
 };
-
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                            Trials - Setting IV Levels & Functions (private)
@@ -216,7 +230,11 @@ function _buildTrials(printTrials) {
 
 
 Trials.buildExperiment = function (printTrials) {
-    _buildTrials( (printTrials === undefined) ? false : printTrials );
+    if (typeof printTrials !== "boolean"){
+        throw new Error("[ buildExperiment ERROR ] - first arg to buildExperiment must be a boolean");
+    } else {
+        _buildTrials( (printTrials === undefined) ? false : printTrials );
+    }
 };
 
 

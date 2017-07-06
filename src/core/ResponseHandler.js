@@ -40,7 +40,6 @@ export function _storeResponse(options) {
              *                          object -    values are the processed version of parts of the data,
              *                                      keys are names given to each portion of the parsed data
              * */
-            // responseFormatted[stdName] = lastTrial[i].parserFunc.apply(this, lastTrial[i].value.concat(i) ); //The args are passed to the parser func with the index as the last arg
 
             var parsed_data = lastTrial[i].parserFunc.apply(this, lastTrial[i].value.concat(i) );                               // Refer to interface description above
 

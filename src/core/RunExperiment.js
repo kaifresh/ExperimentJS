@@ -40,8 +40,6 @@ Trials.runNextTrial = function (settings) { // usage -> runNextTrial({shouldStor
 
     if (_shouldRunNextTrial) {
 
-        // TODO: Change the implementation of the mid callback - Just check the length of the _responses array vs the alltrials array..
-
         if (_shouldRunMidCallback() && _midCallback !== null) {
             _midCallback();
         }
@@ -84,11 +82,11 @@ Trials.runNextTrial = function (settings) { // usage -> runNextTrial({shouldStor
 
 
 var _midCallback = null;
-Trials.setMidCallback = function (value) {
-    if (typeof value === "function"){
-        _midCallback = value;
+Trials.setMidCallback = function (fn) {
+    if (typeof fn === "function"){
+        _midCallback = fn;
     }   else {
-        throw new Error("Only functions may be assigned to the end callback");
+        throw new Error("[ setMidCallback ERROR ] - First argument to setMidCallback must be a function");
     }
 };
 
@@ -96,7 +94,8 @@ var _didRunMidCallback = false;
 function _shouldRunMidCallback() {
     if (_didRunMidCallback) return false;
 
-    //Mid point = there are as many responses as trials (or a difference of one for odd number of trials)
+    // Trials are popped, responses are pushed.
+    // Mid point = there are as many responses as trials (or a difference of one for odd number of trials)
     if (_allTrials.length ===_responses.length || Math.abs(_allTrials.length -_responses.length) === 1){
         _didRunMidCallback = true;
         return true;
@@ -111,7 +110,7 @@ Trials.setEndCallback = function (value) {
     if (typeof value === "function"){
         _endCallBack = value;
     }   else {
-        throw new Error("Only functions may be assigned to the end callback");
+        throw new Error("[ setEndCallback ERROR ] - First argument to setEndCallback must be a function");
     }
 };
 
@@ -132,7 +131,7 @@ function _displayNextTrial() {
     }
 }
 
-export function _fireIVSetFuncWithArgs(cur_iv) {
+function _fireIVSetFuncWithArgs(cur_iv) {
 
     /** Using a FUNCTION to set the display*/
     if ( setFuncs[cur_iv.description] !== undefined ) {

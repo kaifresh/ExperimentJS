@@ -47,10 +47,13 @@
 
     var rgb_triplet_to_string_parser = function(r, g, b){
         console.log("PARSER: ", arguments);
-        return r + " " + g + " " + b;
+        return {
+            "rgb": r + " " + g + " " + b,
+            "extra-shit": "HAHAHAHHAHHA"
+        };
     };
-    ExperimentJS.Trials.setIVTrialParserFunc("Colors for A", rgb_triplet_to_string_parser);
-    ExperimentJS.Trials.setIVTrialParserFunc("Colors for B", rgb_triplet_to_string_parser);
+    ExperimentJS.Trials.setIVResponseParserFunc("Colors for A", rgb_triplet_to_string_parser);
+    ExperimentJS.Trials.setIVResponseParserFunc("Colors for B", rgb_triplet_to_string_parser);
 
     ExperimentJS.Trials.setIVLevels("Colors for A", colours);
     ExperimentJS.Trials.setIVsetFunc("Colors for A", function(r, g, b){

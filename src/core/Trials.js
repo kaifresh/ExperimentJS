@@ -1,6 +1,17 @@
 import { extend } from "../utils/jQueryUtils.js";
 
 
+/**
+ * To set Trial IVs
+ *      1. Set the setter function:                 this is a function `fn` that will manipulate the display
+ *      2. Set the args passed to the setter:       these are the varying args passed to `fn` used to vary the IV
+ *      3. Call Trials.buildExperiment()
+ *
+ *  Optional:
+ *      4. Set a response parser function:          format passed arguments into a desired output format
+ *
+ *
+ * */
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                                 Trials - Setting IV Levels & Functions
@@ -14,7 +25,23 @@ var expRepeats = 1;
 
 /** Every IV requires 2 steps: creating the levels and then, setting the target */
 Trials.setIVLevels = function (ivname, levels) {
-    _setIVGeneric(ivname, "levels", levels);
+
+    if (Array.isArray(levels)){                                     // Enforce the type system: Levels must be an array of arrays
+
+        levels.map(function(elem, i){
+            if (!Array.isArray( elem )){
+                throw new Error("[ setIVLevels Error ] - Level "+i+" must be an array of args passed to the set function for "+ ivname);
+                return;
+            }
+        });
+
+        _setIVGeneric(ivname, "levels", levels);
+
+    } else{
+        throw new Error("[ setIVLevels Error ] - The second argument to setIVLevels must be an array of arrays, containing the arguments passsed to the set function for "+ ivname);
+    }
+
+
 };
 
 Trials.setIVsetFunc = function(ivname, setFunc) {
@@ -43,7 +70,8 @@ Trials.setDVName = function(dvName){
  parserFuncs must return the formatted value
  This assumes you know the content of the trial value, which you should....
  */
-Trials.setIVTrialParserFunc = function (ivname, parserFunc) {
+// Interface for a parser function is function(trial
+Trials.setIVResponseParserFunc = function (ivname, parserFunc) {
     _setIVGeneric(ivname, "parserFunc", parserFunc);
 };
 
@@ -61,7 +89,8 @@ Trials.setRepeats = function (nRepeats) {
 export function _setIVGeneric(ivName, fieldName, fieldVal) { //used by 2AFC.js
     _csvIllegalCharCheck(ivName);
     _csvIllegalCharCheck(fieldName);
-    if (!IVs.hasOwnProperty(ivName)) { //If IV doenst exists make it as a raw object
+
+    if (!IVs.hasOwnProperty(ivName)) {                      // If IV doesn't exist yet, create it
         IVs[ivName] = {};
     }
 
@@ -116,51 +145,46 @@ function _buildTrials(printTrials) {
 
         var len = _allTrials.length === 0 ? 1 : _allTrials.length; // For the first pass
 
-        for (var i = 0; i < len; ++i) { //For all trials built so far
+        for (var i = 0; i < len; ++i) {                                                     // For all trials built so far
 
-            buildingTrial = _allTrials.pop(); //Pop the incomplete array of iv-vals (objects) and extend
+            buildingTrial = _allTrials.pop();                                               // Pop the incomplete array of iv-vals (objects) and extend it
 
             for (var j = 0; j < IVs[iv].levels.length; ++j) { //Extend them by all the levels of the next IV
 
-
-                /** Set the value & description of the current IV obj 4 the current Level */
                 var curIVLevel = {};
-                curIVLevel.description = iv; //camelToSentenceCase(iv);
-                curIVLevel.value = IVs[iv].levels[j];
 
-                /** Store 2AFC std with each trial (if present) */
-                if (IVs[iv].hasOwnProperty("std_2AFC")) {
+                curIVLevel.description = iv;                                                // Set the description of the current IV obj 4 the current Level
+                curIVLevel.value = IVs[iv].levels[j];                                       // Set the description of the current IV obj 4 the current Level
+
+                if (IVs[iv].hasOwnProperty("std_2AFC")) {                                   // Store 2AFC std with each trial (if present)
                     curIVLevel.std_2AFC = IVs[iv].std_2AFC;
                 }
 
-                /** For 2AFC that is simultaneous (as opposed to the flipping kind)*/
-                if (IVs[iv].hasOwnProperty("std_2AFC_simultaneous_target")) {
+                if (IVs[iv].hasOwnProperty("std_2AFC_simultaneous_target")) {               // For 2AFC that is simultaneous (as opposed to the flipping kind)
                     curIVLevel.std_2AFC_simultaneous_target = IVs[iv].std_2AFC_simultaneous_target;
                 }
-                
-                /** Parser function*/
-                if (IVs[iv].parserFunc !== undefined) {
-                    console.log("Setting parser for ", iv);
-                    curIVLevel.parserFunc = IVs[iv].parserFunc; //Could write a copying method for all of these (that handles deep copying)
+
+
+                if (IVs[iv].parserFunc !== undefined) {                                     // Parser functions
+                    curIVLevel.parserFunc = IVs[iv].parserFunc;
                 }
+
+                // = = = = = = = = = = = Extending the trial = = = = = = = = = = = = = =
 
                 var newOrExtendedTrial;
 
                 if (buildingTrial === undefined) {
-                    //newOrExtendedTrial =  iv + "  " + levelValue;
                     newOrExtendedTrial = [curIVLevel];
 
                 } else if (buildingTrial.constructor === Array) {
-                    //newOrExtendedTrial = buildingTrial + " | | " + iv + "  " + levelValue;
-                    newOrExtendedTrial = buildingTrial.concat([curIVLevel]); //Creates a brand new array w the new level
+                    newOrExtendedTrial = buildingTrial.concat([curIVLevel]);                // The incomplete trial is extended by creating a brand new array FROM it
                 }
 
                 temp.push(newOrExtendedTrial);
             }
         }
 
-        /** Replace your previous trials with Temp (don"t know who to do this in place) */
-        _allTrials = temp;
+        _allTrials = temp;                                                                  // /** Replace your previous trials with Temp (don"t know who to do this in place) */
     }
 
 
@@ -186,18 +210,11 @@ function _buildTrials(printTrials) {
 
     if (_shouldShuffle)     _allTrials.shuffle();
 
-
     _totalTrials = _allTrials.length; //Used to determine where you are in the trial process
     _didBuildTrials = true;
 }
 
 
-/**
- * NOTE: This module does not longer handle appearance or input
- * This module now only handles:
-    * - taking IVs
-    * - building all trials
- */
 Trials.buildExperiment = function (printTrials) {
     _buildTrials( (printTrials === undefined) ? false : printTrials );
 };
@@ -213,7 +230,7 @@ Trials.setShuffle = function(shouldShuffle){
 };
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                                      Trials (subfunctions)
+//                                      Trials - sub functions
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 function _csvIllegalCharCheck(string){
 

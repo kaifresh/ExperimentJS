@@ -23,12 +23,7 @@ function _createInterstimulusPause(){
 
 
     SetCSSOnElement(blackout, css);
-    // var keys = Object.keys(css);
-    // for (var i = 0; i < keys.length; i++){
-    //     var attribute = keys[i];
-    //     blackout.style[attribute] = css[attribute];
-    // }
-
+    
     return blackout;
 }
 
@@ -55,7 +50,7 @@ Pause.setPauseTime = function (value) {
     if (value === parseInt(value, 10)) {
         _pause = value;
     } else {
-        throw "setPauseTime only takes integers";
+        throw new Error("setPauseTime only takes integers");
     }
 };
 

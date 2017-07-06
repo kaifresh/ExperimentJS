@@ -166,16 +166,11 @@ function _createDropDownSelect(all_saves){
     var b_clear = document.createElement("button");
     b_clear.innerHTML = "Clear";
 
-
-    // saves_dialog_wrap.append(sel);
+    
     saves_dialog_wrap.appendChild(sel);
-    // saves_dialog_wrap.append($("<br>"));
     saves_dialog_wrap.appendChild(document.createElement("br"));
-    // saves_dialog_wrap.append(b);
     saves_dialog_wrap.appendChild(b);
-    // saves_dialog_wrap.append(b_clear);
     saves_dialog_wrap.appendChild(b_clear);
-    // $(document.body).append(saves_dialog_wrap);
     document.body.appendChild(saves_dialog_wrap);
 
     var css = {
@@ -189,16 +184,7 @@ function _createDropDownSelect(all_saves){
         "text-align": "center"
     };
     SetCSSOnElement(saves_dialog_wrap, css);
-    // saves_dialog_wrap.css({
-    //     position: "fixed",
-    //     top: "45vh",
-    //     left: "25vw",
-    //     width: "50vw",
-    //     height: "5vh",
-    //     background: "white",
-    //     border: "2vw",
-    //     "text-align": "center"
-    // });
+
 
     return {
         select: sel,

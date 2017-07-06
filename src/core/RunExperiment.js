@@ -10,42 +10,12 @@
 
 
 import { Trials, setFuncs, _allTrials, _didBuildTrials, _dvName } from "./Trials.js";
+import { _outputResponses } from "./OutputResponses.js";
 import { _interstimulusPause, _shouldInterstimulusPause } from "./InterstimulusPause.js";
-import { createDownloadLink } from "../utils/CreateDownloadLink.js";
+
 import { getParamNames } from "../utils/StringUtils.js";
 
 
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                      Experiment Lifecycle - Get Participant Info
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
-var _pptName = "unnamed_ppt";
-var _pptNo = 0;
-
-Trials.getPptInfo = function () {
-
-    while (true) {
-        _pptName = prompt("Please enter your name").trim();
-        console.log("name was", _pptName);
-        if (_pptName === "" || _pptName === null) {
-            alert("Name cannot be blank");
-        } else {
-            break;
-        }
-    }
-
-    while (true) {
-        _pptNo = parseInt(prompt("Please enter your participant number"));
-        console.log("ppt number was", _pptNo);
-        if (isNaN(_pptNo)) {
-            alert("Participant number must be an integer");
-        } else {
-            break;
-        }
-    }
-
-    console.log("Participant name: ", _pptName, "\tParticipant number: ", _pptNo);
-};
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                         Experiment Lifecycle - Start & Game Loop
@@ -98,7 +68,7 @@ Trials.runNextTrial = function (settings) { // usage -> runNextTrial({shouldStor
             // $("#interstimulus-pause").hide();
             _outputResponses(_responses);
 
-            if (_endCallBack !== undefined) _endCallBack();
+            if ( typeof _endCallBack === "function") _endCallBack();
 
         }
     }
@@ -247,61 +217,61 @@ function _storeResponse(options) {
 
     _responses.push(responseFormatted);
 }
-
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                                 Experiment Lifecycle - Output Responses
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
-Trials.forceOutputResponses = function(){
-    console.log("Forcing output of _responses");
-    _outputResponses(_responses, true);
-};
-
-
-function _outputResponses(allResponses, log) {
-
-    if (allResponses.length === 0) return;
-
-    var csvString = "";
-
-    var keys = Object.keys(allResponses[0]);
-    /**These are all the columns in the output*/
-
-    /** Make the header*/
-    csvString += "Participant Name, Participant Number, "; //Manually add header
-    for (var i = 0; i < keys.length; i++) {
-        csvString += keys[i] + ",";
-    }
-    csvString = csvString.slice(0, -1) + "\n";//Cut trailing comma and put in a new row/line
-
-    /** Fill the data - This time its an array of arrays not array of dictionaries */
-    for (i = 0; i < allResponses.length; i++) {
-
-        csvString += _pptName + "," + _pptNo + ","; //Manaully add content
-
-        for (var j = 0; j < keys.length; j++) { //Iterate over the keys to get teh values
-
-            var value = allResponses[i][keys[j]];
-            // console.log("writing this raw value ", value, keys[j]);
-            //value = checkReturnProps( value, true ) || value;  //Parse out relevant object fields
-            //console.log("Afer it was parsed:", value, "\n*********");
-            csvString += value + ",";
-        }
-
-        csvString = csvString.slice(0, -1) + "\n"; //Cut trailing comma and put in a new row/line
-    }
-
-    if (log) {
-        console.log(csvString);
-    }
-
-    /** Help out a machine today*/
-    var csvContent = encodeURI("data:text/csv;charset=utf-8," + csvString);
-    var a = createDownloadLink("results (" + _pptName + "," + _pptNo.toString() + ").csv", csvContent);
-    a.innerHTML = "<h4>Click to download results!</h4>";
-    a.className += " results-download";
-    document.body.appendChild(a);
-    a.click();
-}
+//
+// // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// //                                 Experiment Lifecycle - Output Responses
+// // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//
+// Trials.forceOutputResponses = function(){
+//     console.log("Forcing output of _responses");
+//     _outputResponses(_responses, true);
+// };
+//
+//
+// function _outputResponses(allResponses, log) {
+//
+//     if (allResponses.length === 0) return;
+//
+//     var csvString = "";
+//
+//     var keys = Object.keys(allResponses[0]);
+//     /**These are all the columns in the output*/
+//
+//     /** Make the header*/
+//     csvString += "Participant Name, Participant Number, "; //Manually add header
+//     for (var i = 0; i < keys.length; i++) {
+//         csvString += keys[i] + ",";
+//     }
+//     csvString = csvString.slice(0, -1) + "\n";//Cut trailing comma and put in a new row/line
+//
+//     /** Fill the data - This time its an array of arrays not array of dictionaries */
+//     for (i = 0; i < allResponses.length; i++) {
+//
+//         csvString += _pptName + "," + _pptNo + ","; //Manaully add content
+//
+//         for (var j = 0; j < keys.length; j++) { //Iterate over the keys to get teh values
+//
+//             var value = allResponses[i][keys[j]];
+//             // console.log("writing this raw value ", value, keys[j]);
+//             //value = checkReturnProps( value, true ) || value;  //Parse out relevant object fields
+//             //console.log("Afer it was parsed:", value, "\n*********");
+//             csvString += value + ",";
+//         }
+//
+//         csvString = csvString.slice(0, -1) + "\n"; //Cut trailing comma and put in a new row/line
+//     }
+//
+//     if (log) {
+//         console.log(csvString);
+//     }
+//
+//     /** Help out a machine today*/
+//     var csvContent = encodeURI("data:text/csv;charset=utf-8," + csvString);
+//     var a = createDownloadLink("results (" + _pptName + "," + _pptNo.toString() + ").csv", csvContent);
+//     a.innerHTML = "<h4>Click to download results!</h4>";
+//     a.className += " results-download";
+//     document.body.appendChild(a);
+//     a.click();
+// }
 
 

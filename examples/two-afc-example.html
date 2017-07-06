@@ -42,6 +42,7 @@
 
 <script>
 
+    // An array of args passed to the setter function
     var colours = [ [255, 0, 0], [0, 255, 0] ];
 
     ExperimentJS.Trials.setIVLevels("Colors for A", colours);
@@ -82,6 +83,7 @@
 
     ExperimentJS.Trials.setRepeats(1);
     ExperimentJS.Trials.buildExperiment(true); //true logs trials to console
+    ExperimentJS.Trials.getPptInfo();
     ExperimentJS.Trials.runNextTrial();
 
     $(window).keydown(function(event){

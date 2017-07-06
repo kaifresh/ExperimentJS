@@ -47,7 +47,8 @@ export function _storeResponse(options) {
                 responseFormatted[ stdName+"_value" ] = parsed_data;                                                            // Add parsed IV data to response
 
             } else if (parsed_data !== null && typeof parsed_data === "object"){
-                
+
+                // TODO: See if keys can be cached for a performance improvement
                 var keys = Object.keys(parsed_data);
                 for (var k = 0; k < keys.length; k++){
                     var key_and_data_description = keys[k];
@@ -58,7 +59,7 @@ export function _storeResponse(options) {
                 throw new Error("[ Parser Function Error ] - Parser function for "+stdName+" must output either a string or an object. You output:", typeof parsed_data);
             }
 
-        } else if (lastTrial[i].value.constructor === Array) { // Consider these to be defaults for javascript primitive types
+        } else if (lastTrial[i].value.constructor === Array) { // Default behaviour: array of args passed to the IV's set function
 
             /** Manually write out each argument (from an array) to a field in the object
              *  Only append a number if there are >1 arguments passed in */
@@ -79,13 +80,13 @@ export function _storeResponse(options) {
             }
 
         } else {
+            // TODO: Determine if this can be deleted...
             responseFormatted[ivNum + "_" + lastTrial[i].description + "_value"] = lastTrial[i].value;
         }
 
-        /** Add a value of the 2afc std (for the relevant IV) */
-        if (lastTrial[i].hasOwnProperty("std_2AFC")) {
-            responseFormatted["std_2AFC"] = lastTrial[i].std_2AFC;
-        }
+        // if (lastTrial[i].hasOwnProperty("std_2AFC")) {                                                                      // Add a value of the 2afc std (for the relevant IV)
+        //     responseFormatted["std_2AFC"] = lastTrial[i].std_2AFC;                                                          // TODO: Determine if this can be deleted...
+        // }
     }
 
     /** Check that a 2afc std value was added - if not you want to add a null value or it will fuck up the csv write*/

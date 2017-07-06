@@ -9,8 +9,6 @@ import { extend } from "../utils/jQueryUtils.js";
  *
  *  Optional:
  *      4. Set a response parser function:          format passed arguments into a desired output format
- *
- *
  * */
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -35,7 +33,7 @@ Trials.setIVLevels = function ( ivname, levels) {
             }
         });
 
-        _setIVGeneric(ivname, "levels", levels);
+        _setIVGeneric(ivname, "levels", levels);                    // Actually do the setting
 
     } else{
         throw new Error("[ setIVLevels Error ] - The second argument to setIVLevels must be an array of arrays, containing the arguments passsed to the set function for "+ ivname);

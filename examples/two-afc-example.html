@@ -45,6 +45,13 @@
     // An array of args passed to the setter function
     var colours = [ [255, 0, 0], [0, 255, 0] ];
 
+    var rgb_triplet_to_string_parser = function(r, g, b){
+        console.log("PARSER: ", arguments);
+        return r + " " + g + " " + b;
+    };
+    ExperimentJS.Trials.setIVTrialParserFunc("Colors for A", rgb_triplet_to_string_parser);
+    ExperimentJS.Trials.setIVTrialParserFunc("Colors for B", rgb_triplet_to_string_parser);
+
     ExperimentJS.Trials.setIVLevels("Colors for A", colours);
     ExperimentJS.Trials.setIVsetFunc("Colors for A", function(r, g, b){
         var colstring = "rgb(" + r + ", " + g + ", " + b + ")";
@@ -74,12 +81,8 @@
 
 
 
-    var colorParser = function(r, g, b){
-        console.log("PARSER: ", arguments);
-        return r + " " + g + " " + b;
-    };
-    ExperimentJS.Trials.setIVTrialParserFunc("Colors for A", colorParser);
-    ExperimentJS.Trials.setIVTrialParserFunc("Colors for B", colorParser);
+
+
 
     ExperimentJS.Trials.setRepeats(1);
     ExperimentJS.Trials.buildExperiment(true); //true logs trials to console

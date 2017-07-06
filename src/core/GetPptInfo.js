@@ -11,7 +11,7 @@ export var _pptName = "unnamed_ppt";
 export var _pptNo = 0;
 
 Trials.getPptInfo = function () {
-
+    
     while (true) {
         _pptName = prompt("Please enter your name").trim();
         console.log("name was", _pptName);

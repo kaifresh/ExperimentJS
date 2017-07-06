@@ -10,11 +10,11 @@
 
 
 import { Trials, setFuncs, _allTrials, _didBuildTrials, _dvName } from "./Trials.js";
+import { _storeResponse, _responses } from "./ResponseHandler.js";
 import { _outputResponses } from "./OutputResponses.js";
 import { _interstimulusPause, _shouldInterstimulusPause } from "./InterstimulusPause.js";
-
 import { getParamNames } from "../utils/StringUtils.js";
-
+import { _ApplyFunctionToHTMLChildren } from "../utils/DOMUtils.js";
 
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -64,8 +64,11 @@ Trials.runNextTrial = function (settings) { // usage -> runNextTrial({shouldStor
         } else {
 
             //Possibly too destructive
-            $(document.body).children().fadeOut();
-            // $("#interstimulus-pause").hide();
+            // $(document.body).children().fadeOut();
+            _ApplyFunctionToHTMLChildren(document.body, function(child){
+                child.style.display = "none";
+            });
+
             _outputResponses(_responses);
 
             if ( typeof _endCallBack === "function") _endCallBack();
@@ -79,7 +82,7 @@ Trials.runNextTrial = function (settings) { // usage -> runNextTrial({shouldStor
 //                  Experiment Lifecycle - Mid Point Callback (i.e. the "take a break" message)
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
-var _didRunMidCallback = false;
+
 var _midCallback = null;
 Trials.setMidCallback = function (value) {
     if (typeof value === "function"){
@@ -89,6 +92,7 @@ Trials.setMidCallback = function (value) {
     }
 };
 
+var _didRunMidCallback = false;
 function _shouldRunMidCallback() {
     if (_didRunMidCallback) return false;
 
@@ -110,7 +114,6 @@ Trials.setEndCallback = function (value) {
         throw new Error("Only functions may be assigned to the end callback");
     }
 };
-
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                                 Experiment Lifecycle - Displaying The Next Trial
@@ -138,140 +141,4 @@ export function _fireIVSetFuncWithArgs(cur_iv) {
         throw new Error("No setter function supplied by: " + cur_iv);
     }
 }
-
-
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                                 Experiment Lifecycle - Store Response
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-export var _responses = [];
-export function _setResponses(responses){
-    if (responses.constructor === Array){
-        _responses = responses;
-    } else {
-        throw new Error("reponses can only be set to an array");
-    }
-}
-
-function _storeResponse(options) {
-
-    var lastTrial = _allTrials.pop();
-
-    var responseFormatted = {};
-
-    /** Store the IV -> Write out each IV (1 IV per array element) to a field */
-    for (var i = 0; i < lastTrial.length; ++i) {
-        var ivNum = "IV" + i;
-
-        //If a parser is defined use its output as the value of the response
-        if (lastTrial[i].parserFunc !== undefined && $.isFunction(lastTrial[i].parserFunc)){
-            var stdName = ivNum + "_" + lastTrial[i].description + "_value";
-
-            responseFormatted[stdName] = lastTrial[i].parserFunc.apply(this, lastTrial[i].value.concat(i) ); //The args are passed to the parser func with the index as the last arg
-
-        } else if (lastTrial[i].value.constructor === Array) { //Consider these to be defaults for javascript primitive types
-
-            /** Manually write out each argument (from an array) to a field in the object
-             *  Only append a number if there are >1 arguments passed in */
-
-            if (lastTrial[i].value.length > 1){
-
-                //If using a setFunc function with multiple args -> use the arg names to describe the values written to the response
-                var arg_names, arg_name;
-                arg_names = getParamNames( setFuncs[lastTrial[i].description] );
-
-                for (var j = 0; j < lastTrial[i].value.length; ++j) {
-                    arg_name = arg_names[j];
-                    responseFormatted[ivNum + "_" + lastTrial[i].description + "_value_" + arg_name ] =  lastTrial[i].value[j];
-                }
-
-            } else {
-                responseFormatted[ ivNum + "_" + lastTrial[i].description + "_value" ] =  lastTrial[i].value[0];
-            }
-
-        } else {
-            responseFormatted[ivNum + "_" + lastTrial[i].description + "_value"] = lastTrial[i].value;
-        }
-
-        /** Add a value of the 2afc std (for the relevant IV) */
-        if (lastTrial[i].hasOwnProperty("std_2AFC")) {
-            responseFormatted["std_2AFC"] = lastTrial[i].std_2AFC;
-        }
-    }
-
-    /** Check that a 2afc std value was added - if not you want to add a null value or it will fuck up the csv write*/
-    // if (!responseFormatted.hasOwnProperty("std_2AFC") && didSet2AFC) {
-    //     responseFormatted["std_2AFC"] = "null";
-    // }
-    
-
-    /** Store the DV*/
-    if (options !== undefined && options.hasOwnProperty("dv_value")) {
-        var value = _dvName || "value";
-        responseFormatted["DV_"+value] = options.dv_value;
-    } else {
-        alert("No DV was supplied by the calling code. This is an error.");
-        responseFormatted["DV_value"] = "ERROR - No DV supplied";
-    }
-
-    console.log("STORED THIS RESPONSE: ", responseFormatted);
-
-    _responses.push(responseFormatted);
-}
-//
-// // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-// //                                 Experiment Lifecycle - Output Responses
-// // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//
-// Trials.forceOutputResponses = function(){
-//     console.log("Forcing output of _responses");
-//     _outputResponses(_responses, true);
-// };
-//
-//
-// function _outputResponses(allResponses, log) {
-//
-//     if (allResponses.length === 0) return;
-//
-//     var csvString = "";
-//
-//     var keys = Object.keys(allResponses[0]);
-//     /**These are all the columns in the output*/
-//
-//     /** Make the header*/
-//     csvString += "Participant Name, Participant Number, "; //Manually add header
-//     for (var i = 0; i < keys.length; i++) {
-//         csvString += keys[i] + ",";
-//     }
-//     csvString = csvString.slice(0, -1) + "\n";//Cut trailing comma and put in a new row/line
-//
-//     /** Fill the data - This time its an array of arrays not array of dictionaries */
-//     for (i = 0; i < allResponses.length; i++) {
-//
-//         csvString += _pptName + "," + _pptNo + ","; //Manaully add content
-//
-//         for (var j = 0; j < keys.length; j++) { //Iterate over the keys to get teh values
-//
-//             var value = allResponses[i][keys[j]];
-//             // console.log("writing this raw value ", value, keys[j]);
-//             //value = checkReturnProps( value, true ) || value;  //Parse out relevant object fields
-//             //console.log("Afer it was parsed:", value, "\n*********");
-//             csvString += value + ",";
-//         }
-//
-//         csvString = csvString.slice(0, -1) + "\n"; //Cut trailing comma and put in a new row/line
-//     }
-//
-//     if (log) {
-//         console.log(csvString);
-//     }
-//
-//     /** Help out a machine today*/
-//     var csvContent = encodeURI("data:text/csv;charset=utf-8," + csvString);
-//     var a = createDownloadLink("results (" + _pptName + "," + _pptNo.toString() + ").csv", csvContent);
-//     a.innerHTML = "<h4>Click to download results!</h4>";
-//     a.className += " results-download";
-//     document.body.appendChild(a);
-//     a.click();
-// }
-
 

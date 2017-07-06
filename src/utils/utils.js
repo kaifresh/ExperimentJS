@@ -4,5 +4,5 @@
 
 import "./CreateDownloadLink.js";
 import "./Shuffle.js";
-import "./StringUtils.js";
 import "./NumberUtils.js";
+import "./StringUtils.js";

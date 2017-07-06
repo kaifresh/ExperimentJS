@@ -1,6 +1,6 @@
 
 import { Trials } from "./Trials.js";
-import { _responses } from "./RunExperiment.js";
+import { _responses } from "./ResponseHandler.js";
 import { _pptName, _pptNo } from "./GetPptInfo.js";
 import { createDownloadLink } from "../utils/CreateDownloadLink.js";
 

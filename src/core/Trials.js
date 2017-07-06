@@ -1,3 +1,7 @@
+import { extend } from "../utils/jQueryUtils.js";
+
+
+
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                                 Trials - Setting IV Levels & Functions
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -73,21 +77,26 @@ function _setSetFunc(ivname, setfunc){
 //                                      Trials - Building
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
-var _totalTrials = -1;                                          //Assigned but never used
+
 export var _allTrials = [];
-export function _setAllTrials(alltrials){
+var _totalTrials = -1;                                          //Assigned but never used
+export var _didBuildTrials = false;
+
+export function _setAllTrials(alltrials){                      // Used in ./Saves.js. Has to live here as it redefines _allTrials
     if (alltrials.constructor === Array){
         _allTrials = alltrials;
     }
 }
 
+// Returns a deep copy of the trials
 Trials.getTrials = function(){
     if (_allTrials.length > 0){
-        return $.extend(true, [], _allTrials);
+        return extend(true, [], _allTrials);
+        // return $.extend(true, [], _allTrials);
     }
 };
 
-export var _didBuildTrials = false;
+
 function _buildTrials(printTrials) {
 
     console.log("Build Trials. IVS:", IVs);
@@ -131,6 +140,7 @@ function _buildTrials(printTrials) {
                 
                 /** Parser function*/
                 if (IVs[iv].parserFunc !== undefined) {
+                    console.log("Setting parser for ", iv);
                     curIVLevel.parserFunc = IVs[iv].parserFunc; //Could write a copying method for all of these (that handles deep copying)
                 }
 

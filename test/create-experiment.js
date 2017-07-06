@@ -59,17 +59,10 @@ function testIVLevels(){
         console.log("IV b setFunc! ", arguments);
     });
 
-
-
-    
-
-    
     
     var repeats = 2;
     ExperimentJS.Trials.setRepeats(repeats);
     ExperimentJS.Trials.buildExperiment(true);
-
-
 
 
     var builtTrials = ExperimentJS.Trials.getTrials();

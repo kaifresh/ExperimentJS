@@ -40,6 +40,8 @@ Trials.runNextTrial = function (settings) { // usage -> runNextTrial({shouldStor
 
     if (_shouldRunNextTrial) {
 
+        alert("running next trial");
+
         if (_shouldRunMidCallback() && _midCallback !== null) {
             _midCallback();
         }
@@ -131,7 +133,7 @@ function _fireIVSetFuncWithArgs(cur_iv) {
 
     /** Using a FUNCTION to set the display*/
     if ( setFuncs[cur_iv.description] !== undefined ) {
-        // TODO: Serialise objects
+        // TODO: FIX Serialise objects into .value
         setFuncs[cur_iv.description].apply(null, cur_iv.value);
     } else {
         throw new Error("No setter function supplied by: " + cur_iv);

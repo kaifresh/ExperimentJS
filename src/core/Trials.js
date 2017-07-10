@@ -156,22 +156,15 @@ function _buildTrials(printTrials) {
         for (var i = 0; i < len; ++i) {                                                     // For all trials built so far
 
             buildingTrial = _allTrials.pop();                                               // Pop the incomplete array of iv-vals (objects) and extend it
-
+            
+            // TODO: FIX Add object serialisation
+            
             for (var j = 0; j < IVs[iv].levels.length; ++j) { //Extend them by all the levels of the next IV
 
                 var curIVLevel = {};
 
                 curIVLevel.description = iv;                                                // Set the description of the current IV obj 4 the current Level
-                curIVLevel.value = IVs[iv].levels[j];                                       // Set the description of the current IV obj 4 the current Level
-
-                if (IVs[iv].hasOwnProperty("std_2AFC")) {                                   // Store 2AFC std with each trial (if present)
-                    curIVLevel.std_2AFC = IVs[iv].std_2AFC;
-                }
-
-                if (IVs[iv].hasOwnProperty("std_2AFC_simultaneous_target")) {               // For 2AFC that is simultaneous (as opposed to the flipping kind)
-                    curIVLevel.std_2AFC_simultaneous_target = IVs[iv].std_2AFC_simultaneous_target;
-                }
-
+                curIVLevel.value = IVs[iv].levels[j];                                       // Create a factorial combination of the current IV level
 
                 if (IVs[iv].parserFunc !== undefined) {                                     // Parser functions
                     curIVLevel.parserFunc = IVs[iv].parserFunc;

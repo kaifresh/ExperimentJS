@@ -23,6 +23,8 @@ export function _storeResponse(options) {                       // Used in ./Run
 
     var lastTrial = _allTrials.pop();               // allTrials decreases by one
 
+    // TODO: FIX Serialise objects into .value
+    
     var responseFormatted = {};
 
     /** Store the IV -> Write out each IV (1 IV per array element) to a field */

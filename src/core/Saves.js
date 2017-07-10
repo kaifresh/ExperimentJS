@@ -15,7 +15,7 @@ import { SetCSSOnElement } from "../utils/SetCSSOnElement.js";
 
 var Saves = {};
 
-// TODO: Remove parser functions. When the trials are built, if any of htem contains unseralizable shit, create a map internal to ExperimentJS & Handle the tokens yourself! 
+// TODO: Remove parser functions. When the trials are built, if any of htem contains unseralizable shit, create a map internal to ExperimentJS & Handle the tokens yourself!
 
 /** Saving Parser Function Interface:
  *              function( array of all trials) { }
@@ -79,7 +79,7 @@ Saves.saveBuiltTrialsAndResponses = function() {
     if (typeof(Storage) !== "undefined") {
 
         // localStorage.experimentJSsaves = undefined;
-
+        // TODO: FIX - parse these trials
         var trialsForSaving = Saves.parseTrialsForSaving(_allTrials);                   //Parse your trials, using the custom serializer..
         var responsesForSaving = Saves.parseResponsesForSaving(_responses);
 

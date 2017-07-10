@@ -29,7 +29,6 @@ Trials.setIVLevels = function ( ivname, levels) {
         levels.map(function(elem, i){
             if (!Array.isArray( elem )){
                 throw new Error("[ setIVLevels Error ] - Level "+i+" must be an array of args passed to the set function for "+ ivname);
-                return;
             }
         });
 
@@ -38,8 +37,6 @@ Trials.setIVLevels = function ( ivname, levels) {
     } else{
         throw new Error("[ setIVLevels Error ] - The second argument to setIVLevels must be an array of arrays, containing the arguments passsed to the set function for "+ ivname);
     }
-
-
 };
 
 Trials.setIVsetFunc = function(ivname, setFunc) {
@@ -77,7 +74,7 @@ Trials.setDVName = function(dvName){
 Trials.setIVResponseParserFunc = function (ivname, parserFunc) {
 
     if (typeof parserFunc !== "function"){
-        throw new Error("[ setIVResponseParserFunc Error ] - parser function for "+ivname+" was not a function");
+        throw new Error("[ setIVResponseParserFunc Error ] - parser function for "+ivname+" was not a function: ", typeof parserFunc);
     }
 
     _setIVGeneric(ivname, "parserFunc", parserFunc);
@@ -98,7 +95,7 @@ Trials.setRepeats = function (nRepeats) {
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 /*
 * */
-export function _setIVGeneric(ivName, fieldName, fieldVal) { //used by 2AFC.js
+export function _setIVGeneric(ivName, fieldName, fieldVal) {
     _csvIllegalCharCheck(ivName);
     _csvIllegalCharCheck(fieldName);
 
@@ -133,7 +130,6 @@ export function _setAllTrials(alltrials){                      // Used in ./Save
 Trials.getTrials = function(){
     if (_allTrials.length > 0){
         return extend(true, [], _allTrials);
-        // return $.extend(true, [], _allTrials);
     }
 };
 

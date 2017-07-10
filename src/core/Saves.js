@@ -15,32 +15,57 @@ import { SetCSSOnElement } from "../utils/SetCSSOnElement.js";
 
 var Saves = {};
 
-// TODO: Set these to temp_trial_parser
+// TODO: Remove parser functions. When the trials are built, if any of htem contains unseralizable shit, create a map internal to ExperimentJS & Handle the tokens yourself! 
+
+/** Saving Parser Function Interface:
+ *              function( array of all trials) { }
+ *              return
+ *                      array of all parsed trials
+ *
+ *  Trial array has the following format:
+ *      [
+ *          {
+ *              description:    string -    IV_description
+ *              value:          array -     arguments passed to IV's setter function (these must be parsed to JSON serialisable values)
+ *              parserFunc:     func  -     TODO: will this be lost? parser function supplied by the user. This will be lost in
+ *          }
+ *      ]
+ * */
 Saves.parseTrialsForSaving = undefined;                     //interface is function(_allTrials){...} return a parsed copy of `modified` _allTrials
 Saves.parseResponsesForSaving = undefined;                  //interface is function(_responses){...} return a parsed copy of `modified` _responses
 Saves.unparseSavedTrials = undefined;
 Saves.unparseSavedResponses = undefined;
 
-// TODO: write a default parser that checks whether an object can be serialised. If not throw an error that requests a serialiser to be written
-function temp_trial_parser(allTrials, err){
+// TODO: COMPLETE THIS. write a default parser that checks whether an object can be serialised. If not throw an error that requests a serialiser to be written
+
+function DefaultTrialAndResponseParser(allTrials, err){
+
+    // var args_to_check;//, serialization_result;
+
+    console.log("ALL TRIALLS/RESPOSNES!");
+    console.log(allTrials);
 
     // Check for the presence of undefined, function, symbol => these cause the JSON.stringify func to fail
-    allTrials.map(function(elem, i, all){
-        var cur_child_elem = elem; // Recurse over elements and check them for the bad datatypes
-        if (typeof cur_child_elem === "function" || cur_child_elem === undefined){
+    allTrials.map(function(arg_to_check, i, all){
+
+        console.log(arg_to_check);
+
+        // serialization_result = JSON.stringify(current_arg_to_iv_setter_function)     // TODO: alt approach is to actually serialise
+
+        if (typeof arg_to_check === "function" || arg_to_check === undefined){
             throw err;
-            return;
         }
+
     });
 
     return allTrials;                                                                   // Can be safely serialised
 }
 
 function errorCheckSavingParsers(){
-    if (Saves.parseTrialsForSaving === undefined) throw new Error("Cannot restore trials without parsing function");
-    if (Saves.parseResponsesForSaving === undefined) throw new Error("Cannot restore _responses without parsing function");
-    if (Saves.unparseSavedTrials === undefined) throw new Error("Cannot restore trials without UNparsing function");
-    if (Saves.unparseSavedResponses === undefined) throw new Error("Cannot restore _responses without UNparsing function");
+    if (typeof Saves.parseTrialsForSaving !== "function") throw new Error("Cannot restore trials without parsing function");
+    if (typeof Saves.parseResponsesForSaving !== "function") throw new Error("Cannot restore responses without parsing function");
+    if (typeof Saves.unparseSavedTrials !== "function") throw new Error("Cannot restore trials without unparsing function");
+    if (typeof Saves.unparseSavedResponses !== "function") throw new Error("Cannot restore responses without unparsing function");
 }
 
 Saves.clearSaves = function(){
@@ -79,6 +104,8 @@ Saves.saveBuiltTrialsAndResponses = function() {
         localStorage.experimentJSsaves = JSON.stringify(keyed_by_dates);                //serialize!
 
         console.log("Saved Trials", JSON.parse(localStorage.experimentJSsaves));
+    } else {
+        alert("Your browser does not support trial saving.");
     }
 };
 
@@ -106,8 +133,8 @@ Saves.loadSavedTrialsAndResponses = function(){
         _setResponses( Saves.unparseSavedResponses( saves_from_seleced_date["responses"]) );
         if (_responses === undefined || _responses === null) _setResponses( [] );
 
-        console.log("restored all trials: ", _allTrials);
-        console.log("restored all _responses: ", _responses);
+        console.log("restored trials: ", _allTrials);
+        console.log("restored responses: ", _responses);
 
         Trials.runNextTrial();
 

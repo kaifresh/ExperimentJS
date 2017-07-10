@@ -17,9 +17,11 @@ export function _setResponses(responses){                       // Used in ./Sav
     }
 }
 
-export function _storeResponse(options) {
 
-    var lastTrial = _allTrials.pop();
+// Responsible for changing hte lengths of _allTrials and _responses
+export function _storeResponse(options) {                       // Used in ./RunExperiment.js
+
+    var lastTrial = _allTrials.pop();               // allTrials decreases by one
 
     var responseFormatted = {};
 
@@ -48,7 +50,7 @@ export function _storeResponse(options) {
 
             } else if (parsed_data !== null && typeof parsed_data === "object"){
 
-                // TODO: See if keys can be cached for a performance improvement
+                // TODO: See if keys output by the parser function can be cached for a performance improvement
                 var keys = Object.keys(parsed_data);
                 for (var k = 0; k < keys.length; k++){
                     var key_and_data_description = keys[k];
@@ -84,15 +86,7 @@ export function _storeResponse(options) {
             responseFormatted[ivNum + "_" + lastTrial[i].description + "_value"] = lastTrial[i].value;
         }
 
-        // if (lastTrial[i].hasOwnProperty("std_2AFC")) {                                                                      // Add a value of the 2afc std (for the relevant IV)
-        //     responseFormatted["std_2AFC"] = lastTrial[i].std_2AFC;                                                          // TODO: Determine if this can be deleted...
-        // }
     }
-
-    /** Check that a 2afc std value was added - if not you want to add a null value or it will fuck up the csv write*/
-    // if (!responseFormatted.hasOwnProperty("std_2AFC") && didSet2AFC) {
-    //     responseFormatted["std_2AFC"] = "null";
-    // }
 
     /** Store the DV*/
     if (options !== undefined && options.hasOwnProperty("dv_value")) {
@@ -105,5 +99,5 @@ export function _storeResponse(options) {
 
     console.log("STORED THIS RESPONSE: ", responseFormatted);
 
-    _responses.push(responseFormatted);
+    _responses.push(responseFormatted);                         // _responses by one
 }

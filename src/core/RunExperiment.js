@@ -1,7 +1,7 @@
 
 // RunExperiment.js
-// Add core functionality facilitating the experimental life cycle to the Trials Object.
-// Such as:
+// Adds core functionality facilitating the experimental life cycle to the Trials Object.
+// Specifically:
 //      - Getting participant info
 //      - Running the next trial (setting IVs etc)
 //      - Storing a response
@@ -54,11 +54,8 @@ Trials.runNextTrial = function (settings) { // usage -> runNextTrial({shouldStor
 
         if (_allTrials.length > 0) {
             _displayNextTrial();
-
-            // _cur2AFCIsTarget = true;
-            /** Always reset the 2AFC value*/
-
             console.log("There are ", _allTrials.length, " trials remaining.");
+            
         } else {
 
             //Possibly too destructive
@@ -120,14 +117,13 @@ Trials.setEndCallback = function (value) {
 
 /** Where view-level elements are set - this is like the CONTROLLER method interfacing between MODEL and VIEW*/
 function _displayNextTrial() {
-    var nextTrial = _allTrials[_allTrials.length - 1]; //Always go from the back
+    var nextTrial = _allTrials[_allTrials.length - 1]; // Always go from the back. allTrials is decreased by _storeResponse() 
     console.log("Displaying next trial:", nextTrial);
 
     /** Iterate over each IV and set its pointer to its value for that trial */
     for (var i = 0; i < nextTrial.length; ++i) {
         var cur_iv = nextTrial[i];
         _fireIVSetFuncWithArgs(cur_iv);
-
     }
 }
 
@@ -135,6 +131,7 @@ function _fireIVSetFuncWithArgs(cur_iv) {
 
     /** Using a FUNCTION to set the display*/
     if ( setFuncs[cur_iv.description] !== undefined ) {
+        // TODO: Serialise objects
         setFuncs[cur_iv.description].apply(null, cur_iv.value);
     } else {
         throw new Error("No setter function supplied by: " + cur_iv);

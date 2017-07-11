@@ -105,9 +105,20 @@
         }
     });
 
+    ExperimentJS.Trials.setIVLevels("FUNCTIONE", [
+        [ function(n){ console.log("called function&&!! LEVEL 1 of the IV" + n) }, 187 ],
+        [ function(n){ console.log("called function&&!! LEVEL 2 of the IV" + n) }, 200 ]
+    ]);
+    ExperimentJS.Trials.setIVsetFunc("FUNCTIONE", function(cb, num){
+        console.log("THE CALLBACK: ");
+        console.log(cb);
+        cb(num);
+    });
+
     ExperimentJS.Trials.setRepeats(1);
+    ExperimentJS.Trials.setShuffle(false);
     ExperimentJS.Trials.buildExperiment(true); //true logs trials to console
-    ExperimentJS.Trials.getPptInfo();
+//    ExperimentJS.Trials.getPptInfo();
     ExperimentJS.Trials.runNextTrial();
 
     $(window).keydown(function(event){

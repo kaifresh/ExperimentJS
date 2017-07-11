@@ -10,7 +10,7 @@
     "build": "rollup -c",
     "build-uglify-old": "rollup -c && uglifyjs build/three.js -cm --preamble \"// threejs.org/license\" > build/three.min.js",
     "build-uglify": "rollup -c && uglifyjs build/experimentJS.js > build/experimentJS.min.js",
-    "build-browserify": "browserify src/ExperimentJS.js -o build/bundle.js -t [ babelify --presets [ es2015 ]  ] -s ExperimentJS && uglifyjs build/bundle.js > build/bundle.min.js",
+    "build-browserify": "browserify src/ExperimentJS.js -o build/experimentJS.js -t [ babelify --presets [ es2015 ]  ] -s ExperimentJS && uglifyjs build/experimentJS.js > build/experimentJS.min.js",
     "dev": "rollup -c -w",
     "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1"

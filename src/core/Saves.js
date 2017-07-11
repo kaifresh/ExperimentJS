@@ -72,6 +72,8 @@ Saves.clearSaves = function(){
     localStorage.removeItem("experimentJSsaves");
 };
 
+// var serially = require("serially");
+
 Saves.saveBuiltTrialsAndResponses = function() {
 
     errorCheckSavingParsers();
@@ -80,6 +82,7 @@ Saves.saveBuiltTrialsAndResponses = function() {
 
         // localStorage.experimentJSsaves = undefined;
         // TODO: FIX - parse these trials
+
         var trialsForSaving = Saves.parseTrialsForSaving(_allTrials);                   //Parse your trials, using the custom serializer..
         var responsesForSaving = Saves.parseResponsesForSaving(_responses);
 

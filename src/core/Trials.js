@@ -1,5 +1,5 @@
 import { extend } from "../utils/jQueryUtils.js";
-
+import { _ReplaceUnserializabletWithTokenIV } from "./UnserializableMap.js";
 
 /**
  * To set Trial IVs
@@ -144,8 +144,11 @@ function _buildTrials(printTrials) {
 
         if (IVs[iv].levels === undefined)  throw new Error("Levels not supplied for " + iv);
         if (IVs[iv].setFunc === undefined) throw new Error("Setter function not supplied for " + iv);
-
+        
         console.log("Extending all trials array with: " + iv + " (" + IVs[iv].levels.length + " levels)");
+        
+        // TODO: FIX Add object serialisation
+        var _tokenized_iv_levels = _ReplaceUnserializabletWithTokenIV(IVs[iv].levels, iv);         // From UnserializableMap.js - replace actual unserializable object with the  tokens
 
         if (setFuncs[iv] === undefined) throw new Error("SetFunc not defined for " + iv);
 
@@ -156,15 +159,14 @@ function _buildTrials(printTrials) {
         for (var i = 0; i < len; ++i) {                                                     // For all trials built so far
 
             buildingTrial = _allTrials.pop();                                               // Pop the incomplete array of iv-vals (objects) and extend it
-            
-            // TODO: FIX Add object serialisation
-            
-            for (var j = 0; j < IVs[iv].levels.length; ++j) { //Extend them by all the levels of the next IV
+
+            // for (var j = 0; j < IVs[iv].levels.length; ++j) { //Extend them by all the levels of the next IV
+            for (var j = 0; j < _tokenized_iv_levels.length; ++j) { //Extend them by all the levels of the next IV
 
                 var curIVLevel = {};
 
                 curIVLevel.description = iv;                                                // Set the description of the current IV obj 4 the current Level
-                curIVLevel.value = IVs[iv].levels[j];                                       // Create a factorial combination of the current IV level
+                curIVLevel.value = _tokenized_iv_levels[j].slice();                         // Create a factorial combination of the current IV level
 
                 if (IVs[iv].parserFunc !== undefined) {                                     // Parser functions
                     curIVLevel.parserFunc = IVs[iv].parserFunc;
@@ -175,10 +177,10 @@ function _buildTrials(printTrials) {
                 var newOrExtendedTrial;
 
                 if (buildingTrial === undefined) {
-                    newOrExtendedTrial = [curIVLevel];
+                    newOrExtendedTrial = [ curIVLevel ];
 
                 } else if (buildingTrial.constructor === Array) {
-                    newOrExtendedTrial = buildingTrial.concat([curIVLevel]);                // The incomplete trial is extended by creating a brand new array FROM it
+                    newOrExtendedTrial = buildingTrial.concat([ curIVLevel ]);                // The incomplete trial is extended by creating a brand new array FROM it
                 }
 
                 temp.push(newOrExtendedTrial);
@@ -200,6 +202,7 @@ function _buildTrials(printTrials) {
 
     console.log("There are ", _allTrials.length, "trials (using", repeats, "repeats)");
     if (printTrials){
+        console.log(_allTrials);
         for (i = 0; i < _allTrials.length; i++){
             console.log("TRIAL ", i);
             for (j = 0; j < _allTrials[i].length; j++){

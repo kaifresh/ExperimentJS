@@ -15,7 +15,7 @@ import { _outputResponses } from "./OutputResponses.js";
 import { _interstimulusPause, _shouldInterstimulusPause } from "./InterstimulusPause.js";
 import { getParamNames } from "../utils/StringUtils.js";
 import { _ApplyFunctionToHTMLChildren } from "../utils/DOMUtils.js";
-
+import { _ReplaceTokenWithUnserializableIV } from "./UnserializableMap.js";
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                         Experiment Lifecycle - Start & Game Loop
@@ -39,9 +39,7 @@ Trials.runNextTrial = function (settings) { // usage -> runNextTrial({shouldStor
     }
 
     if (_shouldRunNextTrial) {
-
-        alert("running next trial");
-
+        
         if (_shouldRunMidCallback() && _midCallback !== null) {
             _midCallback();
         }
@@ -121,10 +119,14 @@ Trials.setEndCallback = function (value) {
 function _displayNextTrial() {
     var nextTrial = _allTrials[_allTrials.length - 1]; // Always go from the back. allTrials is decreased by _storeResponse() 
     console.log("Displaying next trial:", nextTrial);
-
+    
     /** Iterate over each IV and set its pointer to its value for that trial */
     for (var i = 0; i < nextTrial.length; ++i) {
         var cur_iv = nextTrial[i];
+
+        // TODO FIX - get this implementation right!!!!
+        cur_iv = _ReplaceTokenWithUnserializableIV(cur_iv);         // From UnserializableMap.js - replace tokens with the actual unserializable object
+        
         _fireIVSetFuncWithArgs(cur_iv);
     }
 }

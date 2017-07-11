@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<script src="../src/core/UnserializableMap.js"></script>
+
+<script>
+
+    function TestUnserializableReplacer(){
+        var iv_name = "This is a demo";
+
+        var test_array = [1, 1.1, "demo string", [187], {"187": "lolol"}, function(){ alert("hey")}];
+
+        console.log("original array: ", test_array);
+
+        var tokenised_array = _ReplaceUnserializabletWithToken(test_array, iv_name);
+
+        console.log("tokenised_array", tokenised_array);
+
+        var restored_array = _ReplaceTokenWithUnserializable(tokenised_array, iv_name);
+
+        console.log("restored array:", restored_array);
+        for (var i = 0; i < test_array.length; i++){
+            console.log(test_array[i] === restored_array[i], test_array[i], restored_array[i]);
+        }
+    }
+
+    TestUnserializableReplacer();
+
+
+
+</script>
+
+</body>
+</html>

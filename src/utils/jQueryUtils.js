@@ -31,6 +31,7 @@ var support = {};
 
 
 // Taken from Jquery
+// extend(bool deep_copy (must be true), object dest, object src, object src2 .... object srcN )
 export function extend() {
     var options, name, src, copy, copyIsArray, clone,
         target = arguments[ 0 ] || {},

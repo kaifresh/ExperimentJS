@@ -31,10 +31,10 @@ var Saves = {};
  *          }
  *      ]
  * */
-Saves.parseTrialsForSaving = undefined;                     //interface is function(_allTrials){...} return a parsed copy of `modified` _allTrials
-Saves.parseResponsesForSaving = undefined;                  //interface is function(_responses){...} return a parsed copy of `modified` _responses
-Saves.unparseSavedTrials = undefined;
-Saves.unparseSavedResponses = undefined;
+// Saves.parseTrialsForSaving = undefined;                     //interface is function(_allTrials){...} return a parsed copy of `modified` _allTrials
+// Saves.parseResponsesForSaving = undefined;                  //interface is function(_responses){...} return a parsed copy of `modified` _responses
+// Saves.unparseSavedTrials = undefined;
+// Saves.unparseSavedResponses = undefined;
 
 // TODO: COMPLETE THIS. write a default parser that checks whether an object can be serialised. If not throw an error that requests a serialiser to be written
 
@@ -61,30 +61,30 @@ function DefaultTrialAndResponseParser(allTrials, err){
     return allTrials;                                                                   // Can be safely serialised
 }
 
-function errorCheckSavingParsers(){
-    if (typeof Saves.parseTrialsForSaving !== "function") throw new Error("Cannot restore trials without parsing function");
-    if (typeof Saves.parseResponsesForSaving !== "function") throw new Error("Cannot restore responses without parsing function");
-    if (typeof Saves.unparseSavedTrials !== "function") throw new Error("Cannot restore trials without unparsing function");
-    if (typeof Saves.unparseSavedResponses !== "function") throw new Error("Cannot restore responses without unparsing function");
-}
+// function errorCheckSavingParsers(){
+//     // if (typeof Saves.parseTrialsForSaving !== "function") throw new Error("Cannot restore trials without parsing function");
+//     // if (typeof Saves.parseResponsesForSaving !== "function") throw new Error("Cannot restore responses without parsing function");
+//     // if (typeof Saves.unparseSavedTrials !== "function") throw new Error("Cannot restore trials without unparsing function");
+//     // if (typeof Saves.unparseSavedResponses !== "function") throw new Error("Cannot restore responses without unparsing function");
+// }
 
 Saves.clearSaves = function(){
     localStorage.removeItem("experimentJSsaves");
 };
 
-// var serially = require("serially");
-
 Saves.saveBuiltTrialsAndResponses = function() {
 
-    errorCheckSavingParsers();
+    // errorCheckSavingParsers();
 
     if (typeof(Storage) !== "undefined") {
 
         // localStorage.experimentJSsaves = undefined;
         // TODO: FIX - parse these trials
 
-        var trialsForSaving = Saves.parseTrialsForSaving(_allTrials);                   //Parse your trials, using the custom serializer..
-        var responsesForSaving = Saves.parseResponsesForSaving(_responses);
+        // var trialsForSaving = Saves.parseTrialsForSaving(_allTrials);                   //Parse your trials, using the custom serializer..
+        // var responsesForSaving = Saves.parseResponsesForSaving(_responses);
+        var trialsForSaving = _allTrials;                   //Parse your trials, using the custom serializer..
+        var responsesForSaving = _responses;
 
         var experimentJSsaves = {};                                                     //JSONify the trials and _responses
         experimentJSsaves["trials"] = trialsForSaving;
@@ -107,16 +107,16 @@ Saves.saveBuiltTrialsAndResponses = function() {
         localStorage.experimentJSsaves = JSON.stringify(keyed_by_dates);                //serialize!
 
         console.log("Saved Trials", JSON.parse(localStorage.experimentJSsaves));
-    } else {
-        alert("Your browser does not support trial saving.");
     }
 };
 
 
 Saves.loadSavedTrialsAndResponses = function(){
     
-    errorCheckSavingParsers();
+    // errorCheckSavingParsers();
 
+
+    
     var experimentJSsaves = JSON.parse(localStorage.experimentJSsaves);
 
     console.log("all saves: ", experimentJSsaves);
@@ -132,8 +132,8 @@ Saves.loadSavedTrialsAndResponses = function(){
 
         saves_from_seleced_date = experimentJSsaves[saves_from_seleced_date];
 
-        _setAllTrials( Saves.unparseSavedTrials( saves_from_seleced_date["trials"]) );                // Unparse your trials using custom unserialiser
-        _setResponses( Saves.unparseSavedResponses( saves_from_seleced_date["responses"]) );
+        _setAllTrials( saves_from_seleced_date["trials"] );                // Unparse your trials using custom unserialiser
+        _setResponses( saves_from_seleced_date["responses"] );
         if (_responses === undefined || _responses === null) _setResponses( [] );
 
         console.log("restored trials: ", _allTrials);
@@ -159,6 +159,12 @@ Saves.loadSavedTrialsAndResponses = function(){
     });
 
 };
+
+// Remove this functionality if Storage isnt supported
+if (typeof(Storage) === "undefined"){
+    var localStorageIsUnsupported = function(){alert("Your browser does not support local storage or experiment result saving")};
+    Saves.loadSavedTrialsAndResponses = Saves.saveBuiltTrialsAndResponses = localStorageIsUnsupported;
+}
 
 
 

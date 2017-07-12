@@ -21,7 +21,7 @@ export function _setResponses(responses){                       // Used in ./Sav
 // Responsible for changing hte lengths of _allTrials and _responses
 export function _storeResponse(options) {                       // Used in ./RunExperiment.js
 
-    var lastTrial = _allTrials.pop();               // allTrials decreases by one
+    var lastTrial = _allTrials.pop();                           // allTrials decreases by one
 
     // TODO: FIX Serialise objects into .value
     

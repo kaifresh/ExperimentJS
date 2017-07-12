@@ -1,5 +1,5 @@
 import { extend } from "../utils/jQueryUtils.js";
-import { _ReplaceUnserializabletWithTokenIV } from "./UnserializableMap.js";
+import { _Unserializable_Var2Token } from "./UnserializableMap.js";
 
 /**
  * To set Trial IVs
@@ -126,10 +126,13 @@ export function _setAllTrials(alltrials){                      // Used in ./Save
     }
 }
 
+var _ = require("lodash");
 // Returns a deep copy of the trials
 Trials.getTrials = function(){
     if (_allTrials.length > 0){
-        return extend(true, [], _allTrials);
+        // TODO: determine if this can be replaced with lodash
+        return _.cloneDeep(_allTrials);
+        // return extend(true, [], _allTrials);
     }
 };
 
@@ -148,7 +151,7 @@ function _buildTrials(printTrials) {
         console.log("Extending all trials array with: " + iv + " (" + IVs[iv].levels.length + " levels)");
         
         // TODO: FIX Add object serialisation
-        var _tokenized_iv_levels = _ReplaceUnserializabletWithTokenIV(IVs[iv].levels, iv);         // From UnserializableMap.js - replace actual unserializable object with the  tokens
+        var _tokenized_iv_levels = _Unserializable_Var2Token(IVs[iv].levels, iv);         // From UnserializableMap.js - replace unserializable object with token
 
         if (setFuncs[iv] === undefined) throw new Error("SetFunc not defined for " + iv);
 
@@ -161,12 +164,12 @@ function _buildTrials(printTrials) {
             buildingTrial = _allTrials.pop();                                               // Pop the incomplete array of iv-vals (objects) and extend it
 
             // for (var j = 0; j < IVs[iv].levels.length; ++j) { //Extend them by all the levels of the next IV
-            for (var j = 0; j < _tokenized_iv_levels.length; ++j) { //Extend them by all the levels of the next IV
+            for (var j = 0; j < _tokenized_iv_levels.length; ++j) {                         //Extend trials so far by all the levels of the next IV
 
                 var curIVLevel = {};
 
                 curIVLevel.description = iv;                                                // Set the description of the current IV obj 4 the current Level
-                curIVLevel.value = _tokenized_iv_levels[j].slice();                         // Create a factorial combination of the current IV level
+                curIVLevel.value = _tokenized_iv_levels[j];                                 // Create a factorial combination of the current IV level
 
                 if (IVs[iv].parserFunc !== undefined) {                                     // Parser functions
                     curIVLevel.parserFunc = IVs[iv].parserFunc;

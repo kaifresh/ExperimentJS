@@ -15,7 +15,7 @@ import { _outputResponses } from "./OutputResponses.js";
 import { _interstimulusPause, _shouldInterstimulusPause } from "./InterstimulusPause.js";
 import { getParamNames } from "../utils/StringUtils.js";
 import { _ApplyFunctionToHTMLChildren } from "../utils/DOMUtils.js";
-import { _ReplaceTokenWithUnserializableIV } from "./UnserializableMap.js";
+import { _Unserializable_Token2Var } from "./UnserializableMap.js";
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                         Experiment Lifecycle - Start & Game Loop
@@ -30,8 +30,9 @@ export function _setShouldRunNextTrial(value){
     }
 }
 
-export var _shouldRunNextTrial = true; //used by: InterstimulusPause.js
-Trials.runNextTrial = function (settings) { // usage -> runNextTrial({shouldStoreResponse: true, dv_value: "inside"});
+export var _shouldRunNextTrial = true;                                      // used by: InterstimulusPause.js
+
+Trials.runNextTrial = function (settings) {                                 // usage -> runNextTrial({shouldStoreResponse: true, dv_value: "inside"});
 
     if (!_didBuildTrials){
         throw new Error("runNextTrial(): Trial were not built");
@@ -49,7 +50,7 @@ Trials.runNextTrial = function (settings) { // usage -> runNextTrial({shouldStor
         }
 
         if (settings !== undefined && settings.hasOwnProperty("shouldStoreResponse") && settings.shouldStoreResponse) {
-            _storeResponse(settings); //Settings contains a field "dv_value" which is also read by _storeResponse
+            _storeResponse(settings);                                       //Settings contains a field "dv_value" which is also read by _storeResponse
         }
 
         if (_allTrials.length > 0) {
@@ -72,6 +73,46 @@ Trials.runNextTrial = function (settings) { // usage -> runNextTrial({shouldStor
     }
 
 };
+
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                                 Experiment Lifecycle - Displaying The Next Trial
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+var _ = require("lodash");                                                            // Browserify will add this package
+
+/** Where view-level elements are set - this is like the CONTROLLER method interfacing between MODEL and VIEW*/
+export var _next_trial;
+function _displayNextTrial() {
+
+    // If you Pop here and store the trial, then you use it in store response
+
+    var nextTrial = _allTrials[_allTrials.length - 1]; // Always go from the back. allTrials is decreased by _storeResponse() 
+    console.log("Displaying next trial:", nextTrial);
+    
+    /** Iterate over each IV and set its pointer to its value for that trial */
+    for (var i = 0; i < nextTrial.length; ++i) {
+
+        // Deep copy the trial before you replace its tokens. This is because the tokens themselves are passed by reference and you will have replaced tokens in other shit too 
+        var cur_iv_unserialized = _Unserializable_Token2Var( _.cloneDeep( nextTrial[i] ) );         // UnserializableMap.js
+
+        console.log("Now displaying Unserialized IV", cur_iv_unserialized);
+
+        _fireIVSetFuncWithArgs(cur_iv_unserialized);
+    }
+}
+
+function _fireIVSetFuncWithArgs(cur_iv) {
+
+    /** Using a FUNCTION to set the display*/
+    if ( setFuncs[cur_iv.description] !== undefined ) {
+        // TODO: FIX Serialise objects into .value
+        setFuncs[cur_iv.description].apply(null, cur_iv.value);
+    } else {
+        throw new Error("No setter function supplied by: " + cur_iv);
+    }
+}
+
+
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                  Experiment Lifecycle - Mid Point Callback (i.e. the "take a break" message)
@@ -102,6 +143,7 @@ function _shouldRunMidCallback() {
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //             Experiment Lifecycle - End Callback (a behaviour at the end of the experiment)
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
 var _endCallBack = null;
 Trials.setEndCallback = function (value) {
     if (typeof value === "function"){
@@ -110,35 +152,3 @@ Trials.setEndCallback = function (value) {
         throw new Error("[ setEndCallback ERROR ] - First argument to setEndCallback must be a function");
     }
 };
-
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                                 Experiment Lifecycle - Displaying The Next Trial
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
-/** Where view-level elements are set - this is like the CONTROLLER method interfacing between MODEL and VIEW*/
-function _displayNextTrial() {
-    var nextTrial = _allTrials[_allTrials.length - 1]; // Always go from the back. allTrials is decreased by _storeResponse() 
-    console.log("Displaying next trial:", nextTrial);
-    
-    /** Iterate over each IV and set its pointer to its value for that trial */
-    for (var i = 0; i < nextTrial.length; ++i) {
-        var cur_iv = nextTrial[i];
-
-        // TODO FIX - get this implementation right!!!!
-        cur_iv = _ReplaceTokenWithUnserializableIV(cur_iv);         // From UnserializableMap.js - replace tokens with the actual unserializable object
-        
-        _fireIVSetFuncWithArgs(cur_iv);
-    }
-}
-
-function _fireIVSetFuncWithArgs(cur_iv) {
-
-    /** Using a FUNCTION to set the display*/
-    if ( setFuncs[cur_iv.description] !== undefined ) {
-        // TODO: FIX Serialise objects into .value
-        setFuncs[cur_iv.description].apply(null, cur_iv.value);
-    } else {
-        throw new Error("No setter function supplied by: " + cur_iv);
-    }
-}
-

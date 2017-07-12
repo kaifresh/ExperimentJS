@@ -9,11 +9,10 @@ const unserializable_token = "%%UNSERIALIZABLE%%";
 
 // ========================================================================================
 
-// TOKEN -> Unserializable - When trials are used to display
-export function _ReplaceTokenWithUnserializableIV(iv_for_trial){
+export function _Unserializable_Token2Var(iv_for_trial){
 
     if (!Array.isArray(iv_for_trial.value) || typeof iv_for_trial.description !== "string"){
-        throw new Error("_ReplaceTokenWithUnserializableIV", iv_for_trial);
+        throw new Error("_Unserializable_Token2Var", iv_for_trial);
     }
 
     // {description, value}
@@ -40,13 +39,12 @@ export function _ReplaceTokenWithUnserializableIV(iv_for_trial){
     return iv_for_trial;
 }
 
-// Unserialisable -> Token - When trials are created
-export function _ReplaceUnserializabletWithTokenIV(array_of_iv_args, iv_name){
+export function _Unserializable_Var2Token(array_of_iv_args, iv_name){
 
-    console.log("******\t_ReplaceUnserializabletWithTokenIV\t*******");
+    console.log("******\t_Unserializable_Var2Token\t*******");
 
     if (!Array.isArray(array_of_iv_args) || typeof iv_name !== "string"){
-        throw new Error("_ReplaceUnserializabletWithTokenIV usage: (array iv_args, string iv_name)");
+        throw new Error("_Unserializable_Var2Token usage: (array iv_args, string iv_name)");
     }
 
     var __ctr = 0, __val, __iv_args, __did_tokenize = false;

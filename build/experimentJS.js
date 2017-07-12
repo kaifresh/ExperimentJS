@@ -17346,6 +17346,8 @@ exports._storeResponse = _storeResponse;
 
 var _Trials = require("./Trials");
 
+var _RunExperiment = require("./RunExperiment.js");
+
 var _StringUtils = require("../utils/StringUtils.js");
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -17365,9 +17367,7 @@ function _setResponses(responses) {
 function _storeResponse(options) {
     // Used in ./RunExperiment.js
 
-    var lastTrial = _Trials._allTrials.pop(); // allTrials decreases by one
-
-    // TODO: FIX Serialise objects into .value
+    var lastTrial = _RunExperiment._trial_to_run; // _trial_to_run is set in ./RunExperiment.js:_displayNextTrial()
 
     var responseFormatted = {};
 
@@ -17375,7 +17375,7 @@ function _storeResponse(options) {
     for (var i = 0; i < lastTrial.length; ++i) {
         var ivNum = "IV" + i;
 
-        // If a parser is defined use its output as the value of the response
+        // [ RESPONSE PARSER ]
         if (lastTrial[i].parserFunc !== undefined && typeof lastTrial[i].parserFunc === "function") {
             //$.isFunction(lastTrial[i].parserFunc)){
 
@@ -17400,11 +17400,13 @@ function _storeResponse(options) {
                 var keys = Object.keys(parsed_data);
                 for (var k = 0; k < keys.length; k++) {
                     var key_and_data_description = keys[k];
-                    responseFormatted[stdName + "_" + key_and_data_description + "_value"] = parsed_data[key_and_data_description]; // Add parsed data for this key to response
+                    responseFormatted[stdName + "_" + key_and_data_description] = parsed_data[key_and_data_description]; // Add parsed data for this key to response
                 }
             } else {
                 throw new Error("[ Parser Function Error ] - Parser function for " + stdName + " must output either a string or an object. You output:", typeof parsed_data === "undefined" ? "undefined" : _typeof(parsed_data));
             }
+
+            // [ DEFAULT: ARRAY OF INPUT ]
         } else if (lastTrial[i].value.constructor === Array) {
             // Default behaviour: array of args passed to the IV's set function
 
@@ -17419,14 +17421,14 @@ function _storeResponse(options) {
 
                 for (var j = 0; j < lastTrial[i].value.length; ++j) {
                     arg_name = arg_names[j];
-                    responseFormatted[ivNum + "_" + lastTrial[i].description + "_value_" + arg_name] = lastTrial[i].value[j];
+                    responseFormatted[ivNum + "_" + lastTrial[i].description + "_" + arg_name] = lastTrial[i].value[j];
                 }
             } else {
-                responseFormatted[ivNum + "_" + lastTrial[i].description + "_value"] = lastTrial[i].value[0];
+                responseFormatted[ivNum + "_" + lastTrial[i].description] = lastTrial[i].value[0];
             }
         } else {
             // TODO: Determine if this can be deleted...
-            responseFormatted[ivNum + "_" + lastTrial[i].description + "_value"] = lastTrial[i].value;
+            responseFormatted[ivNum + "_" + lastTrial[i].description] = lastTrial[i].value;
         }
     }
 
@@ -17444,13 +17446,13 @@ function _storeResponse(options) {
     _responses.push(responseFormatted); // _responses by one
 }
 
-},{"../utils/StringUtils.js":17,"./Trials":9}],7:[function(require,module,exports){
+},{"../utils/StringUtils.js":17,"./RunExperiment.js":7,"./Trials":9}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports._shouldRunNextTrial = undefined;
+exports._trial_to_run = exports._shouldRunNextTrial = undefined;
 exports._setShouldRunNextTrial = _setShouldRunNextTrial;
 
 var _Trials = require("./Trials.js");
@@ -17489,7 +17491,8 @@ function _setShouldRunNextTrial(value) {
 //      - Mid/end callbacks
 
 
-var _shouldRunNextTrial = exports._shouldRunNextTrial = true; //used by: InterstimulusPause.js
+var _shouldRunNextTrial = exports._shouldRunNextTrial = true; // used by: InterstimulusPause.js
+
 _Trials.Trials.runNextTrial = function (settings) {
     // usage -> runNextTrial({shouldStoreResponse: true, dv_value: "inside"});
 
@@ -17517,18 +17520,55 @@ _Trials.Trials.runNextTrial = function (settings) {
             console.log("There are ", _Trials._allTrials.length, " trials remaining.");
         } else {
 
-            //Possibly too destructive
-            // $(document.body).children().fadeOut();
-            (0, _DOMUtils._ApplyFunctionToHTMLChildren)(document.body, function (child) {
-                child.style.display = "none";
-            });
-
             (0, _OutputResponses._outputResponses)(_ResponseHandler._responses);
 
             if (typeof _endCallBack === "function") _endCallBack();
         }
     }
 };
+
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                                 Experiment Lifecycle - Displaying The Next Trial
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+var _ = require("lodash"); // Browserify will add this package
+
+/** Where view-level elements are set - this is like the CONTROLLER method interfacing between MODEL and VIEW*/
+var _trial_to_run = exports._trial_to_run = undefined;
+var _trials_that_were_run = [];
+function _displayNextTrial() {
+
+    // Deep copy the trial before you replace its tokens.
+    // This is because the tokens themselves are passed by reference
+    // thus you will have replaced tokens elsewhere in _allTrials too
+    // _trial_to_run = _.cloneDeep( _allTrials.pop() );                                // Pop the trial and store it for ./ResponseHandler.js:_storeResponse()
+    exports._trial_to_run = _trial_to_run = _.cloneDeep(_Trials._allTrials.pop()); // Pop the trial and store it for ./ResponseHandler.js:_storeResponse()
+
+    console.log("Displaying next trial:", _trial_to_run);
+
+    /** Iterate over each IV and set its pointer to its value for that trial */
+    for (var i = 0; i < _trial_to_run.length; ++i) {
+
+        _trial_to_run[i] = (0, _UnserializableMap._Unserializable_Token2Var)(_trial_to_run[i]); // UnserializableMap.js
+
+        console.log("Now displaying Unserialized IV", _trial_to_run[i]);
+
+        _fireIVSetFuncWithArgs(_trial_to_run[i]);
+    }
+
+    _trials_that_were_run.push(_trial_to_run); // TODO: Determine if this is necessary
+}
+
+function _fireIVSetFuncWithArgs(cur_iv) {
+
+    /** Using a FUNCTION to set the display*/
+    if (_Trials.setFuncs[cur_iv.description] !== undefined) {
+        // TODO: FIX Serialise objects into .value
+        _Trials.setFuncs[cur_iv.description].apply(null, cur_iv.value);
+    } else {
+        throw new Error("No setter function supplied by: " + cur_iv);
+    }
+}
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                  Experiment Lifecycle - Mid Point Callback (i.e. the "take a break" message)
@@ -17559,7 +17599,13 @@ function _shouldRunMidCallback() {
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //             Experiment Lifecycle - End Callback (a behaviour at the end of the experiment)
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-var _endCallBack = null;
+
+var _endCallBack = function _endCallBack() {
+    // Default behaviour is to empty the DOM
+    (0, _DOMUtils._ApplyFunctionToHTMLChildren)(document.body, function (child) {
+        child.style.display = "none";
+    });
+};
 _Trials.Trials.setEndCallback = function (value) {
     if (typeof value === "function") {
         _endCallBack = value;
@@ -17567,40 +17613,6 @@ _Trials.Trials.setEndCallback = function (value) {
         throw new Error("[ setEndCallback ERROR ] - First argument to setEndCallback must be a function");
     }
 };
-
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                                 Experiment Lifecycle - Displaying The Next Trial
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
-var _ = require("lodash"); // Browserify will add this package
-
-/** Where view-level elements are set - this is like the CONTROLLER method interfacing between MODEL and VIEW*/
-function _displayNextTrial() {
-    var nextTrial = _Trials._allTrials[_Trials._allTrials.length - 1]; // Always go from the back. allTrials is decreased by _storeResponse() 
-    console.log("Displaying next trial:", nextTrial);
-
-    /** Iterate over each IV and set its pointer to its value for that trial */
-    for (var i = 0; i < nextTrial.length; ++i) {
-
-        // TODO FIX - get this implementation right!!!!
-        var cur_iv_unserialized = (0, _UnserializableMap._Unserializable_Token2Var)(_.cloneDeep(nextTrial[i])); // From UnserializableMap.js - replace tokens with the actual unserializable object
-
-        console.log("Now displaying Unserialized IV", cur_iv_unserialized);
-
-        _fireIVSetFuncWithArgs(cur_iv_unserialized);
-    }
-}
-
-function _fireIVSetFuncWithArgs(cur_iv) {
-
-    /** Using a FUNCTION to set the display*/
-    if (_Trials.setFuncs[cur_iv.description] !== undefined) {
-        // TODO: FIX Serialise objects into .value
-        _Trials.setFuncs[cur_iv.description].apply(null, cur_iv.value);
-    } else {
-        throw new Error("No setter function supplied by: " + cur_iv);
-    }
-}
 
 },{"../utils/DOMUtils.js":13,"../utils/StringUtils.js":17,"./InterstimulusPause.js":4,"./OutputResponses.js":5,"./ResponseHandler.js":6,"./Trials.js":9,"./UnserializableMap.js":10,"lodash":1}],8:[function(require,module,exports){
 "use strict";
@@ -17725,7 +17737,6 @@ Saves.saveBuiltTrialsAndResponses = function () {
 Saves.loadSavedTrialsAndResponses = function () {
 
     // errorCheckSavingParsers();
-
 
     var experimentJSsaves = JSON.parse(localStorage.experimentJSsaves);
 
@@ -18003,7 +18014,7 @@ function _buildTrials(printTrials) {
         console.log("Extending all trials array with: " + iv + " (" + IVs[iv].levels.length + " levels)");
 
         // TODO: FIX Add object serialisation
-        var _tokenized_iv_levels = (0, _UnserializableMap._Unserializable_Var2Token)(IVs[iv].levels, iv); // From UnserializableMap.js - replace actual unserializable object with the  tokens
+        var _tokenized_iv_levels = (0, _UnserializableMap._Unserializable_Var2Token)(IVs[iv].levels, iv); // From UnserializableMap.js - replace unserializable object with token
 
         if (setFuncs[iv] === undefined) throw new Error("SetFunc not defined for " + iv);
 
@@ -18018,12 +18029,12 @@ function _buildTrials(printTrials) {
 
             // for (var j = 0; j < IVs[iv].levels.length; ++j) { //Extend them by all the levels of the next IV
             for (var j = 0; j < _tokenized_iv_levels.length; ++j) {
-                //Extend them by all the levels of the next IV
+                //Extend trials so far by all the levels of the next IV
 
                 var curIVLevel = {};
 
                 curIVLevel.description = iv; // Set the description of the current IV obj 4 the current Level
-                curIVLevel.value = _tokenized_iv_levels[j].slice(); // Create a factorial combination of the current IV level
+                curIVLevel.value = _tokenized_iv_levels[j]; // Create a factorial combination of the current IV level
 
                 if (IVs[iv].parserFunc !== undefined) {
                     // Parser functions
@@ -18061,7 +18072,7 @@ function _buildTrials(printTrials) {
         for (i = 0; i < _allTrials.length; i++) {
             console.log("TRIAL ", i);
             for (j = 0; j < _allTrials[i].length; j++) {
-                console.log(_allTrials[i][j]);
+                console.log(_allTrials[i][j], "\t==>", _allTrials[i][j].value);
             }
             console.log("******* ******* ******* *******");
         }

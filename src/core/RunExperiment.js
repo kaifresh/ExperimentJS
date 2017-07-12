@@ -17,6 +17,8 @@ import { getParamNames } from "../utils/StringUtils.js";
 import { _ApplyFunctionToHTMLChildren } from "../utils/DOMUtils.js";
 import { _Unserializable_Token2Var } from "./UnserializableMap.js";
 
+var _ = require("lodash");                                                            // Browserify will resolve this package
+
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                         Experiment Lifecycle - Start & Game Loop
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -32,7 +34,7 @@ export function _setShouldRunNextTrial(value){
 
 export var _shouldRunNextTrial = true;                                      // used by: InterstimulusPause.js
 
-Trials.runNextTrial = function (settings) {                                 // usage -> runNextTrial({shouldStoreResponse: true, dv_value: "inside"});
+Trials.runNextTrial = function (options) {                                 // usage -> runNextTrial({shouldStoreResponse: true, dv_value: "inside"});
 
     if (!_didBuildTrials){
         throw new Error("runNextTrial(): Trial were not built");
@@ -49,8 +51,8 @@ Trials.runNextTrial = function (settings) {                                 // u
             _interstimulusPause();
         }
 
-        if (settings !== undefined && settings.hasOwnProperty("shouldStoreResponse") && settings.shouldStoreResponse) {
-            _storeResponse(settings);                                       //Settings contains a field "dv_value" which is also read by _storeResponse
+        if (options !== undefined && options.hasOwnProperty("shouldStoreResponse") && options.shouldStoreResponse) {
+            _storeResponse(options);                                       //Settings contains a field "dv_value" which is also read by _storeResponse
         }
 
         if (_allTrials.length > 0) {
@@ -58,12 +60,6 @@ Trials.runNextTrial = function (settings) {                                 // u
             console.log("There are ", _allTrials.length, " trials remaining.");
             
         } else {
-
-            //Possibly too destructive
-            // $(document.body).children().fadeOut();
-            _ApplyFunctionToHTMLChildren(document.body, function(child){
-                child.style.display = "none";
-            });
 
             _outputResponses(_responses);
 
@@ -78,27 +74,33 @@ Trials.runNextTrial = function (settings) {                                 // u
 //                                 Experiment Lifecycle - Displaying The Next Trial
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
-var _ = require("lodash");                                                            // Browserify will add this package
+
 
 /** Where view-level elements are set - this is like the CONTROLLER method interfacing between MODEL and VIEW*/
-export var _next_trial;
+export var _trial_to_run;
+var _trials_that_were_run = [];
 function _displayNextTrial() {
 
-    // If you Pop here and store the trial, then you use it in store response
+    // Deep copy the trial before you replace its tokens.
+    // This is because the tokens themselves are passed by reference
+    // thus you will have replaced tokens elsewhere in _allTrials too
+    // _trial_to_run = _.cloneDeep( _allTrials.pop() );                                // Pop the trial, clone and store it for ./ResponseHandler.js:_storeResponse()
+    _trial_to_run = _.cloneDeep( _allTrials.pop() );                                // Pop the trial and store it for ./ResponseHandler.js:_storeResponse()
 
-    var nextTrial = _allTrials[_allTrials.length - 1]; // Always go from the back. allTrials is decreased by _storeResponse() 
-    console.log("Displaying next trial:", nextTrial);
+    _trials_that_were_run.push( _.cloneDeep(_trial_to_run) );                                  // TODO: Determine if this is necessary
+
+    console.log("Displaying next trial:", _trial_to_run);
     
     /** Iterate over each IV and set its pointer to its value for that trial */
-    for (var i = 0; i < nextTrial.length; ++i) {
+    for (var i = 0; i < _trial_to_run.length; ++i) {
 
-        // Deep copy the trial before you replace its tokens. This is because the tokens themselves are passed by reference and you will have replaced tokens in other shit too 
-        var cur_iv_unserialized = _Unserializable_Token2Var( _.cloneDeep( nextTrial[i] ) );         // UnserializableMap.js
+        _trial_to_run[i] = _Unserializable_Token2Var( _trial_to_run[i] );         // UnserializableMap.js - DeTokenize
 
-        console.log("Now displaying Unserialized IV", cur_iv_unserialized);
+        console.log("Now displaying Unserialized IV", _trial_to_run[i]);
 
-        _fireIVSetFuncWithArgs(cur_iv_unserialized);
+        _fireIVSetFuncWithArgs(_trial_to_run[i]);
     }
+    
 }
 
 function _fireIVSetFuncWithArgs(cur_iv) {
@@ -144,7 +146,11 @@ function _shouldRunMidCallback() {
 //             Experiment Lifecycle - End Callback (a behaviour at the end of the experiment)
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
-var _endCallBack = null;
+var _endCallBack = function(){                                                  // Default behaviour is to empty the DOM
+    _ApplyFunctionToHTMLChildren(document.body, function(child){
+        child.style.display = "none";
+    });
+};
 Trials.setEndCallback = function (value) {
     if (typeof value === "function"){
         _endCallBack = value;

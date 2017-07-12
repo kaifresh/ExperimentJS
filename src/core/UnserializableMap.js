@@ -97,10 +97,15 @@ export function _Unserializable_Var2Token(array_of_iv_args, iv_name){
 
 
 
+export function _Responses_Token2Var(responses){
+    
+}
 
 
 
+export function _Responses_Var2Token(responses){
 
+}
 
 
 

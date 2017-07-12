@@ -114,8 +114,6 @@ Saves.saveBuiltTrialsAndResponses = function() {
 Saves.loadSavedTrialsAndResponses = function(){
     
     // errorCheckSavingParsers();
-
-
     
     var experimentJSsaves = JSON.parse(localStorage.experimentJSsaves);
 

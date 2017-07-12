@@ -3,6 +3,7 @@
  */
 
 import { _allTrials, setFuncs, _dvName } from "./Trials";
+import { _trial_to_run } from "./RunExperiment.js";
 import { getParamNames } from "../utils/StringUtils.js";
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -21,17 +22,39 @@ export function _setResponses(responses){                       // Used in ./Sav
 // Responsible for changing hte lengths of _allTrials and _responses
 export function _storeResponse(options) {                       // Used in ./RunExperiment.js
 
-    var lastTrial = _allTrials.pop();                           // allTrials decreases by one
+    var lastTrial = _trial_to_run;                              // _trial_to_run is set in ./RunExperiment.js:_displayNextTrial()
 
-    // TODO: FIX Serialise objects into .value
-    
     var responseFormatted = {};
-
+    
+    /** 
+     * GOAL only tokenize & de-tokenize ONCE
+     * 
+     * Trials 
+     *      - Tokenuzed on creation
+     *      - DeTokenized on trial (deep copy)
+     *      - Nothing on Save               - Still tokenized from creation 
+     *      - Nothing on Load               - DeTokenized as normal
+     *
+     * Responses
+     *      - DeTokenised on creation       - Receivng the detokenised trial
+     *            - ALT = store Tokenized trials & DeTokenize on output
+     *            - Nothing on Save - still a token
+     *            - Nothign on load - still a token
+     * 
+     * Result
+     *      - Store all run trials + their DV response in tokenised form as the Response array
+     *      - On output, de-tokenize them & pass them to this current method
+     *      - TODO: create a way to store the run trials that works with JSON. eg -> { trials: []run_trials, dv: []responses }
+     * */
+    
+    // TODO: UNZSERIALIZABLE ISSUE: By this point, the responses no longer have tokens. So when saved their content is lost. SO the question is where to keep a serialised copy
+    // TODO: Could just store all trials in tokenised/untokensied formats and convert to response format at the end (otherwise you need to indivudally support parsers, and the other shit)
+    
     /** Store the IV -> Write out each IV (1 IV per array element) to a field */
     for (var i = 0; i < lastTrial.length; ++i) {
         var ivNum = "IV" + i;
 
-        // If a parser is defined use its output as the value of the response
+        // [ RESPONSE PARSER ]
         if (lastTrial[i].parserFunc !== undefined && typeof lastTrial[i].parserFunc === "function"){ //$.isFunction(lastTrial[i].parserFunc)){
             
             var stdName = ivNum + "_" + lastTrial[i].description;
@@ -56,13 +79,14 @@ export function _storeResponse(options) {                       // Used in ./Run
                 var keys = Object.keys(parsed_data);
                 for (var k = 0; k < keys.length; k++){
                     var key_and_data_description = keys[k];
-                    responseFormatted[ stdName+"_"+key_and_data_description+"_value" ] = parsed_data[key_and_data_description]; // Add parsed data for this key to response
+                    responseFormatted[ stdName+"_"+key_and_data_description ] = parsed_data[key_and_data_description]; // Add parsed data for this key to response
                 }
                 
             } else {
                 throw new Error("[ Parser Function Error ] - Parser function for "+stdName+" must output either a string or an object. You output:", typeof parsed_data);
             }
 
+        // [ DEFAULT: ARRAY OF INPUT ]
         } else if (lastTrial[i].value.constructor === Array) { // Default behaviour: array of args passed to the IV's set function
 
             /** Manually write out each argument (from an array) to a field in the object
@@ -76,16 +100,16 @@ export function _storeResponse(options) {                       // Used in ./Run
 
                 for (var j = 0; j < lastTrial[i].value.length; ++j) {
                     arg_name = arg_names[j];
-                    responseFormatted[ivNum + "_" + lastTrial[i].description + "_value_" + arg_name ] =  lastTrial[i].value[j];
+                    responseFormatted[ivNum + "_" + lastTrial[i].description + "_" + arg_name ] =  lastTrial[i].value[j];
                 }
 
             } else {
-                responseFormatted[ ivNum + "_" + lastTrial[i].description + "_value" ] =  lastTrial[i].value[0];
+                responseFormatted[ ivNum + "_" + lastTrial[i].description ] =  lastTrial[i].value[0];
             }
 
         } else {
             // TODO: Determine if this can be deleted...
-            responseFormatted[ivNum + "_" + lastTrial[i].description + "_value"] = lastTrial[i].value;
+            responseFormatted[ivNum + "_" + lastTrial[i].description ] = lastTrial[i].value;
         }
 
     }

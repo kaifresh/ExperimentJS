@@ -209,7 +209,7 @@ function _buildTrials(printTrials) {
         for (i = 0; i < _allTrials.length; i++){
             console.log("TRIAL ", i);
             for (j = 0; j < _allTrials[i].length; j++){
-                console.log( _allTrials[i][j] );
+                console.log( _allTrials[i][j], "\t==>", _allTrials[i][j].value );
             }
             console.log("******* ******* ******* *******");
         }

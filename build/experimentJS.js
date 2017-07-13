@@ -17373,7 +17373,7 @@ function _storeResponse(options) {
         throw new Error("A dependent variable (DV) must be supplied by the calling code. This is an error."); // Do not continue to next trial if DV is not supplied
     }
 
-    var lastTrial = _Trials._allTrials.pop(); // _trial_to_run is set in ./RunExperiment.js:_displayNextTrial()
+    var lastTrial = _Trials._allTrials.pop();
 
     _responses.push({
         trial: lastTrial, // Store the tokenised trial (detokenization occurs at output time)
@@ -17707,7 +17707,7 @@ function _displayNextTrial() {
     // Deep copy the trial before you replace its tokens.
     // This is because the tokens themselves are passed by reference
     // and detokenizing a reference will also detokenize trials elsewhere in _allTrials !!
-    var _trial_to_run = _.cloneDeep(_Trials._allTrials[_Trials._allTrials.length - 1]); // Trial is popped in ./ResponseHandler.js:_storeResponse
+    var _trial_to_run = _.cloneDeep(_Trials._allTrials.back()); // Trial is popped in ./ResponseHandler.js:_storeResponse
 
     console.log("Displaying next trial:", _trial_to_run);
 
@@ -17791,69 +17791,15 @@ var _ResponseHandler = require("./ResponseHandler.js");
 
 var _SetCSSOnElement = require("../utils/SetCSSOnElement.js");
 
-var Saves = {};
-
-// TODO: Remove parser functions. When the trials are built, if any of htem contains unseralizable shit, create a map internal to ExperimentJS & Handle the tokens yourself!
-
-/** Saving Parser Function Interface:
- *              function( array of all trials) { }
- *              return
- *                      array of all parsed trials
- *
- *  Trial array has the following format:
- *      [
- *          {
- *              description:    string -    IV_description
- *              value:          array -     arguments passed to IV's setter function (these must be parsed to JSON serialisable values)
- *              parserFunc:     func  -     TODO: will this be lost? parser function supplied by the user. This will be lost in
- *          }
- *      ]
- * */
-// Saves.parseTrialsForSaving = undefined;                     //interface is function(_allTrials){...} return a parsed copy of `modified` _allTrials
-// Saves.parseResponsesForSaving = undefined;                  //interface is function(_responses){...} return a parsed copy of `modified` _responses
-// Saves.unparseSavedTrials = undefined;
-// Saves.unparseSavedResponses = undefined;
-
-// TODO: COMPLETE THIS. write a default parser that checks whether an object can be serialised. If not throw an error that requests a serialiser to be written
-
-/* = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
- *
- *   Store repsonses in localStorage.
- *   Localstorage converts everything to JSON so object types that cannot be converted will be lost
- *   To preserve these unconvertble data, you need to specify a PARSER and UNPARSER for trials and for responses
- *   On Save: the setter replaces the unconvertible data with a token
- *   On Load: The getter checks the token and replaces it with the correct unconvertible object.
- *
- *  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = */
-
-function DefaultTrialAndResponseParser(allTrials, err) {
-
-    // var args_to_check;//, serialization_result;
-
-    console.log("ALL TRIALLS/RESPOSNES!");
-    console.log(allTrials);
-
-    // Check for the presence of undefined, function, symbol => these cause the JSON.stringify func to fail
-    allTrials.map(function (arg_to_check, i, all) {
-
-        console.log(arg_to_check);
-
-        // serialization_result = JSON.stringify(current_arg_to_iv_setter_function)     // TODO: alt approach is to actually serialise
-
-        if (typeof arg_to_check === "function" || arg_to_check === undefined) {
-            throw err;
-        }
-    });
-
-    return allTrials; // Can be safely serialised
-}
-
-// function errorCheckSavingParsers(){
-//     // if (typeof Saves.parseTrialsForSaving !== "function") throw new Error("Cannot restore trials without parsing function");
-//     // if (typeof Saves.parseResponsesForSaving !== "function") throw new Error("Cannot restore responses without parsing function");
-//     // if (typeof Saves.unparseSavedTrials !== "function") throw new Error("Cannot restore trials without unparsing function");
-//     // if (typeof Saves.unparseSavedResponses !== "function") throw new Error("Cannot restore responses without unparsing function");
-// }
+var Saves = {}; /* = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+                 *
+                 *   Store repsonses in localStorage.
+                 *   Localstorage converts everything to JSON so object types that cannot be converted will be lost
+                 *   To preserve these unconvertble data, you need to specify a PARSER and UNPARSER for trials and for responses
+                 *   On Save: the setter replaces the unconvertible data with a token
+                 *   On Load: The getter checks the token and replaces it with the correct unconvertible object.
+                 *
+                 *  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = */
 
 Saves.clearSaves = function () {
     localStorage.removeItem("experimentJSsaves");
@@ -17861,21 +17807,11 @@ Saves.clearSaves = function () {
 
 Saves.saveBuiltTrialsAndResponses = function () {
 
-    // errorCheckSavingParsers();
-
     if (typeof Storage !== "undefined") {
 
-        // localStorage.experimentJSsaves = undefined;
-        // TODO: FIX - parse these trials
-
-        // var trialsForSaving = Saves.parseTrialsForSaving(_allTrials);                   //Parse your trials, using the custom serializer..
-        // var responsesForSaving = Saves.parseResponsesForSaving(_responses);
-        var trialsForSaving = _Trials._allTrials; //Parse your trials, using the custom serializer..
-        var responsesForSaving = _ResponseHandler._responses;
-
-        var experimentJSsaves = {}; //JSONify the trials and _responses
-        experimentJSsaves["trials"] = trialsForSaving;
-        experimentJSsaves["responses"] = responsesForSaving;
+        var experimentJSsaves = {};
+        experimentJSsaves["trials"] = _Trials._allTrials; // Safely tokenized
+        experimentJSsaves["responses"] = _ResponseHandler._responses;
 
         var msg = prompt("Add a message to this save!");
 
@@ -17886,12 +17822,11 @@ Saves.saveBuiltTrialsAndResponses = function () {
 
         var dateKey = new Date().toUTCString(); //Very clear date
 
-        //Make a new dictionary or get the old one
-        var keyed_by_dates = localStorage.experimentJSsaves === undefined ? {} : JSON.parse(localStorage.experimentJSsaves);
+        var saves_keyed_by_dates = localStorage.experimentJSsaves === undefined ? {} : JSON.parse(localStorage.experimentJSsaves);
 
-        keyed_by_dates[msg + " - " + dateKey] = experimentJSsaves; //save to it
+        saves_keyed_by_dates[msg + " - " + dateKey] = experimentJSsaves; //save to it
 
-        localStorage.experimentJSsaves = JSON.stringify(keyed_by_dates); //serialize!
+        localStorage.experimentJSsaves = JSON.stringify(saves_keyed_by_dates); //serialize!
 
         console.log("Saved Trials", JSON.parse(localStorage.experimentJSsaves));
     }
@@ -17899,7 +17834,7 @@ Saves.saveBuiltTrialsAndResponses = function () {
 
 Saves.loadSavedTrialsAndResponses = function () {
 
-    // errorCheckSavingParsers();
+    if (document.getElementById(saves_dialog_id) !== null) return; // Dont display dialog if its already in the DOM
 
     var experimentJSsaves = JSON.parse(localStorage.experimentJSsaves);
 
@@ -17925,10 +17860,7 @@ Saves.loadSavedTrialsAndResponses = function () {
 
         _Trials.Trials.runNextTrial();
 
-        //Remove select from dom
-
-        // select_dropdown_components.wrap.remove();
-        select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap);
+        select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap); //Remove select from dom
     });
 
     select_dropdown_components.button_clear.addEventListener("click", function () {
@@ -17937,8 +17869,10 @@ Saves.loadSavedTrialsAndResponses = function () {
             Saves.clearSaves();
         }
 
-        //Remove select from DOM
-        // select_dropdown_components.wrap.remove();
+        select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap); //Remove select from DOM
+    });
+
+    select_dropdown_components.button_cancel.addEventListener("click", function () {
         select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap);
     });
 };
@@ -17952,17 +17886,13 @@ if (typeof Storage === "undefined") {
 }
 
 // TODO: Verify that no jQuery is being used!
+var saves_dialog_id = "ExperimentJS_Saved_Info";
 function _createDropDownSelect(all_saves) {
 
-    // var saves_dialog_wrap = $("<saves_dialog_wrap>", {
-    //     id: "saved_info"
-    // });
-
     var saves_dialog_wrap = document.createElement("saves_dialog_wrap");
-    saves_dialog_wrap.id = "saved_info";
+    saves_dialog_wrap.id = saves_dialog_id;
 
     //Make a select to choose from the saves
-    // var sel = $("<select>");
     var sel = document.createElement("select");
 
     Object.keys(all_saves).map(function (elem, i, all) {
@@ -17983,10 +17913,14 @@ function _createDropDownSelect(all_saves) {
     var b_clear = document.createElement("button");
     b_clear.innerHTML = "Clear";
 
+    var b_cancel = document.createElement("button");
+    b_cancel.innerHTML = "Cancel";
+
     saves_dialog_wrap.appendChild(sel);
     saves_dialog_wrap.appendChild(document.createElement("br"));
     saves_dialog_wrap.appendChild(b);
     saves_dialog_wrap.appendChild(b_clear);
+    saves_dialog_wrap.appendChild(b_cancel);
     document.body.appendChild(saves_dialog_wrap);
 
     var css = {
@@ -18005,6 +17939,7 @@ function _createDropDownSelect(all_saves) {
         select: sel,
         button: b,
         button_clear: b_clear,
+        button_cancel: b_cancel,
         wrap: saves_dialog_wrap
     };
 }
@@ -18176,9 +18111,8 @@ function _buildTrials(printTrials) {
 
         console.log("Extending all trials array with: " + iv + " (" + IVs[iv].levels.length + " levels)");
 
-        // TODO: FIX Add object serialisation
+        // Serialise functions & objects stored in the map
         var _tokenized_iv_levels = (0, _UnserializableMap._Unserializable_Var2Token)(IVs[iv].levels, iv); // From UnserializableMap.js - replace unserializable object with token
-
         var _tokenized_parser_func = (0, _UnserializableMap._Unserializable_ParserFunc2Token)(IVs[iv].parserFunc, iv);
 
         if (setFuncs[iv] === undefined) throw new Error("SetFunc not defined for " + iv); // TODO: two setfunc checks? this seems wrong
@@ -18192,18 +18126,18 @@ function _buildTrials(printTrials) {
 
             buildingTrial = _allTrials.pop(); // Pop the incomplete array of iv-vals (objects) and extend it
 
-            // for (var j = 0; j < IVs[iv].levels.length; ++j) { //Extend them by all the levels of the next IV
             for (var j = 0; j < _tokenized_iv_levels.length; ++j) {
                 //Extend trials so far by all the levels of the next IV
 
                 var curIVLevel = {};
 
+                // = = = = = = = = = = = IV name and Args passed to setter = = = = = = = = = = = = = =
+
                 curIVLevel.description = iv; // Set the description of the current IV obj 4 the current Level
                 curIVLevel.value = _tokenized_iv_levels[j]; // Create a factorial combination of the current IV level
 
-                // if (IVs[iv].parserFunc !== undefined) {                                     // Parser functions
-                //     curIVLevel.parserFunc = IVs[iv].parserFunc;
-                // }
+                // = = = = = = = = = = = Parser Func = = = = = = = = = = = = = =
+
                 if (_tokenized_parser_func !== undefined) {
                     // Parser functions
                     curIVLevel.parserFunc = _tokenized_parser_func; // Replaced with a string, keyed by IV name
@@ -18226,15 +18160,21 @@ function _buildTrials(printTrials) {
         exports._allTrials = _allTrials = temp; // /** Replace your previous trials with Temp (don"t know who to do this in place) */
     }
 
-    /** Duplicate the current factorial trials */
-    var repeats = expRepeats;
+    // var expRepeats = expRepeats;
     temp = [];
-    for (i = 0; i < repeats; i++) {
+    for (i = 0; i < expRepeats; i++) {
         temp = temp.concat(_allTrials);
     }
     exports._allTrials = _allTrials = temp;
 
-    console.log("There are ", _allTrials.length, "trials (using", repeats, "repeats)");
+    if (_shouldShuffle) _allTrials.shuffle();
+
+    _totalTrials = _allTrials.length; //Used to determine where you are in the trial process
+    exports._didBuildTrials = _didBuildTrials = true;
+
+    // = = = = = = = = = = = debugging... = = = = = = = = = = = = = =
+
+    console.log("There are ", _allTrials.length, "trials (using", expRepeats, "expRepeats)");
     if (printTrials) {
         console.log(_allTrials);
         for (i = 0; i < _allTrials.length; i++) {
@@ -18245,11 +18185,6 @@ function _buildTrials(printTrials) {
             console.log("******* ******* ******* *******");
         }
     }
-
-    if (_shouldShuffle) _allTrials.shuffle();
-
-    _totalTrials = _allTrials.length; //Used to determine where you are in the trial process
-    exports._didBuildTrials = _didBuildTrials = true;
 }
 
 Trials.buildExperiment = function (printTrials) {
@@ -18404,6 +18339,7 @@ function _Unserializable_Var2Token(array_of_iv_args, iv_name) {
     return tokenized_arg_array;
 }
 
+// ParserFuncs are stored in the Saves object and will be lost when serialsied to JSON, so create a map of them
 function _Unserializable_ParserFunc2Token(parserfunc, iv_name) {
 
     if (parserfunc === undefined) return parserfunc;
@@ -18412,75 +18348,10 @@ function _Unserializable_ParserFunc2Token(parserfunc, iv_name) {
         throw new Error("_Unserializable_ParserFunc2Token ERROR - usage (function parserfunc, string iv_name");
     }
 
-    // TODO: Tokenise the parser func
-    ParserFuncMap[iv_name] = parserfunc; // Parserfuncs are keyed by IV
+    ParserFuncMap[iv_name] = parserfunc;
 
     return unserializable_parserfunc_token;
 }
-
-//
-// //Just do work on the arg array, make it easy on yourself!
-// export function _ReplaceUnserializabletWithToken(iv_arg_array, iv_name){
-//
-//     if (!Array.isArray(iv_arg_array) || typeof iv_name !== "string"){
-//         throw new Error("_ReplaceUnserializabletWithToken usage: (array iv_args, string iv_name)");
-//     }
-//
-//     var __token = 0, __val;
-//
-//     var tokenized_arg_array = iv_arg_array.slice();                     // deep copy?
-//
-//     for (var __idx_in_map = 0;  __idx_in_map < tokenized_arg_array.length; __idx_in_map++){
-//
-//         __val = tokenized_arg_array[__idx_in_map];
-//
-//         if (typeof __val === "function" || typeof __val === "object" || Array.isArray(__val) ){
-//
-//             if (UnserializableMap[iv_name] === undefined) UnserializableMap[iv_name] = {};
-//
-//             __token = __idx_in_map + unserializable_token;          // create token
-//
-//             UnserializableMap[iv_name][__token ] = __val;           // store the unseralizable in the map
-//
-//             tokenized_arg_array[__idx_in_map] = __token ;           // replace the unserializable with the token
-//         }
-//     }
-//
-//     return tokenized_arg_array;
-// }
-//
-//
-//
-// export function _ReplaceTokenWithUnserializable(iv_arg_array_parsed, iv_name){
-//
-//     if (!Array.isArray(iv_arg_array_parsed) || typeof iv_name !== "string"){
-//         throw new Error("_ReplaceTokenWithUnserializable usage: (array iv_args, string iv_name)");
-//     }
-//
-//     var __idx_in_array;
-//
-//     var de_tokenized_arg_array = iv_arg_array_parsed.slice();
-//
-//     // console.log("iv_arg_array_parsed", iv_arg_array_parsed);
-//
-//     var to_replace = Object.keys(UnserializableMap[iv_name]);               // Iterate over unserializable
-//
-//     for (var i = 0; i < to_replace.length; i++){
-//
-//         __idx_in_array = +to_replace[i].replace(unserializable_token, "");  // remove token, coerce to number
-//
-//         de_tokenized_arg_array[__idx_in_array] =  UnserializableMap[iv_name][ to_replace[i] ];
-//
-//     }
-//
-//     // console.log("de_tokenized_arg_array", de_tokenized_arg_array);
-//
-//     return de_tokenized_arg_array;
-// }
-// //
-// // function _GetUnserializableForToken(iv_name, token){
-// //     return UnserializableMap[iv_name][token];
-// // }
 
 },{}],11:[function(require,module,exports){
 "use strict";

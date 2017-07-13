@@ -27,7 +27,7 @@ export function _storeResponse(options) {                       // Used in ./Run
         throw new Error("A dependent variable (DV) must be supplied by the calling code. This is an error.");       // Do not continue to next trial if DV is not supplied
     }
 
-    var lastTrial = _allTrials.pop();                              // _trial_to_run is set in ./RunExperiment.js:_displayNextTrial()
+    var lastTrial = _allTrials.pop();
 
     _responses.push({
         trial: lastTrial,                                           // Store the tokenised trial (detokenization occurs at output time)

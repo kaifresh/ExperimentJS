@@ -15,80 +15,17 @@ import { SetCSSOnElement } from "../utils/SetCSSOnElement.js";
 
 var Saves = {};
 
-// TODO: Remove parser functions. When the trials are built, if any of htem contains unseralizable shit, create a map internal to ExperimentJS & Handle the tokens yourself!
-
-/** Saving Parser Function Interface:
- *              function( array of all trials) { }
- *              return
- *                      array of all parsed trials
- *
- *  Trial array has the following format:
- *      [
- *          {
- *              description:    string -    IV_description
- *              value:          array -     arguments passed to IV's setter function (these must be parsed to JSON serialisable values)
- *              parserFunc:     func  -     TODO: will this be lost? parser function supplied by the user. This will be lost in
- *          }
- *      ]
- * */
-// Saves.parseTrialsForSaving = undefined;                     //interface is function(_allTrials){...} return a parsed copy of `modified` _allTrials
-// Saves.parseResponsesForSaving = undefined;                  //interface is function(_responses){...} return a parsed copy of `modified` _responses
-// Saves.unparseSavedTrials = undefined;
-// Saves.unparseSavedResponses = undefined;
-
-// TODO: COMPLETE THIS. write a default parser that checks whether an object can be serialised. If not throw an error that requests a serialiser to be written
-
-function DefaultTrialAndResponseParser(allTrials, err){
-
-    // var args_to_check;//, serialization_result;
-
-    console.log("ALL TRIALLS/RESPOSNES!");
-    console.log(allTrials);
-
-    // Check for the presence of undefined, function, symbol => these cause the JSON.stringify func to fail
-    allTrials.map(function(arg_to_check, i, all){
-
-        console.log(arg_to_check);
-
-        // serialization_result = JSON.stringify(current_arg_to_iv_setter_function)     // TODO: alt approach is to actually serialise
-
-        if (typeof arg_to_check === "function" || arg_to_check === undefined){
-            throw err;
-        }
-
-    });
-
-    return allTrials;                                                                   // Can be safely serialised
-}
-
-// function errorCheckSavingParsers(){
-//     // if (typeof Saves.parseTrialsForSaving !== "function") throw new Error("Cannot restore trials without parsing function");
-//     // if (typeof Saves.parseResponsesForSaving !== "function") throw new Error("Cannot restore responses without parsing function");
-//     // if (typeof Saves.unparseSavedTrials !== "function") throw new Error("Cannot restore trials without unparsing function");
-//     // if (typeof Saves.unparseSavedResponses !== "function") throw new Error("Cannot restore responses without unparsing function");
-// }
-
 Saves.clearSaves = function(){
     localStorage.removeItem("experimentJSsaves");
 };
 
 Saves.saveBuiltTrialsAndResponses = function() {
 
-    // errorCheckSavingParsers();
-
     if (typeof(Storage) !== "undefined") {
 
-        // localStorage.experimentJSsaves = undefined;
-        // TODO: FIX - parse these trials
-
-        // var trialsForSaving = Saves.parseTrialsForSaving(_allTrials);                   //Parse your trials, using the custom serializer..
-        // var responsesForSaving = Saves.parseResponsesForSaving(_responses);
-        var trialsForSaving = _allTrials;                   //Parse your trials, using the custom serializer..
-        var responsesForSaving = _responses;
-
-        var experimentJSsaves = {};                                                     //JSONify the trials and _responses
-        experimentJSsaves["trials"] = trialsForSaving;
-        experimentJSsaves["responses"] = responsesForSaving;
+        var experimentJSsaves = {};
+        experimentJSsaves["trials"] = _allTrials;                                           // Safely tokenized
+        experimentJSsaves["responses"] = _responses;
 
         var msg = prompt("Add a message to this save!");
 
@@ -99,12 +36,11 @@ Saves.saveBuiltTrialsAndResponses = function() {
 
         var dateKey = (new Date()).toUTCString(); //Very clear date
 
-        //Make a new dictionary or get the old one
-        var keyed_by_dates = (localStorage.experimentJSsaves === undefined) ? {} : JSON.parse(localStorage.experimentJSsaves);
+        var saves_keyed_by_dates = (localStorage.experimentJSsaves === undefined) ? {} : JSON.parse(localStorage.experimentJSsaves);
 
-        keyed_by_dates[msg + " - " +dateKey] = experimentJSsaves;                       //save to it
+        saves_keyed_by_dates[msg + " - " +dateKey] = experimentJSsaves;                       //save to it
 
-        localStorage.experimentJSsaves = JSON.stringify(keyed_by_dates);                //serialize!
+        localStorage.experimentJSsaves = JSON.stringify(saves_keyed_by_dates);                //serialize!
 
         console.log("Saved Trials", JSON.parse(localStorage.experimentJSsaves));
     }
@@ -112,13 +48,12 @@ Saves.saveBuiltTrialsAndResponses = function() {
 
 
 Saves.loadSavedTrialsAndResponses = function(){
-    
-    // errorCheckSavingParsers();
-    
+
+    if (document.getElementById(saves_dialog_id) !== null) return;                      // Dont display dialog if its already in the DOM
+
     var experimentJSsaves = JSON.parse(localStorage.experimentJSsaves);
 
     console.log("all saves: ", experimentJSsaves);
-
 
     var select_dropdown_components = _createDropDownSelect(experimentJSsaves);          // Display the saves in a dropdown select
 
@@ -130,7 +65,7 @@ Saves.loadSavedTrialsAndResponses = function(){
 
         saves_from_seleced_date = experimentJSsaves[saves_from_seleced_date];
 
-        _setAllTrials( saves_from_seleced_date["trials"] );                // Unparse your trials using custom unserialiser
+        _setAllTrials( saves_from_seleced_date["trials"] );                                             // Unparse your trials using custom unserialiser
         _setResponses( saves_from_seleced_date["responses"] );
         if (_responses === undefined || _responses === null) _setResponses( [] );
 
@@ -139,10 +74,8 @@ Saves.loadSavedTrialsAndResponses = function(){
 
         Trials.runNextTrial();
 
-        //Remove select from dom
 
-        // select_dropdown_components.wrap.remove();
-        select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap);
+        select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap);        //Remove select from dom
     });
 
     select_dropdown_components.button_clear.addEventListener("click", function(){
@@ -151,10 +84,13 @@ Saves.loadSavedTrialsAndResponses = function(){
             Saves.clearSaves();
         }
 
-        //Remove select from DOM
-        // select_dropdown_components.wrap.remove();
+        select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap);         //Remove select from DOM
+    });
+
+    select_dropdown_components.button_cancel.addEventListener("click", function(){
         select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap);
     });
+
 
 };
 
@@ -167,17 +103,13 @@ if (typeof(Storage) === "undefined"){
 
 
 // TODO: Verify that no jQuery is being used!
+const saves_dialog_id = "ExperimentJS_Saved_Info";
 function _createDropDownSelect(all_saves){
 
-    // var saves_dialog_wrap = $("<saves_dialog_wrap>", {
-    //     id: "saved_info"
-    // });
-
     var saves_dialog_wrap = document.createElement("saves_dialog_wrap");
-    saves_dialog_wrap.id = "saved_info";
+    saves_dialog_wrap.id = saves_dialog_id;
 
     //Make a select to choose from the saves
-    // var sel = $("<select>");
     var sel = document.createElement("select");
 
     Object.keys(all_saves).map(function(elem, i, all){
@@ -200,11 +132,15 @@ function _createDropDownSelect(all_saves){
     var b_clear = document.createElement("button");
     b_clear.innerHTML = "Clear";
 
+    var b_cancel = document.createElement("button");
+    b_cancel.innerHTML = "Cancel";
+
     
     saves_dialog_wrap.appendChild(sel);
     saves_dialog_wrap.appendChild(document.createElement("br"));
     saves_dialog_wrap.appendChild(b);
     saves_dialog_wrap.appendChild(b_clear);
+    saves_dialog_wrap.appendChild(b_cancel);
     document.body.appendChild(saves_dialog_wrap);
 
     var css = {
@@ -224,6 +160,7 @@ function _createDropDownSelect(all_saves){
         select: sel,
         button: b,
         button_clear: b_clear,
+        button_cancel: b_cancel,
         wrap: saves_dialog_wrap
     };
 }

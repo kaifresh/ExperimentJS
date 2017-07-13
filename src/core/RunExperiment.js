@@ -10,7 +10,7 @@
 
 
 import { Trials, setFuncs, _allTrials, _didBuildTrials, _dvName } from "./Trials.js";
-import { _storeResponse, _responses } from "./ResponseHandler.js";
+import { _storeResponse, _FormatStoredResponses, _responses } from "./ResponseHandler.js";
 import { _outputResponses } from "./OutputResponses.js";
 import { _interstimulusPause, _shouldInterstimulusPause } from "./InterstimulusPause.js";
 import { getParamNames } from "../utils/StringUtils.js";
@@ -42,7 +42,7 @@ Trials.runNextTrial = function (options) {                                 // us
     }
 
     if (_shouldRunNextTrial) {
-        
+
         if (_shouldRunMidCallback() && _midCallback !== null) {
             _midCallback();
         }
@@ -58,10 +58,12 @@ Trials.runNextTrial = function (options) {                                 // us
         if (_allTrials.length > 0) {
             _displayNextTrial();
             console.log("There are ", _allTrials.length, " trials remaining.");
-            
+
         } else {
 
-            _outputResponses(_responses);
+            var formatted_responses = _FormatStoredResponses(_responses);
+
+            _outputResponses( formatted_responses );
 
             if ( typeof _endCallBack === "function") _endCallBack();
 
@@ -77,20 +79,15 @@ Trials.runNextTrial = function (options) {                                 // us
 
 
 /** Where view-level elements are set - this is like the CONTROLLER method interfacing between MODEL and VIEW*/
-export var _trial_to_run;
-var _trials_that_were_run = [];
 function _displayNextTrial() {
 
     // Deep copy the trial before you replace its tokens.
     // This is because the tokens themselves are passed by reference
-    // thus you will have replaced tokens elsewhere in _allTrials too
-    // _trial_to_run = _.cloneDeep( _allTrials.pop() );                                // Pop the trial, clone and store it for ./ResponseHandler.js:_storeResponse()
-    _trial_to_run = _.cloneDeep( _allTrials.pop() );                                // Pop the trial and store it for ./ResponseHandler.js:_storeResponse()
-
-    _trials_that_were_run.push( _.cloneDeep(_trial_to_run) );                                  // TODO: Determine if this is necessary
+    // and detokenizing a reference will also detokenize trials elsewhere in _allTrials !!
+    var  _trial_to_run = _.cloneDeep( _allTrials[ _allTrials.length - 1 ] );                                // Trial is popped in ./ResponseHandler.js:_storeResponse
 
     console.log("Displaying next trial:", _trial_to_run);
-    
+
     /** Iterate over each IV and set its pointer to its value for that trial */
     for (var i = 0; i < _trial_to_run.length; ++i) {
 
@@ -100,7 +97,7 @@ function _displayNextTrial() {
 
         _fireIVSetFuncWithArgs(_trial_to_run[i]);
     }
-    
+
 }
 
 function _fireIVSetFuncWithArgs(cur_iv) {

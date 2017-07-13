@@ -4,16 +4,20 @@
 
 //
 var UnserializableMap = {};
+var ParserFuncMap = {};
 
 const unserializable_token = "%%UNSERIALIZABLE%%";
+const unserializable_parserfunc_token = "%%PARSERFUNC%%";
 
 // ========================================================================================
 
-export function _Unserializable_Token2Var(iv_for_trial){
+export function _Unserializable_Token2Var(iv_for_trial, detokenize_parser = false){
 
     if (!Array.isArray(iv_for_trial.value) || typeof iv_for_trial.description !== "string"){
-        throw new Error("_Unserializable_Token2Var", iv_for_trial);
+        throw new Error("_Unserializable_Token2Var ERROR - usage (object iv, bool detokenize_parser)", iv_for_trial);
     }
+
+    // TODO: short circuit this whole process with some flags if there is nothing to detokenize!!
 
     // {description, value}
 
@@ -36,6 +40,11 @@ export function _Unserializable_Token2Var(iv_for_trial){
         }
     }
     
+    // TODO: Add support for parser funcs here
+    if (detokenize_parser && ParserFuncMap.hasOwnProperty(iv_for_trial.description)){
+        iv_for_trial.parserFunc = ParserFuncMap[iv_for_trial.description];
+    }
+
     return iv_for_trial;
 }
 
@@ -49,7 +58,7 @@ export function _Unserializable_Var2Token(array_of_iv_args, iv_name){
 
     var __ctr = 0, __val, __iv_args, __did_tokenize = false;
 
-    var tokenized_arg_array = array_of_iv_args;//.slice();                     // deep copy?
+    var tokenized_arg_array = array_of_iv_args;                                     // TODO: Determine if a deep copy is required
 
     for (var i = 0; i < tokenized_arg_array.length; i++){
 
@@ -81,34 +90,31 @@ export function _Unserializable_Var2Token(array_of_iv_args, iv_name){
 
         console.log("\t\t\tPost ALL: ", JSON.stringify(tokenized_arg_array));
     }
-    //
-    // console.log("========", iv_name, "We have tokenised the arg array now!!");
+
 
     if (__did_tokenize){
         console.log("\t^^^^^^^", tokenized_arg_array, JSON.stringify(tokenized_arg_array));
     }
-
-    // console.log("========================================");
+    
 
 
     return tokenized_arg_array;
 }
 
 
+export function _Unserializable_ParserFunc2Token(parserfunc, iv_name){
 
+    if (parserfunc === undefined) return parserfunc;
 
-export function _Responses_Token2Var(responses){
-    
+    if (typeof parserfunc !== "function" || typeof  iv_name !== "string"){
+        throw new Error("_Unserializable_ParserFunc2Token ERROR - usage (function parserfunc, string iv_name");
+    }
+
+    // TODO: Tokenise the parser func
+    ParserFuncMap[iv_name] = parserfunc;                              // Parserfuncs are keyed by IV
+
+    return unserializable_parserfunc_token;
 }
-
-
-
-export function _Responses_Var2Token(responses){
-
-}
-
-
-
 
 
 

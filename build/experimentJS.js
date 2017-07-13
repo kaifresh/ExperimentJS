@@ -17343,17 +17343,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 exports._setResponses = _setResponses;
 exports._storeResponse = _storeResponse;
+exports._FormatStoredResponses = _FormatStoredResponses;
 
 var _Trials = require("./Trials");
 
-var _RunExperiment = require("./RunExperiment.js");
-
 var _StringUtils = require("../utils/StringUtils.js");
+
+var _UnserializableMap = require("./UnserializableMap.js");
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                                 Experiment Lifecycle - Store Response
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 var _responses = exports._responses = [];
+
 function _setResponses(responses) {
     // Used in ./Saves.js. Has to live here as it redefines _responses
     if (responses.constructor === Array) {
@@ -17367,92 +17369,253 @@ function _setResponses(responses) {
 function _storeResponse(options) {
     // Used in ./RunExperiment.js
 
-    var lastTrial = _RunExperiment._trial_to_run; // _trial_to_run is set in ./RunExperiment.js:_displayNextTrial()
-
-    var responseFormatted = {};
-
-    /** Store the IV -> Write out each IV (1 IV per array element) to a field */
-    for (var i = 0; i < lastTrial.length; ++i) {
-        var ivNum = "IV" + i;
-
-        // [ RESPONSE PARSER ]
-        if (lastTrial[i].parserFunc !== undefined && typeof lastTrial[i].parserFunc === "function") {
-            //$.isFunction(lastTrial[i].parserFunc)){
-
-            var stdName = ivNum + "_" + lastTrial[i].description;
-
-            /**
-             * Parser function interface:
-             *                  function ( args_passed_to_this_IV_for_this_trial..., index) {}
-             *                  return
-             *                          string -    processed version of the data
-             *                          object -    values are the processed version of parts of the data,
-             *                                      keys are names given to each portion of the parsed data
-             * */
-
-            var parsed_data = lastTrial[i].parserFunc.apply(this, lastTrial[i].value.concat(i)); // Refer to interface description above
-
-            if (typeof parsed_data === "string" || parsed_data instanceof String) {
-                responseFormatted[stdName + "_value"] = parsed_data; // Add parsed IV data to response
-            } else if (parsed_data !== null && (typeof parsed_data === "undefined" ? "undefined" : _typeof(parsed_data)) === "object") {
-
-                // TODO: See if keys output by the parser function can be cached for a performance improvement
-                var keys = Object.keys(parsed_data);
-                for (var k = 0; k < keys.length; k++) {
-                    var key_and_data_description = keys[k];
-                    responseFormatted[stdName + "_" + key_and_data_description] = parsed_data[key_and_data_description]; // Add parsed data for this key to response
-                }
-            } else {
-                throw new Error("[ Parser Function Error ] - Parser function for " + stdName + " must output either a string or an object. You output:", typeof parsed_data === "undefined" ? "undefined" : _typeof(parsed_data));
-            }
-
-            // [ DEFAULT: ARRAY OF INPUT ]
-        } else if (lastTrial[i].value.constructor === Array) {
-            // Default behaviour: array of args passed to the IV's set function
-
-            /** Manually write out each argument (from an array) to a field in the object
-             *  Only append a number if there are >1 arguments passed in */
-
-            if (lastTrial[i].value.length > 1) {
-
-                //If using a setFunc function with multiple args -> use the arg names to describe the values written to the response
-                var arg_names, arg_name;
-                arg_names = (0, _StringUtils.getParamNames)(_Trials.setFuncs[lastTrial[i].description]);
-
-                for (var j = 0; j < lastTrial[i].value.length; ++j) {
-                    arg_name = arg_names[j];
-                    responseFormatted[ivNum + "_" + lastTrial[i].description + "_" + arg_name] = lastTrial[i].value[j];
-                }
-            } else {
-                responseFormatted[ivNum + "_" + lastTrial[i].description] = lastTrial[i].value[0];
-            }
-        } else {
-            // TODO: Determine if this can be deleted...
-            responseFormatted[ivNum + "_" + lastTrial[i].description] = lastTrial[i].value;
-        }
+    if (options === undefined || !options.hasOwnProperty("dv_value")) {
+        throw new Error("A dependent variable (DV) must be supplied by the calling code. This is an error."); // Do not continue to next trial if DV is not supplied
     }
 
-    /** Store the DV*/
-    if (options !== undefined && options.hasOwnProperty("dv_value")) {
-        var value = _Trials._dvName || "value";
-        responseFormatted["DV_" + value] = options.dv_value;
-    } else {
-        responseFormatted["DV_value"] = "ERROR - No DV supplied";
-        throw new Error("A dependent variable (DV) must be supplied by the calling code. This is an error."); // Do not continue if DV is not supplied
-    }
+    var lastTrial = _Trials._allTrials.pop(); // _trial_to_run is set in ./RunExperiment.js:_displayNextTrial()
 
-    console.log("STORED THIS RESPONSE: ", responseFormatted);
+    _responses.push({
+        trial: lastTrial, // Store the tokenised trial (detokenization occurs at output time)
+        dv: options.dv_value
+    });
 
-    _responses.push(responseFormatted); // _responses by one
+    console.log("STORED THIS RESPONSE: ", _responses.back());
 }
 
-},{"../utils/StringUtils.js":17,"./RunExperiment.js":7,"./Trials":9}],7:[function(require,module,exports){
+function _FormatStoredResponses(responses) {
+    /**
+     * GOAL only tokenize & de-tokenize ONCE
+     *
+     * Trials
+     *      - Tokenuzed on creation
+     *      - DeTokenized on trial (deep copy)
+     *      - Nothing on Save               - Still tokenized from creation
+     *      - Nothing on Load               - DeTokenized as normal
+     *
+     * Responses
+     *      - DeTokenised on creation       - Receivng the detokenised trial
+     *            - ALT = store Tokenized trials & DeTokenize on output
+     *            - Nothing on Save - still a token
+     *            - Nothign on load - still a token
+     *
+     * Result
+     *      - Store all run trials + their DV response in tokenised form as the Response array
+     *      - On output, de-tokenize them & pass them to this current method
+     *      - TODO: create a way to store the run trials that works with JSON. eg -> { trials: []run_trials, dv: []responses }
+     * */
+
+    var formatted_responses = [],
+        lastTrial,
+        dv_value;
+
+    for (var resp_idx = 0; resp_idx < responses.length; resp_idx++) {
+
+        // lastTrial = responses[resp_idx]                                                      // (without detokenisation)
+        lastTrial = responses[resp_idx].trial.map(function (iv_obj_in_tokenised_format) {
+            // DeTokenise the saved responses
+            return (0, _UnserializableMap._Unserializable_Token2Var)(iv_obj_in_tokenised_format, true); // 2nd arg = DO detokenize the parser func
+        });
+
+        dv_value = responses[resp_idx].dv;
+
+        var responseFormatted = {};
+
+        // TODO: UNZSERIALIZABLE ISSUE: By this point, the responses no longer have tokens. So when saved their content is lost. SO the question is where to keep a serialised copy
+        // TODO: Could just store all trials in tokenised/untokensied formats and convert to response format at the end (otherwise you need to indivudally support parsers, and the other shit)
+
+        /** [ Store the IV ] -> Write out each IV (1 IV per array element) to a field */
+        for (var i = 0; i < lastTrial.length; ++i) {
+
+            console.log("FORMATTING A RESPONSE FOR ", k, i);
+
+            var ivNum = "IV" + i;
+
+            // [ RESPONSE PARSER ]
+            if (lastTrial[i].parserFunc !== undefined && typeof lastTrial[i].parserFunc === "function") {
+                //$.isFunction(lastTrial[i].parserFunc)){
+
+                var stdName = ivNum + "_" + lastTrial[i].description;
+
+                /**
+                 * Parser function interface:
+                 *                  function ( args_passed_to_this_IV_for_this_trial..., index) {}
+                 *                  return
+                 *                          string -    processed version of the data
+                 *                          object -    values are the processed version of parts of the data,
+                 *                                      keys are names given to each portion of the parsed data
+                 * */
+
+                var parsed_data = lastTrial[i].parserFunc.apply(this, lastTrial[i].value.concat(i)); // Refer to interface description above
+
+                if (typeof parsed_data === "string" || parsed_data instanceof String) {
+                    responseFormatted[stdName + "_value"] = parsed_data; // Add parsed IV data to response
+                } else if (parsed_data !== null && (typeof parsed_data === "undefined" ? "undefined" : _typeof(parsed_data)) === "object") {
+
+                    // TODO: See if keys output by the parser function can be cached for a performance improvement
+                    var keys = Object.keys(parsed_data);
+                    for (var k = 0; k < keys.length; k++) {
+                        var key_and_data_description = keys[k];
+                        responseFormatted[stdName + "_" + key_and_data_description] = parsed_data[key_and_data_description]; // Add parsed data for this key to response
+                    }
+                } else {
+                    throw new Error("[ Parser Function Error ] - Parser function for " + stdName + " must output either a string or an object. You output:", typeof parsed_data === "undefined" ? "undefined" : _typeof(parsed_data));
+                }
+
+                // [ DEFAULT: ARRAY OF INPUT ]
+            } else if (lastTrial[i].value.constructor === Array) {
+                // Default behaviour: array of args passed to the IV's set function
+
+                /** Manually write out each argument (from an array) to a field in the object
+                 *  Only append a number if there are >1 arguments passed in */
+
+                if (lastTrial[i].value.length > 1) {
+
+                    //If using a setFunc function with multiple args -> use the arg names to describe the values written to the response
+                    var arg_names, arg_name;
+                    arg_names = (0, _StringUtils.getParamNames)(_Trials.setFuncs[lastTrial[i].description]);
+
+                    for (var j = 0; j < lastTrial[i].value.length; ++j) {
+                        arg_name = arg_names[j];
+                        responseFormatted[ivNum + "_" + lastTrial[i].description + "_" + arg_name] = lastTrial[i].value[j];
+                    }
+                } else {
+                    responseFormatted[ivNum + "_" + lastTrial[i].description] = lastTrial[i].value[0];
+                }
+            } else {
+                // TODO: Determine if this can be deleted...
+                responseFormatted[ivNum + "_" + lastTrial[i].description] = lastTrial[i].value;
+            }
+        }
+
+        /** [ Store the DV ] */
+        var value = _Trials._dvName || "value";
+        responseFormatted["DV_" + value] = dv_value;
+
+        console.log("FORMATTED THIS RESPONSE: ", responseFormatted);
+
+        formatted_responses.push(responseFormatted); // _responses by one
+    }
+
+    return formatted_responses;
+}
+
+//
+// export function _storeResponse_ORIGINAL(options) {                       // Used in ./RunExperiment.js
+//
+//     // var lastTrial = _trial_to_run;                              // _trial_to_run is set in ./RunExperiment.js:_displayNextTrial()
+//
+//     var responseFormatted = {};
+//
+//     /**
+//      * GOAL only tokenize & de-tokenize ONCE
+//      *
+//      * Trials
+//      *      - Tokenuzed on creation
+//      *      - DeTokenized on trial (deep copy)
+//      *      - Nothing on Save               - Still tokenized from creation
+//      *      - Nothing on Load               - DeTokenized as normal
+//      *
+//      * Responses
+//      *      - DeTokenised on creation       - Receivng the detokenised trial
+//      *            - ALT = store Tokenized trials & DeTokenize on output
+//      *            - Nothing on Save - still a token
+//      *            - Nothign on load - still a token
+//      *
+//      * Result
+//      *      - Store all run trials + their DV response in tokenised form as the Response array
+//      *      - On output, de-tokenize them & pass them to this current method
+//      *      - TODO: create a way to store the run trials that works with JSON. eg -> { trials: []run_trials, dv: []responses }
+//      * */
+//
+//     // TODO: UNZSERIALIZABLE ISSUE: By this point, the responses no longer have tokens. So when saved their content is lost. SO the question is where to keep a serialised copy
+//     // TODO: Could just store all trials in tokenised/untokensied formats and convert to response format at the end (otherwise you need to indivudally support parsers, and the other shit)
+//
+//     /** Store the IV -> Write out each IV (1 IV per array element) to a field */
+//     for (var i = 0; i < lastTrial.length; ++i) {
+//         var ivNum = "IV" + i;
+//
+//         // [ RESPONSE PARSER ]
+//         if (lastTrial[i].parserFunc !== undefined && typeof lastTrial[i].parserFunc === "function"){ //$.isFunction(lastTrial[i].parserFunc)){
+//
+//             var stdName = ivNum + "_" + lastTrial[i].description;
+//
+//             /**
+//              * Parser function interface:
+//              *                  function ( args_passed_to_this_IV_for_this_trial..., index) {}
+//              *                  return
+//              *                          string -    processed version of the data
+//              *                          object -    values are the processed version of parts of the data,
+//              *                                      keys are names given to each portion of the parsed data
+//              * */
+//
+//             var parsed_data = lastTrial[i].parserFunc.apply(this, lastTrial[i].value.concat(i) );                               // Refer to interface description above
+//
+//             if (typeof parsed_data === "string" || parsed_data instanceof String){
+//                 responseFormatted[ stdName+"_value" ] = parsed_data;                                                            // Add parsed IV data to response
+//
+//             } else if (parsed_data !== null && typeof parsed_data === "object"){
+//
+//                 // TODO: See if keys output by the parser function can be cached for a performance improvement
+//                 var keys = Object.keys(parsed_data);
+//                 for (var k = 0; k < keys.length; k++){
+//                     var key_and_data_description = keys[k];
+//                     responseFormatted[ stdName+"_"+key_and_data_description ] = parsed_data[key_and_data_description]; // Add parsed data for this key to response
+//                 }
+//
+//             } else {
+//                 throw new Error("[ Parser Function Error ] - Parser function for "+stdName+" must output either a string or an object. You output:", typeof parsed_data);
+//             }
+//
+//             // [ DEFAULT: ARRAY OF INPUT ]
+//         } else if (lastTrial[i].value.constructor === Array) { // Default behaviour: array of args passed to the IV's set function
+//
+//             /** Manually write out each argument (from an array) to a field in the object
+//              *  Only append a number if there are >1 arguments passed in */
+//
+//             if (lastTrial[i].value.length > 1){
+//
+//                 //If using a setFunc function with multiple args -> use the arg names to describe the values written to the response
+//                 var arg_names, arg_name;
+//                 arg_names = getParamNames( setFuncs[ lastTrial[i].description ] );
+//
+//                 for (var j = 0; j < lastTrial[i].value.length; ++j) {
+//                     arg_name = arg_names[j];
+//                     responseFormatted[ivNum + "_" + lastTrial[i].description + "_" + arg_name ] =  lastTrial[i].value[j];
+//                 }
+//
+//             } else {
+//                 responseFormatted[ ivNum + "_" + lastTrial[i].description ] =  lastTrial[i].value[0];
+//             }
+//
+//         } else {
+//             // TODO: Determine if this can be deleted...
+//             responseFormatted[ivNum + "_" + lastTrial[i].description ] = lastTrial[i].value;
+//         }
+//
+//     }
+//
+//     /** Store the DV*/
+//     if (options !== undefined && options.hasOwnProperty("dv_value")) {
+//         var value = _dvName || "value";
+//         responseFormatted["DV_"+value] = options.dv_value;
+//     } else {
+//         responseFormatted["DV_value"] = "ERROR - No DV supplied";
+//         throw new Error("A dependent variable (DV) must be supplied by the calling code. This is an error.");       // Do not continue if DV is not supplied
+//     }
+//
+//     console.log("STORED THIS RESPONSE: ", responseFormatted);
+//
+//     _responses.push(responseFormatted);                         // _responses by one
+// }
+
+},{"../utils/StringUtils.js":17,"./Trials":9,"./UnserializableMap.js":10}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports._trial_to_run = exports._shouldRunNextTrial = undefined;
+exports._shouldRunNextTrial = undefined;
 exports._setShouldRunNextTrial = _setShouldRunNextTrial;
 
 var _Trials = require("./Trials.js");
@@ -17469,18 +17632,14 @@ var _DOMUtils = require("../utils/DOMUtils.js");
 
 var _UnserializableMap = require("./UnserializableMap.js");
 
+var _ = require("lodash"); // Browserify will resolve this package
+
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                         Experiment Lifecycle - Start & Game Loop
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 //Cannot reassign imported values, so you need a setter (used in InterstimlusPause.js)
-function _setShouldRunNextTrial(value) {
-    if (typeof value === "boolean") {
-        exports._shouldRunNextTrial = _shouldRunNextTrial = value;
-    } else {
-        throw new Error("cannot set _shouldRunNextTrial to a non boolean value");
-    }
-}
+
 // RunExperiment.js
 // Adds core functionality facilitating the experimental life cycle to the Trials Object.
 // Specifically:
@@ -17491,9 +17650,17 @@ function _setShouldRunNextTrial(value) {
 //      - Mid/end callbacks
 
 
+function _setShouldRunNextTrial(value) {
+    if (typeof value === "boolean") {
+        exports._shouldRunNextTrial = _shouldRunNextTrial = value;
+    } else {
+        throw new Error("cannot set _shouldRunNextTrial to a non boolean value");
+    }
+}
+
 var _shouldRunNextTrial = exports._shouldRunNextTrial = true; // used by: InterstimulusPause.js
 
-_Trials.Trials.runNextTrial = function (settings) {
+_Trials.Trials.runNextTrial = function (options) {
     // usage -> runNextTrial({shouldStoreResponse: true, dv_value: "inside"});
 
     if (!_Trials._didBuildTrials) {
@@ -17511,8 +17678,8 @@ _Trials.Trials.runNextTrial = function (settings) {
             (0, _InterstimulusPause._interstimulusPause)();
         }
 
-        if (settings !== undefined && settings.hasOwnProperty("shouldStoreResponse") && settings.shouldStoreResponse) {
-            (0, _ResponseHandler._storeResponse)(settings); //Settings contains a field "dv_value" which is also read by _storeResponse
+        if (options !== undefined && options.hasOwnProperty("shouldStoreResponse") && options.shouldStoreResponse) {
+            (0, _ResponseHandler._storeResponse)(options); //Settings contains a field "dv_value" which is also read by _storeResponse
         }
 
         if (_Trials._allTrials.length > 0) {
@@ -17520,7 +17687,9 @@ _Trials.Trials.runNextTrial = function (settings) {
             console.log("There are ", _Trials._allTrials.length, " trials remaining.");
         } else {
 
-            (0, _OutputResponses._outputResponses)(_ResponseHandler._responses);
+            var formatted_responses = (0, _ResponseHandler._FormatStoredResponses)(_ResponseHandler._responses);
+
+            (0, _OutputResponses._outputResponses)(formatted_responses);
 
             if (typeof _endCallBack === "function") _endCallBack();
         }
@@ -17531,32 +17700,26 @@ _Trials.Trials.runNextTrial = function (settings) {
 //                                 Experiment Lifecycle - Displaying The Next Trial
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
-var _ = require("lodash"); // Browserify will add this package
 
 /** Where view-level elements are set - this is like the CONTROLLER method interfacing between MODEL and VIEW*/
-var _trial_to_run = exports._trial_to_run = undefined;
-var _trials_that_were_run = [];
 function _displayNextTrial() {
 
     // Deep copy the trial before you replace its tokens.
     // This is because the tokens themselves are passed by reference
-    // thus you will have replaced tokens elsewhere in _allTrials too
-    // _trial_to_run = _.cloneDeep( _allTrials.pop() );                                // Pop the trial and store it for ./ResponseHandler.js:_storeResponse()
-    exports._trial_to_run = _trial_to_run = _.cloneDeep(_Trials._allTrials.pop()); // Pop the trial and store it for ./ResponseHandler.js:_storeResponse()
+    // and detokenizing a reference will also detokenize trials elsewhere in _allTrials !!
+    var _trial_to_run = _.cloneDeep(_Trials._allTrials[_Trials._allTrials.length - 1]); // Trial is popped in ./ResponseHandler.js:_storeResponse
 
     console.log("Displaying next trial:", _trial_to_run);
 
     /** Iterate over each IV and set its pointer to its value for that trial */
     for (var i = 0; i < _trial_to_run.length; ++i) {
 
-        _trial_to_run[i] = (0, _UnserializableMap._Unserializable_Token2Var)(_trial_to_run[i]); // UnserializableMap.js
+        _trial_to_run[i] = (0, _UnserializableMap._Unserializable_Token2Var)(_trial_to_run[i]); // UnserializableMap.js - DeTokenize
 
         console.log("Now displaying Unserialized IV", _trial_to_run[i]);
 
         _fireIVSetFuncWithArgs(_trial_to_run[i]);
     }
-
-    _trials_that_were_run.push(_trial_to_run); // TODO: Determine if this is necessary
 }
 
 function _fireIVSetFuncWithArgs(cur_iv) {
@@ -18009,14 +18172,16 @@ function _buildTrials(printTrials) {
         //Iterate over IVs
 
         if (IVs[iv].levels === undefined) throw new Error("Levels not supplied for " + iv);
-        if (IVs[iv].setFunc === undefined) throw new Error("Setter function not supplied for " + iv);
+        if (IVs[iv].setFunc === undefined) throw new Error("Setter function not supplied for " + iv); // TODO: two setfunc checks? this seems wrong
 
         console.log("Extending all trials array with: " + iv + " (" + IVs[iv].levels.length + " levels)");
 
         // TODO: FIX Add object serialisation
         var _tokenized_iv_levels = (0, _UnserializableMap._Unserializable_Var2Token)(IVs[iv].levels, iv); // From UnserializableMap.js - replace unserializable object with token
 
-        if (setFuncs[iv] === undefined) throw new Error("SetFunc not defined for " + iv);
+        var _tokenized_parser_func = (0, _UnserializableMap._Unserializable_ParserFunc2Token)(IVs[iv].parserFunc, iv);
+
+        if (setFuncs[iv] === undefined) throw new Error("SetFunc not defined for " + iv); // TODO: two setfunc checks? this seems wrong
 
         temp = [];
 
@@ -18036,9 +18201,12 @@ function _buildTrials(printTrials) {
                 curIVLevel.description = iv; // Set the description of the current IV obj 4 the current Level
                 curIVLevel.value = _tokenized_iv_levels[j]; // Create a factorial combination of the current IV level
 
-                if (IVs[iv].parserFunc !== undefined) {
+                // if (IVs[iv].parserFunc !== undefined) {                                     // Parser functions
+                //     curIVLevel.parserFunc = IVs[iv].parserFunc;
+                // }
+                if (_tokenized_parser_func !== undefined) {
                     // Parser functions
-                    curIVLevel.parserFunc = IVs[iv].parserFunc;
+                    curIVLevel.parserFunc = _tokenized_parser_func; // Replaced with a string, keyed by IV name
                 }
 
                 // = = = = = = = = = = = Extending the trial = = = = = = = = = = = = = =
@@ -18128,22 +18296,29 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 exports._Unserializable_Token2Var = _Unserializable_Token2Var;
 exports._Unserializable_Var2Token = _Unserializable_Var2Token;
+exports._Unserializable_ParserFunc2Token = _Unserializable_ParserFunc2Token;
 /**
  * Created by kai on 10/7/17.
  */
 
 //
 var UnserializableMap = {};
+var ParserFuncMap = {};
 
 var unserializable_token = "%%UNSERIALIZABLE%%";
+var unserializable_parserfunc_token = "%%PARSERFUNC%%";
 
 // ========================================================================================
 
 function _Unserializable_Token2Var(iv_for_trial) {
+    var detokenize_parser = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
 
     if (!Array.isArray(iv_for_trial.value) || typeof iv_for_trial.description !== "string") {
-        throw new Error("_Unserializable_Token2Var", iv_for_trial);
+        throw new Error("_Unserializable_Token2Var ERROR - usage (object iv, bool detokenize_parser)", iv_for_trial);
     }
+
+    // TODO: short circuit this whole process with some flags if there is nothing to detokenize!!
 
     // {description, value}
 
@@ -18168,6 +18343,11 @@ function _Unserializable_Token2Var(iv_for_trial) {
         }
     }
 
+    // TODO: Add support for parser funcs here
+    if (detokenize_parser && ParserFuncMap.hasOwnProperty(iv_for_trial.description)) {
+        iv_for_trial.parserFunc = ParserFuncMap[iv_for_trial.description];
+    }
+
     return iv_for_trial;
 }
 
@@ -18184,7 +18364,7 @@ function _Unserializable_Var2Token(array_of_iv_args, iv_name) {
         __iv_args,
         __did_tokenize = false;
 
-    var tokenized_arg_array = array_of_iv_args; //.slice();                     // deep copy?
+    var tokenized_arg_array = array_of_iv_args; // TODO: Determine if a deep copy is required
 
     for (var i = 0; i < tokenized_arg_array.length; i++) {
 
@@ -18216,17 +18396,26 @@ function _Unserializable_Var2Token(array_of_iv_args, iv_name) {
 
         console.log("\t\t\tPost ALL: ", JSON.stringify(tokenized_arg_array));
     }
-    //
-    // console.log("========", iv_name, "We have tokenised the arg array now!!");
 
     if (__did_tokenize) {
         console.log("\t^^^^^^^", tokenized_arg_array, JSON.stringify(tokenized_arg_array));
     }
 
-    // console.log("========================================");
-
-
     return tokenized_arg_array;
+}
+
+function _Unserializable_ParserFunc2Token(parserfunc, iv_name) {
+
+    if (parserfunc === undefined) return parserfunc;
+
+    if (typeof parserfunc !== "function" || typeof iv_name !== "string") {
+        throw new Error("_Unserializable_ParserFunc2Token ERROR - usage (function parserfunc, string iv_name");
+    }
+
+    // TODO: Tokenise the parser func
+    ParserFuncMap[iv_name] = parserfunc; // Parserfuncs are keyed by IV
+
+    return unserializable_parserfunc_token;
 }
 
 //
@@ -18416,6 +18605,12 @@ Array.prototype.shuffle = function () {
         temporaryValue = this[currentIndex];
         this[currentIndex] = this[randomIndex];
         this[randomIndex] = temporaryValue;
+    }
+};
+
+Array.prototype.back = function () {
+    if (this.length > 0) {
+        return this[this.length - 1];
     }
 };
 

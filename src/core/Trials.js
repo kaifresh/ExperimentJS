@@ -1,5 +1,5 @@
 import { extend } from "../utils/jQueryUtils.js";
-import { _Unserializable_Var2Token } from "./UnserializableMap.js";
+import { _Unserializable_Var2Token, _Unserializable_ParserFunc2Token } from "./UnserializableMap.js";
 
 /**
  * To set Trial IVs
@@ -146,14 +146,17 @@ function _buildTrials(printTrials) {
     for (var iv in IVs) { //Iterate over IVs
 
         if (IVs[iv].levels === undefined)  throw new Error("Levels not supplied for " + iv);
-        if (IVs[iv].setFunc === undefined) throw new Error("Setter function not supplied for " + iv);
+        if (IVs[iv].setFunc === undefined) throw new Error("Setter function not supplied for " + iv);   // TODO: two setfunc checks? this seems wrong
         
         console.log("Extending all trials array with: " + iv + " (" + IVs[iv].levels.length + " levels)");
         
         // TODO: FIX Add object serialisation
         var _tokenized_iv_levels = _Unserializable_Var2Token(IVs[iv].levels, iv);         // From UnserializableMap.js - replace unserializable object with token
 
-        if (setFuncs[iv] === undefined) throw new Error("SetFunc not defined for " + iv);
+        var _tokenized_parser_func = _Unserializable_ParserFunc2Token(IVs[iv].parserFunc, iv);
+        
+
+        if (setFuncs[iv] === undefined) throw new Error("SetFunc not defined for " + iv);               // TODO: two setfunc checks? this seems wrong
 
         temp = [];
 
@@ -171,8 +174,11 @@ function _buildTrials(printTrials) {
                 curIVLevel.description = iv;                                                // Set the description of the current IV obj 4 the current Level
                 curIVLevel.value = _tokenized_iv_levels[j];                                 // Create a factorial combination of the current IV level
 
-                if (IVs[iv].parserFunc !== undefined) {                                     // Parser functions
-                    curIVLevel.parserFunc = IVs[iv].parserFunc;
+                // if (IVs[iv].parserFunc !== undefined) {                                     // Parser functions
+                //     curIVLevel.parserFunc = IVs[iv].parserFunc;
+                // }
+                if (_tokenized_parser_func !== undefined) {                                     // Parser functions
+                    curIVLevel.parserFunc = _tokenized_parser_func;                             // Replaced with a string, keyed by IV name
                 }
 
                 // = = = = = = = = = = = Extending the trial = = = = = = = = = = = = = =

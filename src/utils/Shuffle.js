@@ -17,3 +17,10 @@ Array.prototype.shuffle = function () {
         this[randomIndex] = temporaryValue;
     }
 };
+
+
+Array.prototype.back = function(){
+    if (this.length > 0){
+        return this[this.length - 1];
+    }
+};

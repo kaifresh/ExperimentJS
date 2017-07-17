@@ -80,8 +80,8 @@ Trials.runNextTrial = function (options) {                                 // us
 function _displayNextTrial() {
 
     // Deep copy the trial before you replace its tokens.
-    // This is because the tokens themselves are passed by reference
-    // and detokenizing a reference will also detokenize trials elsewhere in _allTrials !!
+    // This is because the tokens themselves are just references thus,
+    // detokenizing a reference will also detokenize trials elsewhere in _allTrials !!
     var  _trial_to_run = _.cloneDeep( _allTrials.back() );                                // Trial is popped in ./ResponseHandler.js:_storeResponse
 
     console.log("Displaying next trial:", _trial_to_run);

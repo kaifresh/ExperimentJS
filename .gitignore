@@ -2,3 +2,4 @@
 .gitignore
 .idea/markdown-navigator/
 .idea/vcs.xml
+.idea/*

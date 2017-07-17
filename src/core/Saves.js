@@ -125,13 +125,10 @@ function _createDropDownSelect(all_saves){
     });
 
 
-    //Button - no functionality here, just view
-    // var b = $("<button>").text("Choose");
+    // Buttons - no functionality here
     var b = document.createElement("button");
     b.innerHTML = "Choose";
 
-
-    // var b_clear = $("<button>").text("Clear");
     var b_clear = document.createElement("button");
     b_clear.innerHTML = "Clear";
 
@@ -142,11 +139,6 @@ function _createDropDownSelect(all_saves){
     [sel, document.createElement("br"), b, b_clear, b_cancel].map(function(elem){
         saves_dialog_wrap.appendChild(elem);
     });
-    // saves_dialog_wrap.appendChild(sel);
-    // saves_dialog_wrap.appendChild(document.createElement("br"));
-    // saves_dialog_wrap.appendChild(b);
-    // saves_dialog_wrap.appendChild(b_clear);
-    // saves_dialog_wrap.appendChild(b_cancel);
     document.body.appendChild(saves_dialog_wrap);
 
     var css = {

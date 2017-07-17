@@ -130,7 +130,6 @@ var _ = require("lodash");
 // Returns a deep copy of the trials
 Trials.getTrials = function(){
     if (_allTrials.length > 0){
-        // TODO: determine if this can be replaced with lodash
         return _.cloneDeep(_allTrials);
         // return extend(true, [], _allTrials);
     }
@@ -198,7 +197,6 @@ function _buildTrials(printTrials) {
     }
 
 
-    // var expRepeats = expRepeats;
     temp = [];
     for (i = 0; i < expRepeats; i++) {
         temp = temp.concat(_allTrials);

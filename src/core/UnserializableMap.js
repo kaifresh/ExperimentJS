@@ -48,21 +48,19 @@ export function _Unserializable_Token2Var(iv_for_trial, detokenize_parser = fals
     return iv_for_trial;
 }
 
-export function _Unserializable_Var2Token(array_of_iv_args, iv_name){
+export function _Unserializable_Var2Token(iv_arg_array_to_tokenize, iv_name){
 
-    // console.log("******\t_Unserializable_Var2Token\t*******");
-
-    if (!Array.isArray(array_of_iv_args) || typeof iv_name !== "string"){
+    if (!Array.isArray(iv_arg_array_to_tokenize) || typeof iv_name !== "string"){
         throw new Error("_Unserializable_Var2Token usage: (array iv_args, string iv_name)");
     }
 
-    var __ctr = 0;//, __did_tokenize = false;
+    var __ctr = 0;
 
-    var tokenized_arg_array = array_of_iv_args;                                     // TODO: Determine if a deep copy is required
+    var iv_arg_array_to_tokenize = iv_arg_array_to_tokenize;                                     // TODO: Determine if a deep copy is required
 
-    for (var i = 0; i < tokenized_arg_array.length; i++){
+    for (var i = 0; i < iv_arg_array_to_tokenize.length; i++){
 
-        var __iv_args = tokenized_arg_array[i];
+        var __iv_args = iv_arg_array_to_tokenize[i];
 
         for (var j = 0; j < __iv_args.length; j++){
 
@@ -72,30 +70,17 @@ export function _Unserializable_Var2Token(array_of_iv_args, iv_name){
                 
                 if (UnserializableMap[iv_name] === undefined) UnserializableMap[iv_name] = {};
 
-                UnserializableMap[iv_name][__ctr.toString() ] = __val;             // Save the unserializable
+                UnserializableMap[iv_name][__ctr.toString() ] = __val;               // Save the unserializable
 
-                tokenized_arg_array[i][j] = __ctr + unserializable_token;            // Replace unserializable with token
+                iv_arg_array_to_tokenize[i][j] = __ctr + unserializable_token;            // Replace unserializable with token
 
-                // console.log(iv_name, "\t <== FOUND A THING TO TURN INTO A TOKEN!");
-                // console.log("\tWhat is being stored: ", __val);
-                // console.log("\twhat its being replaced with ", tokenized_arg_array[i][j]);
-                // console.log("\tThe TOKENSIZED arg array: ", tokenized_arg_array[i]);
-                // console.log("\t\tALL: ", JSON.stringify(tokenized_arg_array));
+                __ctr++;
 
-                __ctr++;                                                // increment the counter
-
-                // __did_tokenize = true;
             }
         }
-
-        // console.log("\t\t\tPost ALL: ", JSON.stringify(tokenized_arg_array));
     }
 
-    // if (__did_tokenize){
-    //     console.log("\t^^^^^^^", tokenized_arg_array, JSON.stringify(tokenized_arg_array));
-    // }
-
-    return tokenized_arg_array;
+    return iv_arg_array_to_tokenize;
 }
 
 // ParserFuncs are stored in the Saves object and will be lost when serialsied to JSON, so create a map of them

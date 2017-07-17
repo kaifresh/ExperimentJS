@@ -12,6 +12,7 @@
 import { Trials,_allTrials, _setAllTrials, _didBuildTrials} from "./Trials.js";
 import { _responses, _setResponses } from "./ResponseHandler.js";
 import { SetCSSOnElement } from "../utils/SetCSSOnElement.js";
+import { DOM_remove } from "../utils/DOMUtils.js";
 
 var Saves = {};
 
@@ -74,8 +75,8 @@ Saves.loadSavedTrialsAndResponses = function(){
 
         Trials.runNextTrial();
 
-
-        select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap);        //Remove select from dom
+        DOM_remove(select_dropdown_components.wrap);
+        // select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap);        //Remove select from dom
     });
 
     select_dropdown_components.button_clear.addEventListener("click", function(){
@@ -84,11 +85,13 @@ Saves.loadSavedTrialsAndResponses = function(){
             Saves.clearSaves();
         }
 
-        select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap);         //Remove select from DOM
+        DOM_remove(select_dropdown_components.wrap);
+        // select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap);         //Remove select from DOM
     });
 
     select_dropdown_components.button_cancel.addEventListener("click", function(){
-        select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap);
+        DOM_remove(select_dropdown_components.wrap);
+        // select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap);
     });
 
 
@@ -135,12 +138,15 @@ function _createDropDownSelect(all_saves){
     var b_cancel = document.createElement("button");
     b_cancel.innerHTML = "Cancel";
 
-    
-    saves_dialog_wrap.appendChild(sel);
-    saves_dialog_wrap.appendChild(document.createElement("br"));
-    saves_dialog_wrap.appendChild(b);
-    saves_dialog_wrap.appendChild(b_clear);
-    saves_dialog_wrap.appendChild(b_cancel);
+
+    [sel, document.createElement("br"), b, b_clear, b_cancel].map(function(elem){
+        saves_dialog_wrap.appendChild(elem);
+    });
+    // saves_dialog_wrap.appendChild(sel);
+    // saves_dialog_wrap.appendChild(document.createElement("br"));
+    // saves_dialog_wrap.appendChild(b);
+    // saves_dialog_wrap.appendChild(b_clear);
+    // saves_dialog_wrap.appendChild(b_cancel);
     document.body.appendChild(saves_dialog_wrap);
 
     var css = {

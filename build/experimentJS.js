@@ -17263,78 +17263,6 @@ exports.Pause = Pause;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports._outputResponses = _outputResponses;
-
-var _Trials = require("./Trials.js");
-
-var _ResponseHandler = require("./ResponseHandler.js");
-
-var _GetPptInfo = require("./GetPptInfo.js");
-
-var _CreateDownloadLink = require("../utils/CreateDownloadLink.js");
-
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                                 Experiment Lifecycle - Output Responses
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
-_Trials.Trials.forceOutputResponses = function () {
-    console.log("Forcing output of _responses");
-    _outputResponses(_ResponseHandler._responses, true);
-};
-
-function _outputResponses(allResponses, log) {
-
-    if (allResponses.length === 0) return;
-
-    var csvString = "";
-
-    var keys = Object.keys(allResponses[0]);
-    /**These are all the columns in the output*/
-
-    /** Make the header*/
-    csvString += "Participant Name, Participant Number, "; //Manually add header
-    for (var i = 0; i < keys.length; i++) {
-        csvString += keys[i] + ",";
-    }
-    csvString = csvString.slice(0, -1) + "\n"; //Cut trailing comma and put in a new row/line
-
-    /** Fill the data - This time its an array of arrays not array of dictionaries */
-    for (i = 0; i < allResponses.length; i++) {
-
-        csvString += _GetPptInfo._pptName + "," + _GetPptInfo._pptNo + ","; //Manaully add content
-
-        for (var j = 0; j < keys.length; j++) {
-            //Iterate over the keys to get teh values
-
-            var value = allResponses[i][keys[j]];
-            // console.log("writing this raw value ", value, keys[j]);
-            //value = checkReturnProps( value, true ) || value;  //Parse out relevant object fields
-            //console.log("Afer it was parsed:", value, "\n*********");
-            csvString += value + ",";
-        }
-
-        csvString = csvString.slice(0, -1) + "\n"; //Cut trailing comma and put in a new row/line
-    }
-
-    if (log) {
-        console.log(csvString);
-    }
-
-    /** Help out a machine today*/
-    var csvContent = encodeURI("data:text/csv;charset=utf-8," + csvString);
-    var a = (0, _CreateDownloadLink.createDownloadLink)("results (" + _GetPptInfo._pptName + "," + _GetPptInfo._pptNo.toString() + ").csv", csvContent);
-    a.innerHTML = "<h4>Click to download results!</h4>";
-    a.className += " results-download";
-    document.body.appendChild(a);
-    a.click();
-}
-
-},{"../utils/CreateDownloadLink.js":12,"./GetPptInfo.js":3,"./ResponseHandler.js":6,"./Trials.js":9}],6:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
 exports._responses = undefined;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /**
@@ -17609,7 +17537,81 @@ function _FormatStoredResponses(responses) {
 //     _responses.push(responseFormatted);                         // _responses by one
 // }
 
-},{"../utils/StringUtils.js":17,"./Trials":9,"./UnserializableMap.js":10}],7:[function(require,module,exports){
+},{"../utils/StringUtils.js":17,"./Trials":9,"./UnserializableMap.js":10}],6:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports._outputResponses = _outputResponses;
+
+var _Trials = require("./Trials.js");
+
+var _ResponseHandler = require("./ResponseHandler.js");
+
+var _GetPptInfo = require("./GetPptInfo.js");
+
+var _CreateDownloadLink = require("../utils/CreateDownloadLink.js");
+
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                                 Experiment Lifecycle - Output Responses
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+_Trials.Trials.forceOutputResponses = function () {
+    console.log("Forcing output of _responses");
+    _outputResponses(_ResponseHandler._responses, true);
+};
+
+function _outputResponses(allResponses, log) {
+
+    if (allResponses.length === 0) return;
+
+    allResponses = (0, _ResponseHandler._FormatStoredResponses)(allResponses);
+
+    var csvString = "";
+
+    var keys = Object.keys(allResponses[0]);
+    /**These are all the columns in the output*/
+
+    /** Make the header*/
+    csvString += "Participant Name, Participant Number, "; //Manually add header
+    for (var i = 0; i < keys.length; i++) {
+        csvString += keys[i] + ",";
+    }
+    csvString = csvString.slice(0, -1) + "\n"; //Cut trailing comma and put in a new row/line
+
+    /** Fill the data - This time its an array of arrays not array of dictionaries */
+    for (i = 0; i < allResponses.length; i++) {
+
+        csvString += _GetPptInfo._pptName + "," + _GetPptInfo._pptNo + ","; //Manaully add content
+
+        for (var j = 0; j < keys.length; j++) {
+            //Iterate over the keys to get teh values
+
+            var value = allResponses[i][keys[j]];
+            // console.log("writing this raw value ", value, keys[j]);
+            //value = checkReturnProps( value, true ) || value;  //Parse out relevant object fields
+            //console.log("Afer it was parsed:", value, "\n*********");
+            csvString += value + ",";
+        }
+
+        csvString = csvString.slice(0, -1) + "\n"; //Cut trailing comma and put in a new row/line
+    }
+
+    if (log) {
+        console.log(csvString);
+    }
+
+    /** Store data in a link & Click it - TODO: Move to sub function */
+    var csvContent = encodeURI("data:text/csv;charset=utf-8," + csvString);
+    var a = (0, _CreateDownloadLink.createDownloadLink)("results (" + _GetPptInfo._pptName + "," + _GetPptInfo._pptNo.toString() + ").csv", csvContent);
+    a.innerHTML = "<h4>Click to download results!</h4>";
+    a.className += " results-download";
+    document.body.appendChild(a);
+    a.click();
+}
+
+},{"../utils/CreateDownloadLink.js":12,"./GetPptInfo.js":3,"./ResponseHandler.js":5,"./Trials.js":9}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17622,7 +17624,7 @@ var _Trials = require("./Trials.js");
 
 var _ResponseHandler = require("./ResponseHandler.js");
 
-var _OutputResponses = require("./OutputResponses.js");
+var _ResponsesOutput = require("./ResponsesOutput.js");
 
 var _InterstimulusPause = require("./InterstimulusPause.js");
 
@@ -17687,9 +17689,7 @@ _Trials.Trials.runNextTrial = function (options) {
             console.log("There are ", _Trials._allTrials.length, " trials remaining.");
         } else {
 
-            var formatted_responses = (0, _ResponseHandler._FormatStoredResponses)(_ResponseHandler._responses);
-
-            (0, _OutputResponses._outputResponses)(formatted_responses);
+            (0, _ResponsesOutput._outputResponses)(_ResponseHandler._responses);
 
             if (typeof _endCallBack === "function") _endCallBack();
         }
@@ -17777,7 +17777,7 @@ _Trials.Trials.setEndCallback = function (value) {
     }
 };
 
-},{"../utils/DOMUtils.js":13,"../utils/StringUtils.js":17,"./InterstimulusPause.js":4,"./OutputResponses.js":5,"./ResponseHandler.js":6,"./Trials.js":9,"./UnserializableMap.js":10,"lodash":1}],8:[function(require,module,exports){
+},{"../utils/DOMUtils.js":13,"../utils/StringUtils.js":17,"./InterstimulusPause.js":4,"./ResponseHandler.js":5,"./ResponsesOutput.js":6,"./Trials.js":9,"./UnserializableMap.js":10,"lodash":1}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17791,15 +17791,19 @@ var _ResponseHandler = require("./ResponseHandler.js");
 
 var _SetCSSOnElement = require("../utils/SetCSSOnElement.js");
 
-var Saves = {}; /* = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-                 *
-                 *   Store repsonses in localStorage.
-                 *   Localstorage converts everything to JSON so object types that cannot be converted will be lost
-                 *   To preserve these unconvertble data, you need to specify a PARSER and UNPARSER for trials and for responses
-                 *   On Save: the setter replaces the unconvertible data with a token
-                 *   On Load: The getter checks the token and replaces it with the correct unconvertible object.
-                 *
-                 *  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = */
+var _DOMUtils = require("../utils/DOMUtils.js");
+
+/* = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+ *
+ *   Store repsonses in localStorage.
+ *   Localstorage converts everything to JSON so object types that cannot be converted will be lost
+ *   To preserve these unconvertble data, you need to specify a PARSER and UNPARSER for trials and for responses
+ *   On Save: the setter replaces the unconvertible data with a token
+ *   On Load: The getter checks the token and replaces it with the correct unconvertible object.
+ *
+ *  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = */
+
+var Saves = {};
 
 Saves.clearSaves = function () {
     localStorage.removeItem("experimentJSsaves");
@@ -17860,7 +17864,8 @@ Saves.loadSavedTrialsAndResponses = function () {
 
         _Trials.Trials.runNextTrial();
 
-        select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap); //Remove select from dom
+        (0, _DOMUtils.DOM_remove)(select_dropdown_components.wrap);
+        // select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap);        //Remove select from dom
     });
 
     select_dropdown_components.button_clear.addEventListener("click", function () {
@@ -17869,11 +17874,13 @@ Saves.loadSavedTrialsAndResponses = function () {
             Saves.clearSaves();
         }
 
-        select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap); //Remove select from DOM
+        (0, _DOMUtils.DOM_remove)(select_dropdown_components.wrap);
+        // select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap);         //Remove select from DOM
     });
 
     select_dropdown_components.button_cancel.addEventListener("click", function () {
-        select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap);
+        (0, _DOMUtils.DOM_remove)(select_dropdown_components.wrap);
+        // select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap);
     });
 };
 
@@ -17916,11 +17923,14 @@ function _createDropDownSelect(all_saves) {
     var b_cancel = document.createElement("button");
     b_cancel.innerHTML = "Cancel";
 
-    saves_dialog_wrap.appendChild(sel);
-    saves_dialog_wrap.appendChild(document.createElement("br"));
-    saves_dialog_wrap.appendChild(b);
-    saves_dialog_wrap.appendChild(b_clear);
-    saves_dialog_wrap.appendChild(b_cancel);
+    [sel, document.createElement("br"), b, b_clear, b_cancel].map(function (elem) {
+        saves_dialog_wrap.appendChild(elem);
+    });
+    // saves_dialog_wrap.appendChild(sel);
+    // saves_dialog_wrap.appendChild(document.createElement("br"));
+    // saves_dialog_wrap.appendChild(b);
+    // saves_dialog_wrap.appendChild(b_clear);
+    // saves_dialog_wrap.appendChild(b_cancel);
     document.body.appendChild(saves_dialog_wrap);
 
     var css = {
@@ -17946,7 +17956,7 @@ function _createDropDownSelect(all_saves) {
 
 exports.Saves = Saves;
 
-},{"../utils/SetCSSOnElement.js":15,"./ResponseHandler.js":6,"./Trials.js":9}],9:[function(require,module,exports){
+},{"../utils/DOMUtils.js":13,"../utils/SetCSSOnElement.js":15,"./ResponseHandler.js":5,"./Trials.js":9}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18091,7 +18101,6 @@ var _ = require("lodash");
 // Returns a deep copy of the trials
 Trials.getTrials = function () {
     if (_allTrials.length > 0) {
-        // TODO: determine if this can be replaced with lodash
         return _.cloneDeep(_allTrials);
         // return extend(true, [], _allTrials);
     }
@@ -18160,7 +18169,6 @@ function _buildTrials(printTrials) {
         exports._allTrials = _allTrials = temp; // /** Replace your previous trials with Temp (don"t know who to do this in place) */
     }
 
-    // var expRepeats = expRepeats;
     temp = [];
     for (i = 0; i < expRepeats; i++) {
         temp = temp.concat(_allTrials);
@@ -18286,28 +18294,23 @@ function _Unserializable_Token2Var(iv_for_trial) {
     return iv_for_trial;
 }
 
-function _Unserializable_Var2Token(array_of_iv_args, iv_name) {
+function _Unserializable_Var2Token(iv_arg_array_to_tokenize, iv_name) {
 
-    console.log("******\t_Unserializable_Var2Token\t*******");
-
-    if (!Array.isArray(array_of_iv_args) || typeof iv_name !== "string") {
+    if (!Array.isArray(iv_arg_array_to_tokenize) || typeof iv_name !== "string") {
         throw new Error("_Unserializable_Var2Token usage: (array iv_args, string iv_name)");
     }
 
-    var __ctr = 0,
-        __val,
-        __iv_args,
-        __did_tokenize = false;
+    var __ctr = 0;
 
-    var tokenized_arg_array = array_of_iv_args; // TODO: Determine if a deep copy is required
+    var iv_arg_array_to_tokenize = iv_arg_array_to_tokenize; // TODO: Determine if a deep copy is required
 
-    for (var i = 0; i < tokenized_arg_array.length; i++) {
+    for (var i = 0; i < iv_arg_array_to_tokenize.length; i++) {
 
-        __iv_args = tokenized_arg_array[i];
+        var __iv_args = iv_arg_array_to_tokenize[i];
 
         for (var j = 0; j < __iv_args.length; j++) {
 
-            __val = __iv_args[j];
+            var __val = __iv_args[j];
 
             if (typeof __val === "function" || (typeof __val === "undefined" ? "undefined" : _typeof(__val)) === "object" || Array.isArray(__val)) {
 
@@ -18315,28 +18318,14 @@ function _Unserializable_Var2Token(array_of_iv_args, iv_name) {
 
                 UnserializableMap[iv_name][__ctr.toString()] = __val; // Save the unserializable
 
-                tokenized_arg_array[i][j] = __ctr + unserializable_token; // Replace unserializable with token
+                iv_arg_array_to_tokenize[i][j] = __ctr + unserializable_token; // Replace unserializable with token
 
-                console.log(iv_name, "\t <== FOUND A THING TO TURN INTO A TOKEN!");
-                console.log("\tWhat is being stored: ", __val);
-                console.log("\twhat its being replaced with ", tokenized_arg_array[i][j]);
-                console.log("\tThe TOKENSIZED arg array: ", tokenized_arg_array[i]);
-                console.log("\t\tALL: ", JSON.stringify(tokenized_arg_array));
-
-                __ctr++; // increment the counter
-
-                __did_tokenize = true;
+                __ctr++;
             }
         }
-
-        console.log("\t\t\tPost ALL: ", JSON.stringify(tokenized_arg_array));
     }
 
-    if (__did_tokenize) {
-        console.log("\t^^^^^^^", tokenized_arg_array, JSON.stringify(tokenized_arg_array));
-    }
-
-    return tokenized_arg_array;
+    return iv_arg_array_to_tokenize;
 }
 
 // ParserFuncs are stored in the Saves object and will be lost when serialsied to JSON, so create a map of them
@@ -18365,7 +18354,7 @@ var _Trials = require("./Trials.js");
 
 require("./RunExperiment.js");
 
-require("./OutputResponses.js");
+require("./ResponsesOutput.js");
 
 require("./GetPptInfo.js");
 
@@ -18383,7 +18372,7 @@ exports.Trials = _Trials.Trials; //Needs ./ to treat it as an internal (not exte
 exports.Pause = _InterstimulusPause.Pause;
 exports.Saves = _Saves.Saves;
 
-},{"./GetPptInfo.js":3,"./InterstimulusPause.js":4,"./OutputResponses.js":5,"./RunExperiment.js":7,"./Saves.js":8,"./Trials.js":9}],12:[function(require,module,exports){
+},{"./GetPptInfo.js":3,"./InterstimulusPause.js":4,"./ResponsesOutput.js":6,"./RunExperiment.js":7,"./Saves.js":8,"./Trials.js":9}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18407,6 +18396,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports._ApplyFunctionToHTMLChildren = _ApplyFunctionToHTMLChildren;
+exports.DOM_remove = DOM_remove;
 /**
  * Created by kai on 6/7/17.
  */
@@ -18420,6 +18410,10 @@ function _ApplyFunctionToHTMLChildren(elem, func) {
     for (var i = 0; i < elem.children.length; i++) {
         func(elem.children[i]);
     }
+}
+
+function DOM_remove(elem) {
+    elem.parentNode.removeChild(elem); //Remove select from dom
 }
 
 },{}],14:[function(require,module,exports){

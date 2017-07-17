@@ -3,7 +3,7 @@
 /* Import Trials and extend it with additional functionality*/
 import { Trials } from  "./Trials.js"; //Needs ./ to treat it as an internal (not external dependency)
 import "./RunExperiment.js";           // Extends the functionality of the Trials object
-import "./OutputResponses.js";
+import "./ResponsesOutput.js";
 import "./GetPptInfo.js";
 
 import { Pause } from  "./InterstimulusPause.js";

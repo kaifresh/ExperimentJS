@@ -11,7 +11,7 @@
 
 import { Trials, setFuncs, _allTrials, _didBuildTrials, _dvName } from "./Trials.js";
 import { _storeResponse, _FormatStoredResponses, _responses } from "./ResponseHandler.js";
-import { _outputResponses } from "./OutputResponses.js";
+import { _outputResponses } from "./ResponsesOutput.js";
 import { _interstimulusPause, _shouldInterstimulusPause } from "./InterstimulusPause.js";
 import { getParamNames } from "../utils/StringUtils.js";
 import { _ApplyFunctionToHTMLChildren } from "../utils/DOMUtils.js";
@@ -60,10 +60,8 @@ Trials.runNextTrial = function (options) {                                 // us
             console.log("There are ", _allTrials.length, " trials remaining.");
 
         } else {
-
-            var formatted_responses = _FormatStoredResponses(_responses);
-
-            _outputResponses( formatted_responses );
+            
+            _outputResponses( _responses );
 
             if ( typeof _endCallBack === "function") _endCallBack();
 

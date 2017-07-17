@@ -3,6 +3,7 @@ import { Trials } from "./Trials.js";
 import { _responses } from "./ResponseHandler.js";
 import { _pptName, _pptNo } from "./GetPptInfo.js";
 import { createDownloadLink } from "../utils/CreateDownloadLink.js";
+import { _FormatStoredResponses } from "./ResponseHandler.js";
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                                 Experiment Lifecycle - Output Responses
@@ -17,6 +18,8 @@ Trials.forceOutputResponses = function(){
 export function _outputResponses(allResponses, log) {
 
     if (allResponses.length === 0) return;
+
+    allResponses = _FormatStoredResponses(allResponses);
 
     var csvString = "";
 
@@ -51,7 +54,7 @@ export function _outputResponses(allResponses, log) {
         console.log(csvString);
     }
 
-    /** Help out a machine today*/
+    /** Store data in a link & Click it - TODO: Move to sub function */
     var csvContent = encodeURI("data:text/csv;charset=utf-8," + csvString);
     var a = createDownloadLink("results (" + _pptName + "," + _pptNo.toString() + ").csv", csvContent);
     a.innerHTML = "<h4>Click to download results!</h4>";

@@ -35,7 +35,6 @@ export function _storeResponse(options) {                       // Used in ./Run
     });
 
     console.log("STORED THIS RESPONSE: ", _responses.back());
-
 }
 
 

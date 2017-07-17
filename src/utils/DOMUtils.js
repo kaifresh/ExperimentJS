@@ -13,3 +13,8 @@ export function _ApplyFunctionToHTMLChildren(elem, func){
         func(elem.children[i]);
     }
 }
+
+
+export function DOM_remove(elem){
+    elem.parentNode.removeChild(elem);        //Remove select from dom
+}

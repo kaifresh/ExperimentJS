@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="15a95f82-d721-497f-925e-739aed3019c5" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/saves-example.html" afterPath="$PROJECT_DIR$/examples/saves-example.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/RunExperiment.js" afterPath="$PROJECT_DIR$/src/core/RunExperiment.js" />
     </list>
     <ignored path="ExperimentJS.iws" />
@@ -63,8 +63,8 @@
           <file leaf-file-name="RunExperiment.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/core/RunExperiment.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="318">
-                  <caret line="83" column="86" selection-start-line="83" selection-start-column="86" selection-end-line="83" selection-end-column="86" />
+                <state relative-caret-position="1008">
+                  <caret line="129" column="33" selection-start-line="129" selection-start-column="33" selection-end-line="129" selection-end-column="33" />
                   <folding>
                     <element signature="e#304#389#0" expanded="true" />
                   </folding>
@@ -89,8 +89,8 @@
           <file leaf-file-name="saves-example.html" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/examples/saves-example.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="736">
-                  <caret line="104" column="51" selection-start-line="104" selection-start-column="51" selection-end-line="104" selection-end-column="51" />
+                <state relative-caret-position="1141">
+                  <caret line="131" column="0" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -202,8 +202,8 @@
         <option value="$PROJECT_DIR$/src/utils/DOMUtils.js" />
         <option value="$PROJECT_DIR$/src/core/Saves.js" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/src/core/RunExperiment.js" />
         <option value="$PROJECT_DIR$/examples/saves-example.html" />
+        <option value="$PROJECT_DIR$/src/core/RunExperiment.js" />
       </list>
     </option>
   </component>
@@ -558,12 +558,12 @@
       <workItem from="1499306239029" duration="16632000" />
       <workItem from="1499418188571" duration="2000" />
       <workItem from="1499649168750" duration="32314000" />
-      <workItem from="1500253953496" duration="1312000" />
+      <workItem from="1500253953496" duration="1493000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="96855000" />
+    <option name="totallyTimeSpent" value="97036000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-1577" width="1647" height="1577" extended-state="0" />
@@ -893,16 +893,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/RunExperiment.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="318">
-          <caret line="83" column="86" selection-start-line="83" selection-start-column="86" selection-end-line="83" selection-end-column="86" />
-          <folding>
-            <element signature="e#304#389#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/core/UnserializableMap.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
@@ -913,9 +903,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/examples/saves-example.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="736">
-          <caret line="104" column="51" selection-start-line="104" selection-start-column="51" selection-end-line="104" selection-end-column="51" />
+        <state relative-caret-position="1141">
+          <caret line="131" column="0" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/RunExperiment.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1008">
+          <caret line="129" column="33" selection-start-line="129" selection-start-column="33" selection-end-line="129" selection-end-column="33" />
+          <folding>
+            <element signature="e#304#389#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

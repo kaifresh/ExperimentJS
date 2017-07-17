@@ -45,17 +45,10 @@
     // An array of args passed to the setter function
     var colours = [ [255, 0, 0], [0, 255, 0] ];
 
-    var rgb_triplet_to_string_parser = function(r, g, b){
-        console.log("PARSER: ", arguments);
-        return {
-            "rgb": r + " " + g + " " + b,
-            "extra-shit": "HAHAHAHHAHHA"
-        };
-    };
-    ExperimentJS.Trials.setIVResponseParserFunc("Colors for A", rgb_triplet_to_string_parser);
-    ExperimentJS.Trials.setIVResponseParserFunc("Colors for B", rgb_triplet_to_string_parser);
-
+    // Set levels (array of args) for the IV
     ExperimentJS.Trials.setIVLevels("Colors for A", colours);
+
+    // Set a setter function for the IV
     ExperimentJS.Trials.setIVsetFunc("Colors for A", function(r, g, b){
         var colstring = "rgb(" + r + ", " + g + ", " + b + ")";
         $("#a").css("background", colstring);
@@ -66,6 +59,17 @@
         var colstring = "rgb(" + r + ", " + g + ", " + b + ")";
         $("#b").css("background", colstring);
     });
+
+    // Create a response parser, to format the arguments into an output that is more readable
+    var rgb_triplet_to_string_parser = function(r, g, b){
+        console.log("PARSER: ", arguments);
+        return {
+            "rgb": r + " " + g + " " + b,
+            "Additional Info (Color)": r > 0 ? 'red' : "green"
+        };
+    };
+    ExperimentJS.Trials.setIVResponseParserFunc("Colors for A", rgb_triplet_to_string_parser);
+    ExperimentJS.Trials.setIVResponseParserFunc("Colors for B", rgb_triplet_to_string_parser);
 
     var start =  $(window).width() * 0.2;
     var offset = $(window).width() * 0.3;
@@ -82,11 +86,12 @@
         }
     });
 
-    ExperimentJS.Trials.setIVLevels("FUNCTIONE", [
+    // Demonstrating that functions (and more importantly, classes) can also be stored in a save
+    ExperimentJS.Trials.setIVLevels("Should Persist Through A Save", [
         [ function(n){ console.log("called function&&!! LEVEL 1 of the IV" + n) }, 187 ],
         [ function(n){ console.log("called function&&!! LEVEL 2 of the IV" + n) }, 200 ]
     ]);
-    ExperimentJS.Trials.setIVsetFunc("FUNCTIONE", function(cb, num){
+    ExperimentJS.Trials.setIVsetFunc("Should Persist Through A Save", function(cb, num){
         console.log("THE CALLBACK: ");
         console.log(cb);
         cb(num);
@@ -95,9 +100,9 @@
     ExperimentJS.Trials.setRepeats(1);
     ExperimentJS.Trials.setShuffle(false);
     ExperimentJS.Trials.buildExperiment(true); //true logs trials to console
-//    ExperimentJS.Trials.getPptInfo();
-    ExperimentJS.Trials.runNextTrial();
+    ExperimentJS.Trials.runNextTrial();         // Starts the experiment
 
+    // Write an event handler to run the experiment
     $(window).keydown(function(event){
 
         console.log(event.which);

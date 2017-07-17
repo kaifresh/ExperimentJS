@@ -8,7 +8,6 @@
 //      - Outputting responses
 //      - Mid/end callbacks
 
-
 import { Trials, setFuncs, _allTrials, _didBuildTrials, _dvName } from "./Trials.js";
 import { _storeResponse, _FormatStoredResponses, _responses } from "./ResponseHandler.js";
 import { _outputResponses } from "./ResponsesOutput.js";

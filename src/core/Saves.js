@@ -1,10 +1,11 @@
 /* = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
  *
  *   Store repsonses in localStorage.
- *   Localstorage converts everything to JSON so object types that cannot be converted will be lost
- *   To preserve these unconvertble data, you need to specify a PARSER and UNPARSER for trials and for responses
- *   On Save: the setter replaces the unconvertible data with a token
- *   On Load: The getter checks the token and replaces it with the correct unconvertible object.
+ *   Localstorage converts everything to JSON, so object types that cannot be converted will be lost
+ *   To preserve these unconvertble data, they are stored in a map,
+ *   and are replaced with tokens in the array of trials.
+ *   When trials are built: replaced serializable data with a serializable token (i.e. an indexed string)
+ *   When Trials are run & formatted into response data: replace the token with the relevant object/function
  *
  *  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = */
 

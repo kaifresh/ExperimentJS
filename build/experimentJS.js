@@ -17105,9 +17105,21 @@ Object.keys(_core).forEach(function (key) {
   });
 });
 
+var _methods = require("./methods/methods.js");
+
+Object.keys(_methods).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _methods[key];
+    }
+  });
+});
+
 require("./utils/utils.js");
 
-},{"./core/core.js":11,"./utils/utils.js":19}],3:[function(require,module,exports){
+},{"./core/core.js":11,"./methods/methods.js":13,"./utils/utils.js":21}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17257,7 +17269,7 @@ function _showInterstimulusPause(blackout) {
 
 exports.Pause = Pause;
 
-},{"../utils/SetCSSOnElement.js":15,"./RunExperiment.js":7}],5:[function(require,module,exports){
+},{"../utils/SetCSSOnElement.js":17,"./RunExperiment.js":7}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17265,9 +17277,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports._responses = undefined;
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /**
-                                                                                                                                                                                                                                                                               * Created by kai on 6/7/17.
-                                                                                                                                                                                                                                                                               */
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 exports._setResponses = _setResponses;
 exports._storeResponse = _storeResponse;
@@ -17537,7 +17547,7 @@ function _FormatStoredResponses(responses) {
 //     _responses.push(responseFormatted);                         // _responses by one
 // }
 
-},{"../utils/StringUtils.js":17,"./Trials":9,"./UnserializableMap.js":10}],6:[function(require,module,exports){
+},{"../utils/StringUtils.js":19,"./Trials":9,"./UnserializableMap.js":10}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17611,7 +17621,7 @@ function _outputResponses(allResponses, log) {
     a.click();
 }
 
-},{"../utils/CreateDownloadLink.js":12,"./GetPptInfo.js":3,"./ResponseHandler.js":5,"./Trials.js":9}],7:[function(require,module,exports){
+},{"../utils/CreateDownloadLink.js":14,"./GetPptInfo.js":3,"./ResponseHandler.js":5,"./Trials.js":9}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17650,7 +17660,6 @@ var _ = require("lodash"); // Browserify will resolve this package
 //      - Storing a response
 //      - Outputting responses
 //      - Mid/end callbacks
-
 
 function _setShouldRunNextTrial(value) {
     if (typeof value === "boolean") {
@@ -17705,12 +17714,13 @@ _Trials.Trials.runNextTrial = function (options) {
 function _displayNextTrial() {
 
     // Deep copy the trial before you replace its tokens.
-    // This is because the tokens themselves are passed by reference
-    // and detokenizing a reference will also detokenize trials elsewhere in _allTrials !!
+    // This is because the tokens themselves are just references thus,
+    // detokenizing a reference will also detokenize trials elsewhere in _allTrials !!
     var _trial_to_run = _.cloneDeep(_Trials._allTrials.back()); // Trial is popped in ./ResponseHandler.js:_storeResponse
 
     console.log("Displaying next trial:", _trial_to_run);
 
+    // TODO: Support PROMISES -> Facilitates PHASES of EXPERIMENTS 
     /** Iterate over each IV and set its pointer to its value for that trial */
     for (var i = 0; i < _trial_to_run.length; ++i) {
 
@@ -17758,7 +17768,7 @@ function _shouldRunMidCallback() {
         return true;
     }
 }
-
+///
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //             Experiment Lifecycle - End Callback (a behaviour at the end of the experiment)
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -17777,7 +17787,7 @@ _Trials.Trials.setEndCallback = function (value) {
     }
 };
 
-},{"../utils/DOMUtils.js":13,"../utils/StringUtils.js":17,"./InterstimulusPause.js":4,"./ResponseHandler.js":5,"./ResponsesOutput.js":6,"./Trials.js":9,"./UnserializableMap.js":10,"lodash":1}],8:[function(require,module,exports){
+},{"../utils/DOMUtils.js":15,"../utils/StringUtils.js":19,"./InterstimulusPause.js":4,"./ResponseHandler.js":5,"./ResponsesOutput.js":6,"./Trials.js":9,"./UnserializableMap.js":10,"lodash":1}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17796,10 +17806,11 @@ var _DOMUtils = require("../utils/DOMUtils.js");
 /* = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
  *
  *   Store repsonses in localStorage.
- *   Localstorage converts everything to JSON so object types that cannot be converted will be lost
- *   To preserve these unconvertble data, you need to specify a PARSER and UNPARSER for trials and for responses
- *   On Save: the setter replaces the unconvertible data with a token
- *   On Load: The getter checks the token and replaces it with the correct unconvertible object.
+ *   Localstorage converts everything to JSON, so object types that cannot be converted will be lost
+ *   To preserve these unconvertble data, they are stored in a map,
+ *   and are replaced with tokens in the array of trials.
+ *   When trials are built: replaced serializable data with a serializable token (i.e. an indexed string)
+ *   When Trials are run & formatted into response data: replace the token with the relevant object/function
  *
  *  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = */
 
@@ -17911,12 +17922,10 @@ function _createDropDownSelect(all_saves) {
         // sel.append($("<option>").attr("value",i).text(elem));
     });
 
-    //Button - no functionality here, just view
-    // var b = $("<button>").text("Choose");
+    // Buttons - no functionality here
     var b = document.createElement("button");
     b.innerHTML = "Choose";
 
-    // var b_clear = $("<button>").text("Clear");
     var b_clear = document.createElement("button");
     b_clear.innerHTML = "Clear";
 
@@ -17926,11 +17935,6 @@ function _createDropDownSelect(all_saves) {
     [sel, document.createElement("br"), b, b_clear, b_cancel].map(function (elem) {
         saves_dialog_wrap.appendChild(elem);
     });
-    // saves_dialog_wrap.appendChild(sel);
-    // saves_dialog_wrap.appendChild(document.createElement("br"));
-    // saves_dialog_wrap.appendChild(b);
-    // saves_dialog_wrap.appendChild(b_clear);
-    // saves_dialog_wrap.appendChild(b_cancel);
     document.body.appendChild(saves_dialog_wrap);
 
     var css = {
@@ -17956,7 +17960,7 @@ function _createDropDownSelect(all_saves) {
 
 exports.Saves = Saves;
 
-},{"../utils/DOMUtils.js":13,"../utils/SetCSSOnElement.js":15,"./ResponseHandler.js":5,"./Trials.js":9}],9:[function(require,module,exports){
+},{"../utils/DOMUtils.js":15,"../utils/SetCSSOnElement.js":17,"./ResponseHandler.js":5,"./Trials.js":9}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18106,7 +18110,19 @@ Trials.getTrials = function () {
     }
 };
 
-function _buildTrials(printTrials) {
+/**===========================================
+ *          Trial
+ *             {
+ *              
+ *             }
+ *
+ *
+ *
+ * */
+
+function _buildTrials() {
+    var printTrials = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
 
     console.log("Build Trials. IVS:", IVs);
 
@@ -18195,11 +18211,13 @@ function _buildTrials(printTrials) {
     }
 }
 
-Trials.buildExperiment = function (printTrials) {
+Trials.BuildExperiment = function (printTrials) {
     if (typeof printTrials !== "boolean") {
         throw new Error("[ buildExperiment ERROR ] - first arg to buildExperiment must be a boolean");
+    } else if (_didBuildTrials) {
+        throw new Error("[ buildExperiment ERROR ] - buildExperiment should only be called once!");
     } else {
-        _buildTrials(printTrials === undefined ? false : printTrials);
+        _buildTrials(printTrials);
     }
 };
 
@@ -18228,7 +18246,7 @@ function _csvIllegalCharCheck(string) {
 
 exports.Trials = Trials;
 
-},{"../utils/jQueryUtils.js":18,"./UnserializableMap.js":10,"lodash":1}],10:[function(require,module,exports){
+},{"../utils/jQueryUtils.js":20,"./UnserializableMap.js":10,"lodash":1}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18240,9 +18258,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 exports._Unserializable_Token2Var = _Unserializable_Token2Var;
 exports._Unserializable_Var2Token = _Unserializable_Var2Token;
 exports._Unserializable_ParserFunc2Token = _Unserializable_ParserFunc2Token;
-/**
- * Created by kai on 10/7/17.
- */
+/** = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+ *
+ *   Store repsonses in localStorage.
+ *   Localstorage converts everything to JSON, so object types that cannot be converted will be lost
+ *   To preserve these unconvertble data, they are stored in a map,
+ *   and are replaced with tokens in the array of trials.
+ *   When trials are built: replaced serializable data with a serializable token (i.e. an indexed string)
+ *   When Trials are run & formatted into response data: replace the token with the relevant object/function
+ *
+ *  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = */
 
 //
 var UnserializableMap = {};
@@ -18294,6 +18319,7 @@ function _Unserializable_Token2Var(iv_for_trial) {
     return iv_for_trial;
 }
 
+//  iv_arg_array_to_tokenize - array of arrays - arguments to be passed to the settter func
 function _Unserializable_Var2Token(iv_arg_array_to_tokenize, iv_name) {
 
     if (!Array.isArray(iv_arg_array_to_tokenize) || typeof iv_name !== "string") {
@@ -18302,7 +18328,7 @@ function _Unserializable_Var2Token(iv_arg_array_to_tokenize, iv_name) {
 
     var __ctr = 0;
 
-    var iv_arg_array_to_tokenize = iv_arg_array_to_tokenize; // TODO: Determine if a deep copy is required
+    // var iv_arg_array_to_tokenize = iv_arg_array_to_tokenize;                                     // TODO: Determine if a deep copy is required
 
     for (var i = 0; i < iv_arg_array_to_tokenize.length; i++) {
 
@@ -18378,6 +18404,109 @@ exports.Saves = _Saves.Saves;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports._2AFC = undefined;
+
+var _Trials = require("../core/Trials.js");
+
+var _2AFC = {};
+
+var _didSetStandard = false;
+
+// Usage: (string, function, array of args)
+_2AFC.SetStandard = function (iv_name, std_func, std_func_args) {
+
+    if (typeof iv_name !== "string" || typeof std_func !== "function" || !Array.isArray(std_func_args)) {
+        throw new Error("[ 2AFC SetStandard Error ] - usage = (string iv_name, function std_func, array std_func_args)");
+    }
+
+    _didSetStandard = true;
+
+    iv_name = "std_" + iv_name;
+
+    _Trials.Trials.setIVsetFunc(iv_name, std_func);
+    _Trials.Trials.setIVLevels(iv_name, [std_func_args]);
+};
+
+// Usage: (string iv_name, function parser_func);
+_2AFC.SetStandardParserFunc = function (iv_name, parser_func) {
+    _Trials.Trials.setIVResponseParserFunc("std_" + iv_name, parser_func);
+};
+
+var _didSetVarying = false;
+// Usage: ( string, function, array of arrays (of args) )
+_2AFC.SetVarying = function (iv_name, varying_func, varying_func_levels) {
+
+    if (typeof iv_name !== "string" || typeof varying_func !== "function" || !Array.isArray(varying_func_levels) || !Array.isArray(varying_func_levels[0])) {
+        throw new Error("[ 2AFC SetVarying Error ] - usage = (string iv_name, function varying_func, array varying_func_levels)");
+    }
+
+    _didSetVarying = true;
+
+    _Trials.Trials.setIVsetFunc(iv_name, varying_func);
+    _Trials.Trials.setIVLevels(iv_name, varying_func_levels);
+};
+
+// Usage: (string iv_name, function parser_func);
+_2AFC.SetVaryingParserFunc = _Trials.Trials.setIVResponseParserFunc;
+
+var _didSetCounterBalance = false;
+_2AFC.CounterBalancePresentation = function (iv_name, counterbalance_func, counterbalance_func_levels) {
+
+    if (typeof iv_name !== "string" || typeof counterbalance_func !== "function" || !Array.isArray(counterbalance_func_levels) || !Array.isArray(counterbalance_func_levels[0])) {
+        throw new Error("[ 2AFC CounterBalancePresentation Error ] - usage = (string iv_name, function varying_func, array varying_func_levels)");
+    }
+
+    _didSetCounterBalance = true;
+
+    iv_name = "counterbalance_" + iv_name;
+
+    _Trials.Trials.setIVsetFunc(iv_name, counterbalance_func);
+    _Trials.Trials.setIVLevels(iv_name, counterbalance_func_levels);
+};
+
+// Usage: (string iv_name, function parser_func);
+_2AFC.SetCounterBalanceParserFunc = function (iv_name, parser_func) {
+    _Trials.Trials.setIVResponseParserFunc("counterbalance_" + iv_name, parser_func);
+};
+
+_2AFC.BuildExperiment = function () {
+
+    if (!(_didSetCounterBalance && _didSetStandard && _didSetVarying)) {
+        throw new Error("[ 2AFC BuildExperiment Error ] - To run a 2AFC experiment a standard variable, varying variable and counterbalance must be set");
+    }
+
+    _Trials.Trials.buildExperiment();
+};
+
+exports._2AFC = _2AFC;
+
+},{"../core/Trials.js":9}],13:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Methods = undefined;
+
+var _Trials = require("../core/Trials.js");
+
+var _AFC = require("./2AFC.js");
+
+/**
+ * Created by kai on 17/7/17.
+ */
+var Methods = { // add all methods to methods object
+  _2AFC: _AFC._2AFC
+}; //Needs ./ to treat it as an internal (not external dependency)
+
+exports.Methods = Methods;
+
+},{"../core/Trials.js":9,"./2AFC.js":12}],14:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 exports.createDownloadLink = createDownloadLink;
 function createDownloadLink(filename, data) {
     ////http://stackoverflow.com/questions/17836273/export-javascript-data-to-csv-file-without-server-interaction
@@ -18389,7 +18518,7 @@ function createDownloadLink(filename, data) {
     return a;
 }
 
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18416,7 +18545,7 @@ function DOM_remove(elem) {
     elem.parentNode.removeChild(elem); //Remove select from dom
 }
 
-},{}],14:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18430,7 +18559,7 @@ function isFloat(n) {
   return Number(n) === n && n % 1 !== 0;
 }
 
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18448,7 +18577,7 @@ function SetCSSOnElement(elem, css) {
     }
 }
 
-},{}],16:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 "use strict";
 
 // - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
@@ -18479,7 +18608,7 @@ Array.prototype.back = function () {
     }
 };
 
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18510,7 +18639,7 @@ function getParamNames(fn) {
     return _getParamNames(fn);
 }
 
-},{}],18:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18646,7 +18775,7 @@ function isPlainObject(obj) {
     return typeof Ctor === "function" && fnToString.call(Ctor) === ObjectFunctionString;
 }
 
-},{}],19:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 "use strict";
 
 require("./CreateDownloadLink.js");
@@ -18657,5 +18786,5 @@ require("./NumberUtils.js");
 
 require("./StringUtils.js");
 
-},{"./CreateDownloadLink.js":12,"./NumberUtils.js":14,"./Shuffle.js":16,"./StringUtils.js":17}]},{},[2])(2)
+},{"./CreateDownloadLink.js":14,"./NumberUtils.js":16,"./Shuffle.js":18,"./StringUtils.js":19}]},{},[2])(2)
 });

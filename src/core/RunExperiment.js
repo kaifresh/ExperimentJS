@@ -85,6 +85,7 @@ function _displayNextTrial() {
 
     console.log("Displaying next trial:", _trial_to_run);
 
+    // TODO: Support PROMISES -> Facilitates PHASES of EXPERIMENTS 
     /** Iterate over each IV and set its pointer to its value for that trial */
     for (var i = 0; i < _trial_to_run.length; ++i) {
 

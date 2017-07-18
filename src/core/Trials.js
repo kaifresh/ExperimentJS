@@ -135,8 +135,17 @@ Trials.getTrials = function(){
     }
 };
 
+/**===========================================
+ *          Trial
+ *             {
+ *              
+ *             }
+ *
+ *
+ *
+ * */
 
-function _buildTrials(printTrials) {
+function _buildTrials(printTrials = false) {
 
     console.log("Build Trials. IVS:", IVs);
 
@@ -184,7 +193,6 @@ function _buildTrials(printTrials) {
 
                 if (buildingTrial === undefined) {
                     newOrExtendedTrial = [ curIVLevel ];
-
                 } else if (buildingTrial.constructor === Array) {
                     newOrExtendedTrial = buildingTrial.concat([ curIVLevel ]);                  // The incomplete trial is extended by creating a brand new array FROM it
                 }
@@ -224,11 +232,13 @@ function _buildTrials(printTrials) {
 }
 
 
-Trials.buildExperiment = function (printTrials) {
-    if (typeof printTrials !== "boolean"){
+Trials.BuildExperiment = function (printTrials) {
+    if (typeof printTrials !== "boolean") {
         throw new Error("[ buildExperiment ERROR ] - first arg to buildExperiment must be a boolean");
+    } else if (_didBuildTrials){
+        throw new Error("[ buildExperiment ERROR ] - buildExperiment should only be called once!");
     } else {
-        _buildTrials( (printTrials === undefined) ? false : printTrials );
+        _buildTrials( printTrials );
     }
 };
 

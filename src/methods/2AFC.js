@@ -1,0 +1,76 @@
+import { Trials } from "../core/Trials.js";
+
+
+var _2AFC = {};
+
+var _didSetStandard = false;
+
+// Usage: (string, function, array of args)
+_2AFC.SetStandard = function(iv_name, std_func, std_func_args){
+
+    if (typeof iv_name !== "string" || typeof std_func !== "function" || !Array.isArray(std_func_args) ){
+        throw new Error("[ 2AFC SetStandard Error ] - usage = (string iv_name, function std_func, array std_func_args)");
+    }
+
+    _didSetStandard = true;
+
+    iv_name = "std_"+iv_name;
+
+    Trials.setIVsetFunc(iv_name, std_func);
+    Trials.setIVLevels(iv_name, [ std_func_args ] );
+};
+
+// Usage: (string iv_name, function parser_func);
+_2AFC.SetStandardParserFunc = function(iv_name, parser_func){
+    Trials.setIVResponseParserFunc("std_"+iv_name, parser_func);
+};
+
+var _didSetVarying = false;
+// Usage: ( string, function, array of arrays (of args) )
+_2AFC.SetVarying = function(iv_name, varying_func, varying_func_levels){
+
+    if (typeof iv_name !== "string" || typeof varying_func !== "function" || !Array.isArray(varying_func_levels) || !Array.isArray(varying_func_levels[0]) ){
+        throw new Error("[ 2AFC SetVarying Error ] - usage = (string iv_name, function varying_func, array varying_func_levels)");
+    }
+
+    _didSetVarying = true;
+
+
+    Trials.setIVsetFunc(iv_name, varying_func);
+    Trials.setIVLevels(iv_name, varying_func_levels);
+};
+
+// Usage: (string iv_name, function parser_func);
+_2AFC.SetVaryingParserFunc = Trials.setIVResponseParserFunc;
+
+var _didSetCounterBalance = false;
+_2AFC.CounterBalancePresentation = function(iv_name, counterbalance_func, counterbalance_func_levels){
+
+    if (typeof iv_name !== "string" || typeof counterbalance_func !== "function" || !Array.isArray(counterbalance_func_levels) || !Array.isArray(counterbalance_func_levels[0]) ){
+        throw new Error("[ 2AFC CounterBalancePresentation Error ] - usage = (string iv_name, function varying_func, array varying_func_levels)");
+    }
+
+    _didSetCounterBalance = true;
+
+    iv_name = "counterbalance_"+iv_name;
+
+    Trials.setIVsetFunc(iv_name, counterbalance_func);
+    Trials.setIVLevels(iv_name, counterbalance_func_levels);
+};
+
+// Usage: (string iv_name, function parser_func);
+_2AFC.SetCounterBalanceParserFunc = function(iv_name, parser_func){
+    Trials.setIVResponseParserFunc("counterbalance_"+iv_name, parser_func);
+};
+
+_2AFC.BuildExperiment = function(){
+
+
+    if ( !(_didSetCounterBalance && _didSetStandard && _didSetVarying) ){
+        throw new Error("[ 2AFC BuildExperiment Error ] - To run a 2AFC experiment a standard variable, varying variable and counterbalance must be set");
+    }
+
+    Trials.buildExperiment();
+};
+
+export { _2AFC }

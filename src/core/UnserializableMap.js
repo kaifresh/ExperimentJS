@@ -1,6 +1,13 @@
-/**
- * Created by kai on 10/7/17.
- */
+/** = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+ *
+ *   Store repsonses in localStorage.
+ *   Localstorage converts everything to JSON, so object types that cannot be converted will be lost
+ *   To preserve these unconvertble data, they are stored in a map,
+ *   and are replaced with tokens in the array of trials.
+ *   When trials are built: replaced serializable data with a serializable token (i.e. an indexed string)
+ *   When Trials are run & formatted into response data: replace the token with the relevant object/function
+ *
+ *  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = */
 
 //
 var UnserializableMap = {};
@@ -48,6 +55,7 @@ export function _Unserializable_Token2Var(iv_for_trial, detokenize_parser = fals
     return iv_for_trial;
 }
 
+//  iv_arg_array_to_tokenize - array of arrays - arguments to be passed to the settter func
 export function _Unserializable_Var2Token(iv_arg_array_to_tokenize, iv_name){
 
     if (!Array.isArray(iv_arg_array_to_tokenize) || typeof iv_name !== "string"){
@@ -56,7 +64,7 @@ export function _Unserializable_Var2Token(iv_arg_array_to_tokenize, iv_name){
 
     var __ctr = 0;
 
-    var iv_arg_array_to_tokenize = iv_arg_array_to_tokenize;                                     // TODO: Determine if a deep copy is required
+    // var iv_arg_array_to_tokenize = iv_arg_array_to_tokenize;                                     // TODO: Determine if a deep copy is required
 
     for (var i = 0; i < iv_arg_array_to_tokenize.length; i++){
 

@@ -1,6 +1,4 @@
-/**
- * Created by kai on 6/7/17.
- */
+
 
 import { _allTrials, setFuncs, _dvName } from "./Trials";
 import { getParamNames } from "../utils/StringUtils.js";

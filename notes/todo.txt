@@ -1,0 +1,6 @@
+- Add multi phase experiments in -> use Promises
+
+- 2AFC
+- Method of Adjustment
+- Method of Constant Stimuli
+- Staircase

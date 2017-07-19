@@ -5,7 +5,7 @@ import { _Unserializable_Var2Token, _Unserializable_ParserFunc2Token } from "./U
  * To set Trial IVs
  *      1. Set the setter function:                 this is a function `fn` that will manipulate the display
  *      2. Set the args passed to the setter:       these are the varying args passed to `fn` used to vary the IV
- *      3. Call Trials.buildExperiment()
+ *      3. Call Trials.BuildExperiment()
  *
  *  Optional:
  *      4. Set a response parser function:          format passed arguments into a desired output format
@@ -135,16 +135,6 @@ Trials.getTrials = function(){
     }
 };
 
-/**===========================================
- *          Trial
- *             {
- *              
- *             }
- *
- *
- *
- * */
-
 function _buildTrials(printTrials = false) {
 
     console.log("Build Trials. IVS:", IVs);
@@ -211,7 +201,7 @@ function _buildTrials(printTrials = false) {
     }
     _allTrials = temp;
 
-    if (_shouldShuffle)     _allTrials.shuffle();
+    if (_shouldShuffle)    Trials.shuffleTrials( _allTrials );
 
     _totalTrials = _allTrials.length; //Used to determine where you are in the trial process
     _didBuildTrials = true;
@@ -232,6 +222,8 @@ function _buildTrials(printTrials = false) {
 }
 
 
+
+
 Trials.BuildExperiment = function (printTrials) {
     if (typeof printTrials !== "boolean") {
         throw new Error("[ buildExperiment ERROR ] - first arg to buildExperiment must be a boolean");
@@ -242,6 +234,9 @@ Trials.BuildExperiment = function (printTrials) {
     }
 };
 
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                                      Trials - sub functions
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 var _shouldShuffle = true;
 Trials.setShuffle = function(shouldShuffle){
@@ -252,9 +247,16 @@ Trials.setShuffle = function(shouldShuffle){
     }
 };
 
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                                      Trials - sub functions
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+Trials.shuffleTrials = function(trials){
+
+    if (!Array.isArray(trials)){
+        throw new Error("Trial Shuffling Function Usage (array trials)");
+    }
+
+    trials.shuffle();
+};
+
+
 function _csvIllegalCharCheck(string){
 
     if (typeof string !== "string"){

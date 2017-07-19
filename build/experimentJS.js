@@ -17119,7 +17119,7 @@ Object.keys(_methods).forEach(function (key) {
 
 require("./utils/utils.js");
 
-},{"./core/core.js":11,"./methods/methods.js":13,"./utils/utils.js":21}],3:[function(require,module,exports){
+},{"./core/core.js":11,"./methods/methods.js":14,"./utils/utils.js":22}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17269,7 +17269,7 @@ function _showInterstimulusPause(blackout) {
 
 exports.Pause = Pause;
 
-},{"../utils/SetCSSOnElement.js":17,"./RunExperiment.js":7}],5:[function(require,module,exports){
+},{"../utils/SetCSSOnElement.js":18,"./RunExperiment.js":7}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17547,7 +17547,7 @@ function _FormatStoredResponses(responses) {
 //     _responses.push(responseFormatted);                         // _responses by one
 // }
 
-},{"../utils/StringUtils.js":19,"./Trials":9,"./UnserializableMap.js":10}],6:[function(require,module,exports){
+},{"../utils/StringUtils.js":20,"./Trials":9,"./UnserializableMap.js":10}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17621,7 +17621,7 @@ function _outputResponses(allResponses, log) {
     a.click();
 }
 
-},{"../utils/CreateDownloadLink.js":14,"./GetPptInfo.js":3,"./ResponseHandler.js":5,"./Trials.js":9}],7:[function(require,module,exports){
+},{"../utils/CreateDownloadLink.js":15,"./GetPptInfo.js":3,"./ResponseHandler.js":5,"./Trials.js":9}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17676,12 +17676,15 @@ _Trials.Trials.runNextTrial = function (options) {
 
     if (!_Trials._didBuildTrials) {
         throw new Error("runNextTrial(): Trial were not built");
-        return;
     }
 
     if (_shouldRunNextTrial) {
 
-        if (_shouldRunMidCallback() && _midCallback !== null) {
+        if (_shouldRunStartCallback() && typeof _startCallback === "function") {
+            _startCallback();
+        }
+
+        if (_shouldRunMidCallback() && typeof _midCallback === "function") {
             _midCallback();
         }
 
@@ -17689,7 +17692,7 @@ _Trials.Trials.runNextTrial = function (options) {
             (0, _InterstimulusPause._interstimulusPause)();
         }
 
-        if (options !== undefined && options.hasOwnProperty("shouldStoreResponse") && options.shouldStoreResponse) {
+        if (options !== undefined && options.hasOwnProperty("dv_value")) {
             (0, _ResponseHandler._storeResponse)(options); //Settings contains a field "dv_value" which is also read by _storeResponse
         }
 
@@ -17706,9 +17709,8 @@ _Trials.Trials.runNextTrial = function (options) {
 };
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                                 Experiment Lifecycle - Displaying The Next Trial
+//                        Experiment Lifecycle - Displaying The Next Trial
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
 
 /** Where view-level elements are set - this is like the CONTROLLER method interfacing between MODEL and VIEW*/
 function _displayNextTrial() {
@@ -17720,7 +17722,7 @@ function _displayNextTrial() {
 
     console.log("Displaying next trial:", _trial_to_run);
 
-    // TODO: Support PROMISES -> Facilitates PHASES of EXPERIMENTS 
+    // TODO: Support PROMISES -> Facilitates PHASES of EXPERIMENTS
     /** Iterate over each IV and set its pointer to its value for that trial */
     for (var i = 0; i < _trial_to_run.length; ++i) {
 
@@ -17736,10 +17738,34 @@ function _fireIVSetFuncWithArgs(cur_iv) {
 
     /** Using a FUNCTION to set the display*/
     if (_Trials.setFuncs[cur_iv.description] !== undefined) {
-        // TODO: FIX Serialise objects into .value
         _Trials.setFuncs[cur_iv.description].apply(null, cur_iv.value);
     } else {
         throw new Error("No setter function supplied by: " + cur_iv);
+    }
+}
+
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                  Experiment Lifecycle - Star Point Callback (i.e. the "instructions" message)
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+var _startCallback = null;
+_Trials.Trials.setStartCallback = function (fn) {
+    if (typeof fn === "function") {
+        _startCallback = fn;
+    } else {
+        throw new Error("[ setStartCallback ERROR ] - First argument to setStartCallback must be a function");
+    }
+};
+
+var _didRunStartCallback = false;
+function _shouldRunStartCallback() {
+    if (_didRunMidCallback) return false;
+
+    // As trials are popped, responses are pushed.
+    // Mid point = there are as many responses as trials (or a difference of one for odd number of trials)
+    if (_ResponseHandler._responses.length === 0) {
+        _didRunStartCallback = true;
+        return true;
     }
 }
 
@@ -17749,7 +17775,7 @@ function _fireIVSetFuncWithArgs(cur_iv) {
 
 
 var _midCallback = null;
-_Trials.Trials.setMidCallback = function (fn) {
+_Trials.Trials.setMidpointCallback = function (fn) {
     if (typeof fn === "function") {
         _midCallback = fn;
     } else {
@@ -17761,7 +17787,7 @@ var _didRunMidCallback = false;
 function _shouldRunMidCallback() {
     if (_didRunMidCallback) return false;
 
-    // Trials are popped, responses are pushed.
+    // As trials are popped, responses are pushed.
     // Mid point = there are as many responses as trials (or a difference of one for odd number of trials)
     if (_Trials._allTrials.length === _ResponseHandler._responses.length || Math.abs(_Trials._allTrials.length - _ResponseHandler._responses.length) === 1) {
         _didRunMidCallback = true;
@@ -17787,7 +17813,7 @@ _Trials.Trials.setEndCallback = function (value) {
     }
 };
 
-},{"../utils/DOMUtils.js":15,"../utils/StringUtils.js":19,"./InterstimulusPause.js":4,"./ResponseHandler.js":5,"./ResponsesOutput.js":6,"./Trials.js":9,"./UnserializableMap.js":10,"lodash":1}],8:[function(require,module,exports){
+},{"../utils/DOMUtils.js":16,"../utils/StringUtils.js":20,"./InterstimulusPause.js":4,"./ResponseHandler.js":5,"./ResponsesOutput.js":6,"./Trials.js":9,"./UnserializableMap.js":10,"lodash":1}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17960,7 +17986,7 @@ function _createDropDownSelect(all_saves) {
 
 exports.Saves = Saves;
 
-},{"../utils/DOMUtils.js":15,"../utils/SetCSSOnElement.js":17,"./ResponseHandler.js":5,"./Trials.js":9}],9:[function(require,module,exports){
+},{"../utils/DOMUtils.js":16,"../utils/SetCSSOnElement.js":18,"./ResponseHandler.js":5,"./Trials.js":9}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17981,7 +18007,7 @@ var _UnserializableMap = require("./UnserializableMap.js");
  * To set Trial IVs
  *      1. Set the setter function:                 this is a function `fn` that will manipulate the display
  *      2. Set the args passed to the setter:       these are the varying args passed to `fn` used to vary the IV
- *      3. Call Trials.buildExperiment()
+ *      3. Call Trials.BuildExperiment()
  *
  *  Optional:
  *      4. Set a response parser function:          format passed arguments into a desired output format
@@ -18110,16 +18136,6 @@ Trials.getTrials = function () {
     }
 };
 
-/**===========================================
- *          Trial
- *             {
- *              
- *             }
- *
- *
- *
- * */
-
 function _buildTrials() {
     var printTrials = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
@@ -18191,7 +18207,7 @@ function _buildTrials() {
     }
     exports._allTrials = _allTrials = temp;
 
-    if (_shouldShuffle) _allTrials.shuffle();
+    if (_shouldShuffle) Trials.shuffleTrials(_allTrials);
 
     _totalTrials = _allTrials.length; //Used to determine where you are in the trial process
     exports._didBuildTrials = _didBuildTrials = true;
@@ -18221,6 +18237,10 @@ Trials.BuildExperiment = function (printTrials) {
     }
 };
 
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                                      Trials - sub functions
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
 var _shouldShuffle = true;
 Trials.setShuffle = function (shouldShuffle) {
     if (typeof shouldShuffle === "boolean") {
@@ -18230,9 +18250,15 @@ Trials.setShuffle = function (shouldShuffle) {
     }
 };
 
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                                      Trials - sub functions
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+Trials.shuffleTrials = function (trials) {
+
+    if (!Array.isArray(trials)) {
+        throw new Error("Trial Shuffling Function Usage (array trials)");
+    }
+
+    trials.shuffle();
+};
+
 function _csvIllegalCharCheck(string) {
 
     if (typeof string !== "string") {
@@ -18246,7 +18272,7 @@ function _csvIllegalCharCheck(string) {
 
 exports.Trials = Trials;
 
-},{"../utils/jQueryUtils.js":20,"./UnserializableMap.js":10,"lodash":1}],10:[function(require,module,exports){
+},{"../utils/jQueryUtils.js":21,"./UnserializableMap.js":10,"lodash":1}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18410,6 +18436,16 @@ var _Trials = require("../core/Trials.js");
 
 var _2AFC = {};
 
+/**
+ * 2AFC Module.
+ *
+ * These are lightweight wrappers around the core Trials methods.
+ * They enforce a 2AFC structure to the experiment
+ *
+ * */
+
+// ================================== Standard ==================================
+
 var _didSetStandard = false;
 
 // Usage: (string, function, array of args)
@@ -18432,6 +18468,8 @@ _2AFC.SetStandardParserFunc = function (iv_name, parser_func) {
     _Trials.Trials.setIVResponseParserFunc("std_" + iv_name, parser_func);
 };
 
+// ================================== Varying ==================================
+
 var _didSetVarying = false;
 // Usage: ( string, function, array of arrays (of args) )
 _2AFC.SetVarying = function (iv_name, varying_func, varying_func_levels) {
@@ -18449,8 +18487,10 @@ _2AFC.SetVarying = function (iv_name, varying_func, varying_func_levels) {
 // Usage: (string iv_name, function parser_func);
 _2AFC.SetVaryingParserFunc = _Trials.Trials.setIVResponseParserFunc;
 
+// ================================== Counter Balancer ==================================
+
 var _didSetCounterBalance = false;
-_2AFC.CounterBalancePresentation = function (iv_name, counterbalance_func, counterbalance_func_levels) {
+_2AFC.SetCounterBalancePresentation = function (iv_name, counterbalance_func, counterbalance_func_levels) {
 
     if (typeof iv_name !== "string" || typeof counterbalance_func !== "function" || !Array.isArray(counterbalance_func_levels) || !Array.isArray(counterbalance_func_levels[0])) {
         throw new Error("[ 2AFC CounterBalancePresentation Error ] - usage = (string iv_name, function varying_func, array varying_func_levels)");
@@ -18472,15 +18512,30 @@ _2AFC.SetCounterBalanceParserFunc = function (iv_name, parser_func) {
 _2AFC.BuildExperiment = function () {
 
     if (!(_didSetCounterBalance && _didSetStandard && _didSetVarying)) {
-        throw new Error("[ 2AFC BuildExperiment Error ] - To run a 2AFC experiment a standard variable, varying variable and counterbalance must be set");
+        throw new Error("[ 2AFC BuildExperiment Error ] - To run a 2AFC experiment a standard variable, varying variable and counterbalancer must be set");
     }
 
-    _Trials.Trials.buildExperiment();
+    _Trials.Trials.BuildExperiment();
 };
 
 exports._2AFC = _2AFC;
 
 },{"../core/Trials.js":9}],13:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ConstantStimuli = undefined;
+
+var _Trials = require("../core/Trials.js");
+
+var ConstantStimuli = {}; /**
+                           * Created by kai on 19/7/17.
+                           */
+exports.ConstantStimuli = ConstantStimuli;
+
+},{"../core/Trials.js":9}],14:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18492,16 +18547,20 @@ var _Trials = require("../core/Trials.js");
 
 var _AFC = require("./2AFC.js");
 
+var _ConstantStimuli = require("./ConstantStimuli.js");
+
+var Methods = {
+  _2AFC: _AFC._2AFC,
+  ConstantStimuli: _ConstantStimuli.ConstantStimuli
+};
+
+// The fields of ExperimentJS
 /**
  * Created by kai on 17/7/17.
  */
-var Methods = { // add all methods to methods object
-  _2AFC: _AFC._2AFC
-}; //Needs ./ to treat it as an internal (not external dependency)
-
 exports.Methods = Methods;
 
-},{"../core/Trials.js":9,"./2AFC.js":12}],14:[function(require,module,exports){
+},{"../core/Trials.js":9,"./2AFC.js":12,"./ConstantStimuli.js":13}],15:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18518,7 +18577,7 @@ function createDownloadLink(filename, data) {
     return a;
 }
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18545,7 +18604,7 @@ function DOM_remove(elem) {
     elem.parentNode.removeChild(elem); //Remove select from dom
 }
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18559,7 +18618,7 @@ function isFloat(n) {
   return Number(n) === n && n % 1 !== 0;
 }
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18577,7 +18636,7 @@ function SetCSSOnElement(elem, css) {
     }
 }
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 
 // - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
@@ -18608,7 +18667,7 @@ Array.prototype.back = function () {
     }
 };
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18639,7 +18698,7 @@ function getParamNames(fn) {
     return _getParamNames(fn);
 }
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18775,7 +18834,7 @@ function isPlainObject(obj) {
     return typeof Ctor === "function" && fnToString.call(Ctor) === ObjectFunctionString;
 }
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 
 require("./CreateDownloadLink.js");
@@ -18786,5 +18845,5 @@ require("./NumberUtils.js");
 
 require("./StringUtils.js");
 
-},{"./CreateDownloadLink.js":14,"./NumberUtils.js":16,"./Shuffle.js":18,"./StringUtils.js":19}]},{},[2])(2)
+},{"./CreateDownloadLink.js":15,"./NumberUtils.js":17,"./Shuffle.js":19,"./StringUtils.js":20}]},{},[2])(2)
 });

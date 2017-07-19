@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ExperimentJS Tests</title>
+    <style>
+
+        #std {
+            position: fixed;
+            left: 12.5vw;
+            top: 25vw;
+            width: 25vw;
+            height: 25vw;
+            background: red;
+        }
+
+        #varying {
+            position: fixed;
+            right: 12.5vw;
+            top: 25vw;
+            width: 25vw;
+            height: 25vw;
+            background: green;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<h1> 2AFC Experiment example...</h1>
+<h3> Select the red square </h3>
+
+<div id="std"></div>
+<div id="varying"></div>
+
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script src="../build/experimentJS.js"></script>
+
+<script>
+
+
+    var rgb_triplet_to_string_parser = function(r, g, b){
+        return {
+            "rgb": r + " " + g + " " + b,
+            "Additional Info": r === 255 ? "red" : "not red"
+        }
+    };
+
+    // ===================== set up the standard ===================
+
+    var std_setter_func = function(r, g, b){
+        var colstring = "rgb(" + r + ", " + g + ", " + b + ")";
+        $("#std").css("background", colstring);
+    };
+
+    var std_func_arg_array = [255, 0, 0]; //
+
+    ExperimentJS.Methods._2AFC.SetStandard("Std Square", std_setter_func, std_func_arg_array);
+    ExperimentJS.Methods._2AFC.SetStandardParserFunc( "Std Square",  rgb_triplet_to_string_parser);
+
+    // ===================== set up the varying display =====================
+
+    var varying_setter_func = function(r,g,b){
+        var colstring = "rgb(" + r + ", " + g + ", " + b + ")";
+        $("#varying").css("background", colstring);
+    };
+
+    var varying_func_array_of_arg_arrays = [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ].map(function(elem, i, all){
+        return [255, elem/10 * 255, 0]; // array of arg arrays
+    });
+
+    ExperimentJS.Methods._2AFC.SetVarying("Varying Square", varying_setter_func, varying_func_array_of_arg_arrays);
+    ExperimentJS.Methods._2AFC.SetVaryingParserFunc("Varying Square", rgb_triplet_to_string_parser);
+
+    // ===================== set up counterbalancing =====================
+
+    var counter_balancing_func = function(a_is_on_left){
+
+        var start =  $(window).width() * 0.2;
+        var offset = $(window).width() * 0.3;
+
+        if (a_is_on_left) {
+            $("#std").offset({ left: start + offset });
+            $("#varying").offset({ left: start });
+
+        } else {
+            $("#std").offset({ left: start });
+            $("#varying").offset({ left: start + offset });
+        }
+    };
+
+    var counter_balancing_func_args = [ [true], [false] ];
+
+    var counter_balancing_parser_func = function(a_is_on_left){
+        return a_is_on_left ? "Standard On Left" : "Standard On Right";
+    };
+
+    ExperimentJS.Methods._2AFC.SetCounterBalancePresentation("Present Std On Different Sides", counter_balancing_func, counter_balancing_func_args);
+    ExperimentJS.Methods._2AFC.SetCounterBalanceParserFunc("Present Std On Different Sides", counter_balancing_parser_func);
+
+    // ===================== Set up other experimental  =====================
+
+    //    ExperimentJS.Trials.getPptInfo();                         // turn off in development
+    ExperimentJS.Trials.setRepeats(1);
+    ExperimentJS.Methods._2AFC.BuildExperiment(true);                      // true logs trials to console
+    ExperimentJS.Trials.runNextTrial();
+
+    $(window).keydown(function(event){
+
+        console.log(event.which);
+
+        if (event.which === 37){ //left arrow
+            ExperimentJS.Trials.runNextTrial({shouldStoreResponse: true, dv_value: 'left'});
+        }
+        else if (event.which === 39){ //right arrow
+            ExperimentJS.Trials.runNextTrial({shouldStoreResponse: true, dv_value: 'right'});
+        }
+
+    });
+
+</script>
+
+
+
+</body>
+</html>

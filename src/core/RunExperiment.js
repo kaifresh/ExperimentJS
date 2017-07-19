@@ -37,12 +37,15 @@ Trials.runNextTrial = function (options) {                                 // us
 
     if (!_didBuildTrials){
         throw new Error("runNextTrial(): Trial were not built");
-        return;
     }
 
     if (_shouldRunNextTrial) {
 
-        if (_shouldRunMidCallback() && _midCallback !== null) {
+        if (_shouldRunStartCallback() && typeof  _startCallback === "function"){
+            _startCallback();
+        }
+
+        if (_shouldRunMidCallback() && typeof _midCallback === "function") {
             _midCallback();
         }
 
@@ -50,7 +53,7 @@ Trials.runNextTrial = function (options) {                                 // us
             _interstimulusPause();
         }
 
-        if (options !== undefined && options.hasOwnProperty("shouldStoreResponse") && options.shouldStoreResponse) {
+        if (options !== undefined && options.hasOwnProperty("dv_value") ) {
             _storeResponse(options);                                       //Settings contains a field "dv_value" which is also read by _storeResponse
         }
 
@@ -59,21 +62,18 @@ Trials.runNextTrial = function (options) {                                 // us
             console.log("There are ", _allTrials.length, " trials remaining.");
 
         } else {
-            
+
             _outputResponses( _responses );
-
+            
             if ( typeof _endCallBack === "function") _endCallBack();
-
         }
     }
 
 };
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                                 Experiment Lifecycle - Displaying The Next Trial
+//                        Experiment Lifecycle - Displaying The Next Trial
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
-
 
 /** Where view-level elements are set - this is like the CONTROLLER method interfacing between MODEL and VIEW*/
 function _displayNextTrial() {
@@ -85,11 +85,11 @@ function _displayNextTrial() {
 
     console.log("Displaying next trial:", _trial_to_run);
 
-    // TODO: Support PROMISES -> Facilitates PHASES of EXPERIMENTS 
+    // TODO: Support PROMISES -> Facilitates PHASES of EXPERIMENTS
     /** Iterate over each IV and set its pointer to its value for that trial */
     for (var i = 0; i < _trial_to_run.length; ++i) {
 
-        _trial_to_run[i] = _Unserializable_Token2Var( _trial_to_run[i] );         // UnserializableMap.js - DeTokenize
+        _trial_to_run[i] = _Unserializable_Token2Var( _trial_to_run[i] );               // UnserializableMap.js - DeTokenize
 
         console.log("Now displaying Unserialized IV", _trial_to_run[i]);
 
@@ -102,13 +102,37 @@ function _fireIVSetFuncWithArgs(cur_iv) {
 
     /** Using a FUNCTION to set the display*/
     if ( setFuncs[cur_iv.description] !== undefined ) {
-        // TODO: FIX Serialise objects into .value
         setFuncs[cur_iv.description].apply(null, cur_iv.value);
     } else {
         throw new Error("No setter function supplied by: " + cur_iv);
     }
 }
 
+
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                  Experiment Lifecycle - Star Point Callback (i.e. the "instructions" message)
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+var _startCallback = null;
+Trials.setStartCallback = function (fn) {
+    if (typeof fn === "function"){
+        _startCallback = fn;
+    }   else {
+        throw new Error("[ setStartCallback ERROR ] - First argument to setStartCallback must be a function");
+    }
+};
+
+var _didRunStartCallback = false;
+function _shouldRunStartCallback() {
+    if (_didRunMidCallback) return false;
+
+    // As trials are popped, responses are pushed.
+    // Mid point = there are as many responses as trials (or a difference of one for odd number of trials)
+    if (_responses.length === 0 ){
+        _didRunStartCallback = true;
+        return true;
+    }
+}
 
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -117,7 +141,7 @@ function _fireIVSetFuncWithArgs(cur_iv) {
 
 
 var _midCallback = null;
-Trials.setMidCallback = function (fn) {
+Trials.setMidpointCallback = function (fn) {
     if (typeof fn === "function"){
         _midCallback = fn;
     }   else {
@@ -129,7 +153,7 @@ var _didRunMidCallback = false;
 function _shouldRunMidCallback() {
     if (_didRunMidCallback) return false;
 
-    // Trials are popped, responses are pushed.
+    // As trials are popped, responses are pushed.
     // Mid point = there are as many responses as trials (or a difference of one for odd number of trials)
     if (_allTrials.length ===_responses.length || Math.abs(_allTrials.length -_responses.length) === 1){
         _didRunMidCallback = true;

@@ -3,6 +3,16 @@ import { Trials } from "../core/Trials.js";
 
 var _2AFC = {};
 
+/**
+ * 2AFC Module.
+ *
+ * These are lightweight wrappers around the core Trials methods.
+ * They enforce a 2AFC structure to the experiment
+ *
+ * */
+
+// ================================== Standard ==================================
+
 var _didSetStandard = false;
 
 // Usage: (string, function, array of args)
@@ -25,6 +35,8 @@ _2AFC.SetStandardParserFunc = function(iv_name, parser_func){
     Trials.setIVResponseParserFunc("std_"+iv_name, parser_func);
 };
 
+// ================================== Varying ==================================
+
 var _didSetVarying = false;
 // Usage: ( string, function, array of arrays (of args) )
 _2AFC.SetVarying = function(iv_name, varying_func, varying_func_levels){
@@ -43,8 +55,10 @@ _2AFC.SetVarying = function(iv_name, varying_func, varying_func_levels){
 // Usage: (string iv_name, function parser_func);
 _2AFC.SetVaryingParserFunc = Trials.setIVResponseParserFunc;
 
+// ================================== Counter Balancer ==================================
+
 var _didSetCounterBalance = false;
-_2AFC.CounterBalancePresentation = function(iv_name, counterbalance_func, counterbalance_func_levels){
+_2AFC.SetCounterBalancePresentation = function(iv_name, counterbalance_func, counterbalance_func_levels){
 
     if (typeof iv_name !== "string" || typeof counterbalance_func !== "function" || !Array.isArray(counterbalance_func_levels) || !Array.isArray(counterbalance_func_levels[0]) ){
         throw new Error("[ 2AFC CounterBalancePresentation Error ] - usage = (string iv_name, function varying_func, array varying_func_levels)");
@@ -65,12 +79,11 @@ _2AFC.SetCounterBalanceParserFunc = function(iv_name, parser_func){
 
 _2AFC.BuildExperiment = function(){
 
-
     if ( !(_didSetCounterBalance && _didSetStandard && _didSetVarying) ){
-        throw new Error("[ 2AFC BuildExperiment Error ] - To run a 2AFC experiment a standard variable, varying variable and counterbalance must be set");
+        throw new Error("[ 2AFC BuildExperiment Error ] - To run a 2AFC experiment a standard variable, varying variable and counterbalancer must be set");
     }
 
-    Trials.buildExperiment();
+    Trials.BuildExperiment();
 };
 
 export { _2AFC }

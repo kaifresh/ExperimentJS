@@ -4,3 +4,4 @@
 - Method of Adjustment
 - Method of Constant Stimuli
 - Staircase
+

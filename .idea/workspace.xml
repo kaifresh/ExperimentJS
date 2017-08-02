@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="15a95f82-d721-497f-925e-739aed3019c5" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notes/todo.txt" afterPath="$PROJECT_DIR$/notes/todo.txt" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/methods/2AFC-old.js" afterPath="" />
     </list>
     <ignored path="ExperimentJS.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,7 +28,7 @@
           <file leaf-file-name="Trials.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/core/Trials.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="540">
+                <state relative-caret-position="3360">
                   <caret line="224" column="0" selection-start-line="224" selection-start-column="0" selection-end-line="224" selection-end-column="0" />
                   <folding>
                     <element signature="e#0#49#0" expanded="true" />
@@ -38,11 +37,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="2AFC.js" pinned="false" current-in-tab="false">
+          <file leaf-file-name="2AFC.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/methods/2AFC.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="420">
-                  <caret line="28" column="33" selection-start-line="28" selection-start-column="33" selection-end-line="28" selection-end-column="33" />
+                <state relative-caret-position="840">
+                  <caret line="70" column="46" selection-start-line="70" selection-start-column="46" selection-end-line="70" selection-end-column="46" />
                   <folding />
                 </state>
               </provider>
@@ -51,27 +50,17 @@
           <file leaf-file-name="subtrees-info.txt" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/notes/subtrees-info.txt">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                <state relative-caret-position="420">
+                  <caret line="28" column="28" selection-start-line="28" selection-start-column="28" selection-end-line="28" selection-end-column="28" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="todo.txt" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/notes/todo.txt">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="105">
-                  <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="ResponseHandler.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="ResponseHandler.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/core/ResponseHandler.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="555">
+                <state relative-caret-position="840">
                   <caret line="161" column="2" selection-start-line="161" selection-start-column="2" selection-end-line="161" selection-end-column="2" />
                   <folding>
                     <element signature="e#2#59#0" expanded="true" />
@@ -171,6 +160,7 @@
         <option value="$PROJECT_DIR$/src/methods/ConstantStimuli.js" />
         <option value="$PROJECT_DIR$/src/methods/methods.js" />
         <option value="$PROJECT_DIR$/notes/todo.txt" />
+        <option value="$PROJECT_DIR$/notes/subtrees-info.txt" />
       </list>
     </option>
   </component>
@@ -518,12 +508,12 @@
       <workItem from="1501630006496" duration="888000" />
       <workItem from="1501630982461" duration="445000" />
       <workItem from="1501631460361" duration="961000" />
-      <workItem from="1501632471175" duration="309000" />
+      <workItem from="1501632471175" duration="411000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="117117000" />
+    <option name="totallyTimeSpent" value="117219000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-1577" width="2560" height="1577" extended-state="6" />
@@ -652,13 +642,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/methods/2AFC-old.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="930">
-          <caret line="62" column="2" selection-start-line="62" selection-start-column="2" selection-end-line="62" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/core/InterstimulusPause.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="465">
@@ -763,6 +746,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="4" column="7" selection-start-line="4" selection-start-column="7" selection-end-line="4" selection-end-column="7" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -815,11 +799,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/notes/subtrees-info.txt">
+    <entry file="file://$PROJECT_DIR$/src/core/RunExperiment.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="435">
+          <caret line="35" column="76" selection-start-line="35" selection-start-column="76" selection-end-line="35" selection-end-column="76" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/methods/ConstantStimuli.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="11" column="26" selection-start-line="11" selection-start-column="26" selection-end-line="11" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/ResponseHandler.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="840">
+          <caret line="161" column="2" selection-start-line="161" selection-start-column="2" selection-end-line="161" selection-end-column="2" />
+          <folding>
+            <element signature="e#2#59#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -831,17 +833,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/RunExperiment.js">
+    <entry file="file://$PROJECT_DIR$/notes/subtrees-info.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="35" column="76" selection-start-line="35" selection-start-column="76" selection-end-line="35" selection-end-column="76" />
+        <state relative-caret-position="420">
+          <caret line="28" column="28" selection-start-line="28" selection-start-column="28" selection-end-line="28" selection-end-column="28" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/core/Trials.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
+        <state relative-caret-position="3360">
           <caret line="224" column="0" selection-start-line="224" selection-start-column="0" selection-end-line="224" selection-end-column="0" />
           <folding>
             <element signature="e#0#49#0" expanded="true" />
@@ -849,28 +851,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/methods/2AFC.js">
+    <entry file="file://$PROJECT_DIR$/src/methods/2AFC-old.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="28" column="33" selection-start-line="28" selection-start-column="33" selection-end-line="28" selection-end-column="33" />
+        <state relative-caret-position="930">
+          <caret line="62" column="2" selection-start-line="62" selection-start-column="2" selection-end-line="62" selection-end-column="2" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/ResponseHandler.js">
+    <entry file="file://$PROJECT_DIR$/src/methods/2AFC.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="161" column="2" selection-start-line="161" selection-start-column="2" selection-end-line="161" selection-end-column="2" />
-          <folding>
-            <element signature="e#2#59#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/methods/ConstantStimuli.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="11" column="26" selection-start-line="11" selection-start-column="26" selection-end-line="11" selection-end-column="26" />
+        <state relative-caret-position="840">
+          <caret line="70" column="46" selection-start-line="70" selection-start-column="46" selection-end-line="70" selection-end-column="46" />
           <folding />
         </state>
       </provider>

@@ -17119,7 +17119,7 @@ Object.keys(_methods).forEach(function (key) {
 
 require("./utils/utils.js");
 
-},{"./core/core.js":11,"./methods/methods.js":14,"./utils/utils.js":22}],3:[function(require,module,exports){
+},{"./core/core.js":11,"./methods/methods.js":14,"./utils/utils.js":21}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17138,6 +17138,9 @@ var _pptName = exports._pptName = "unnamed_ppt"; /**
                                                   */
 var _pptNo = exports._pptNo = 0;
 
+/**
+ * Get participant number and name.
+ */
 _Trials.Trials.getPptInfo = function () {
 
     while (true) {
@@ -17191,7 +17194,8 @@ function _createInterstimulusPause() {
         width: "100vw",
         height: "100vh",
         background: "black",
-        display: "none" // block when visible
+        display: "none", // block when visible
+        'z-index': 99999999
     };
 
     (0, _SetCSSOnElement.SetCSSOnElement)(blackout, css);
@@ -17209,6 +17213,11 @@ document.body.appendChild(_blackOut);
 
 var Pause = {};
 
+/**
+ * Manually fire the interstimulus pause and black out the screen
+ * @param {int} duration - milliseconds to show the interstimulus pause
+ * @returns {Promise}
+ */
 Pause.showInterstimulusPause = function (duration) {
     return new Promise(function (resolve, reject) {
         _interstimulusPause(duration).then(function () {
@@ -17218,15 +17227,22 @@ Pause.showInterstimulusPause = function (duration) {
 };
 
 var _pause = 500;
-Pause.setPauseTime = function (value) {
-    if (value === parseInt(value, 10)) {
-        _pause = value;
+/**
+ * @param {int} pause_duration - set length of the interstimulus pause
+ */
+Pause.setPauseTime = function (pause_duration) {
+    if (pause_duration === parseInt(pause_duration, 10)) {
+        _pause = pause_duration;
     } else {
         throw new Error("setPauseTime only takes integers");
     }
 };
 
 var _shouldInterstimulusPause = exports._shouldInterstimulusPause = true; //used in: RunExperiment.js
+/**
+ * Turn the interstimulus pause on or off
+ * @param {bool} - value
+ */
 Pause.setShouldInterstimulusPause = function (value) {
     if (typeof value === "boolean") {
         exports._shouldInterstimulusPause = _shouldInterstimulusPause = value;
@@ -17322,6 +17338,8 @@ function _storeResponse(options) {
 }
 
 function _FormatStoredResponses(responses) {
+
+    console.log(responses);
     /**
      * GOAL only tokenize & de-tokenize ONCE
      *
@@ -17554,6 +17572,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports._outputResponses = _outputResponses;
+exports._formatAllResponsesToCSV = _formatAllResponsesToCSV;
+exports._createCSVLinkAndDownload = _createCSVLinkAndDownload;
 
 var _Trials = require("./Trials.js");
 
@@ -17563,57 +17583,64 @@ var _GetPptInfo = require("./GetPptInfo.js");
 
 var _CreateDownloadLink = require("../utils/CreateDownloadLink.js");
 
+var _ = require("lodash"); // Browserify will resolve this package
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                                 Experiment Lifecycle - Output Responses
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
+/**
+ * Download participant's responses as a csv
+ */
 _Trials.Trials.forceOutputResponses = function () {
     console.log("Forcing output of _responses");
-    _outputResponses(_ResponseHandler._responses, true);
+    _Trials.Trials.OutputResponses(_outputResponses(_ResponseHandler._responses, true));
 };
 
 function _outputResponses(allResponses, log) {
 
     if (allResponses.length === 0) return;
 
-    allResponses = (0, _ResponseHandler._FormatStoredResponses)(allResponses);
+    allResponses = (0, _ResponseHandler._FormatStoredResponses)(_.cloneDeep(allResponses));
+
+    return _formatAllResponsesToCSV(allResponses); // need to decide what to do HERE
+
+    // _createCSVLinkAndDownload(csvContent);
+}
+
+function _formatAllResponsesToCSV(allResponses) {
+    var log = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
 
     var csvString = "";
 
-    var keys = Object.keys(allResponses[0]);
-    /**These are all the columns in the output*/
+    var keys = Object.keys(allResponses[0]); // These are all the columns in the output
 
-    /** Make the header*/
-    csvString += "Participant Name, Participant Number, "; //Manually add header
+    csvString += "Participant Name, Participant Number, "; // Add ppt info to header
     for (var i = 0; i < keys.length; i++) {
         csvString += keys[i] + ",";
     }
-    csvString = csvString.slice(0, -1) + "\n"; //Cut trailing comma and put in a new row/line
+    csvString = csvString.slice(0, -1) + "\n"; // Cut trailing comma and put in a new row/line
 
     /** Fill the data - This time its an array of arrays not array of dictionaries */
     for (i = 0; i < allResponses.length; i++) {
 
-        csvString += _GetPptInfo._pptName + "," + _GetPptInfo._pptNo + ","; //Manaully add content
+        csvString += _GetPptInfo._pptName + "," + _GetPptInfo._pptNo + ","; // Manaully add content
 
         for (var j = 0; j < keys.length; j++) {
-            //Iterate over the keys to get teh values
-
+            // Iterate over the keys to get teh values
             var value = allResponses[i][keys[j]];
-            // console.log("writing this raw value ", value, keys[j]);
-            //value = checkReturnProps( value, true ) || value;  //Parse out relevant object fields
-            //console.log("Afer it was parsed:", value, "\n*********");
             csvString += value + ",";
         }
 
         csvString = csvString.slice(0, -1) + "\n"; //Cut trailing comma and put in a new row/line
     }
 
-    if (log) {
-        console.log(csvString);
-    }
+    if (log) console.log(csvString);
 
-    /** Store data in a link & Click it - TODO: Move to sub function */
-    var csvContent = encodeURI("data:text/csv;charset=utf-8," + csvString);
+    return encodeURI("data:text/csv;charset=utf-8," + csvString);
+}
+
+function _createCSVLinkAndDownload(csvContent) {
     var a = (0, _CreateDownloadLink.createDownloadLink)("results (" + _GetPptInfo._pptName + "," + _GetPptInfo._pptNo.toString() + ").csv", csvContent);
     a.innerHTML = "<h4>Click to download results!</h4>";
     a.className += " results-download";
@@ -17621,7 +17648,7 @@ function _outputResponses(allResponses, log) {
     a.click();
 }
 
-},{"../utils/CreateDownloadLink.js":15,"./GetPptInfo.js":3,"./ResponseHandler.js":5,"./Trials.js":9}],7:[function(require,module,exports){
+},{"../utils/CreateDownloadLink.js":15,"./GetPptInfo.js":3,"./ResponseHandler.js":5,"./Trials.js":9,"lodash":1}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17670,13 +17697,22 @@ function _setShouldRunNextTrial(value) {
 }
 
 var _shouldRunNextTrial = exports._shouldRunNextTrial = true; // used by: InterstimulusPause.js
+var _didStartExperiment = false;
 
+/**
+ * Call Trials.runNextTrial both to start the experiment and to progress to the next trial.
+ * To progress, an object with the field "dv_value" should be passed in as the first arg,
+ * containing the participant's response to the trial that was just run.
+ * @param {object} options - must contain field "dv_value"
+ */
 _Trials.Trials.runNextTrial = function (options) {
     // usage -> runNextTrial({shouldStoreResponse: true, dv_value: "inside"});
 
     if (!_Trials._didBuildTrials) {
         throw new Error("runNextTrial(): Trial were not built");
     }
+
+    if (!_didStartExperiment) _didStartExperiment = true;
 
     if (_shouldRunNextTrial) {
 
@@ -17705,7 +17741,7 @@ _Trials.Trials.runNextTrial = function (options) {
             }
         } else {
 
-            (0, _ResponsesOutput._outputResponses)(_ResponseHandler._responses);
+            _Trials.Trials.OutputResponses((0, _ResponsesOutput._outputResponses)(_ResponseHandler._responses));
 
             if (typeof _endCallBack === "function") _endCallBack();
         }
@@ -17726,7 +17762,6 @@ function _displayNextTrial() {
 
     console.log("Displaying next trial:", _trial_to_run);
 
-    // TODO: Support PROMISES -> Facilitates PHASES of EXPERIMENTS
     if (!_Trials._isUsingPhases) {
         _displayTrialSimultaneously(_trial_to_run);
     } else {
@@ -17735,50 +17770,32 @@ function _displayNextTrial() {
 }
 
 function _detokenizeTrial(_trial_to_run) {
-
     return _trial_to_run.map(function (_tokenised_trial) {
         return (0, _UnserializableMap._Unserializable_Token2Var)(_tokenised_trial);
     });
-    // for (var i = 0; i < _trial_to_run.length; ++i) {
-    //     _trial_to_run[i] = _Unserializable_Token2Var( _trial_to_run[i] );               // UnserializableMap.js - DeTokenize
-    // }
-    // return _trial_to_run
 }
 
 function _displayTrialSimultaneously(_trial_to_run) {
     /** Iterate over each IV and set its pointer to its value for that trial */
     for (var i = 0; i < _trial_to_run.length; ++i) {
-
-        // _trial_to_run[i] = _Unserializable_Token2Var( _trial_to_run[i] );               // UnserializableMap.js - DeTokenize
-
         console.log("Now displaying Unserialized IV", _trial_to_run[i]);
-
         _fireIVSetFuncWithArgs(_trial_to_run[i]);
     }
 }
 
 function _displayTrialPhases(_trial_to_run) {
-    // Get IV names from trial
-    // Get IV names in each phase
-
-    console.log("RUN A PHASE BIATCH", _trial_to_run);
-
-    console.log("M PHAZES NICCCUUH", _Trials.Trials.Phases);
 
     var promise_array = [];
 
     _Trials.Trials.Phases.map(function (current_phase, i) {
         // Iterate over phases
 
-        //A CHAIN NEEDED HERE
-        var promise = function promise() {
+        var phase_promise = function phase_promise() {
             return new Promise(function (resolve, reject) {
                 // Build promises chain of phases
 
                 current_phase.phase_ivs.map(function (iv_description) {
                     // Iterate over IVs named in phase
-
-                    console.log("Phase ", i, iv_description);
 
                     _trial_to_run.map(function (iv_trial) {
                         // Find those IVs in the trial array
@@ -17799,22 +17816,12 @@ function _displayTrialPhases(_trial_to_run) {
             });
         };
 
-        promise_array.push(promise);
+        promise_array.push(phase_promise);
     });
 
     promise_array.reduce(function (p, f) {
         return p.then(f);
     }, Promise.resolve()); // Run array of promises in a chain
-
-    // Build a chain of promises... (responses are asynchronus)
-
-    // Trials.Phases.map(function(phase){
-    //
-    //     // phase{phase_ivs, phase_transition_function};
-    //
-    //
-    //
-    // });
 }
 
 function _fireIVSetFuncWithArgs(cur_iv) {
@@ -17832,9 +17839,16 @@ function _fireIVSetFuncWithArgs(cur_iv) {
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 var _startCallback = null;
-_Trials.Trials.setStartCallback = function (fn) {
-    if (typeof fn === "function") {
-        _startCallback = fn;
+/**
+ * Set a callback to be run at the start of the experiment.
+ * @param {function} start_callback
+ */
+_Trials.Trials.setStartCallback = function (start_callback) {
+
+    _ErrorIfDidStartExperiment();
+
+    if (typeof start_callback === "function") {
+        _startCallback = start_callback;
     } else {
         throw new Error("[ setStartCallback ERROR ] - First argument to setStartCallback must be a function");
     }
@@ -17858,7 +17872,14 @@ function _shouldRunStartCallback() {
 
 
 var _midCallback = null;
+/**
+ * Set a callback to be run at the midpoint of the experiment
+ * @param fn
+ */
 _Trials.Trials.setMidpointCallback = function (fn) {
+
+    _ErrorIfDidStartExperiment();
+
     if (typeof fn === "function") {
         _midCallback = fn;
     } else {
@@ -17877,7 +17898,29 @@ function _shouldRunMidCallback() {
         return true;
     }
 }
-///
+
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//             Experiment Lifecycle - Output responses
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+/**
+ * Function to output URI encoded csv.
+ * Can be re-assigned or overridden to provide additional
+ * functionality (e.g. sending the CSV to a server).
+ * Overriding this function must conform to the interface.
+ * @param {string} uri_csv_string
+ */
+_Trials.Trials.OutputResponses = function (uri_csv_string) {
+    (0, _ResponsesOutput._createCSVLinkAndDownload)(uri_csv_string);
+};
+
+function _ErrorIfDidStartExperiment() {
+    if (_didStartExperiment) {
+        var funcname = arguments.callee.caller.toString();
+        throw new Error("[ " + funcname + " Error ] Experiment has already begun.");
+    }
+}
+
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //             Experiment Lifecycle - End Callback (a behaviour at the end of the experiment)
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -17888,9 +17931,14 @@ var _endCallBack = function _endCallBack() {
         child.style.display = "none";
     });
 };
-_Trials.Trials.setEndCallback = function (value) {
-    if (typeof value === "function") {
-        _endCallBack = value;
+
+/**
+ * Set a callback to be run at the end of the experiment, after responses are output.
+ * @param {function} end_callback
+ */
+_Trials.Trials.setEndCallback = function (end_callback) {
+    if (typeof end_callback === "function") {
+        _endCallBack = end_callback;
     } else {
         throw new Error("[ setEndCallback ERROR ] - First argument to setEndCallback must be a function");
     }
@@ -17925,10 +17973,16 @@ var _DOMUtils = require("../utils/DOMUtils.js");
 
 var Saves = {};
 
+/**
+ * Clear the saves stored in local storage.
+ */
 Saves.clearSaves = function () {
     localStorage.removeItem("experimentJSsaves");
 };
 
+/**
+ * Save the remaining trials and stored responses in local storage.
+ */
 Saves.saveBuiltTrialsAndResponses = function () {
 
     if (typeof Storage !== "undefined") {
@@ -17956,6 +18010,9 @@ Saves.saveBuiltTrialsAndResponses = function () {
     }
 };
 
+/**
+ * Load the saved trials from local storage.
+ */
 Saves.loadSavedTrialsAndResponses = function () {
 
     if (document.getElementById(saves_dialog_id) !== null) return; // Dont display dialog if its already in the DOM
@@ -18082,8 +18139,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 exports._setIVGeneric = _setIVGeneric;
 exports._setAllTrials = _setAllTrials;
 
-var _jQueryUtils = require("../utils/jQueryUtils.js");
-
 var _NumberUtils = require("../utils/NumberUtils");
 
 var NumUtils = _interopRequireWildcard(_NumberUtils);
@@ -18112,9 +18167,14 @@ var Trials = {};
 var IVs = exports.IVs = {};
 var setFuncs = exports.setFuncs = {};
 
-var expRepeats = 1;
+var _expRepeats = 1;
 
-/** Every IV requires 2 steps: creating the levels and then, setting the target */
+/**
+ * Generating every IV requires 2 steps: creating the levels and creating a set function.
+ * setIVLevels sets the levels used by IV.
+ * @param {string} ivname - The name of the IV.
+ * @param {array} levels - Array of arrays of arguments passed to the set function.
+ */
 Trials.setIVLevels = function (ivname, levels) {
 
     _ErrorIfTrialsAreBuilt();
@@ -18134,6 +18194,13 @@ Trials.setIVLevels = function (ivname, levels) {
     }
 };
 
+/**
+ * Generating every IV requires 2 steps: creating the levels and creating a set function.
+ * setIVsetFunc stores the function that is used to set those levels in the display.
+ * The arguments that this function takes must correspond to the arguments assigned in Trials.setIVLevels.
+ * @param {string} ivname - The name of the IV.
+ * @param {function} setFunc - Function used to set levels in the display.
+ */
 Trials.setIVsetFunc = function (ivname, setFunc) {
 
     _ErrorIfTrialsAreBuilt();
@@ -18150,6 +18217,10 @@ Trials.setIVsetFunc = function (ivname, setFunc) {
 };
 
 var _dvName = exports._dvName = undefined;
+/**
+ * Set the name of the DV
+ * @param {string} dvName
+ */
 Trials.setDVName = function (dvName) {
     if (typeof dvName === "string") {
         _csvIllegalCharCheck(dvName);
@@ -18166,7 +18237,9 @@ Trials.setDVName = function (dvName) {
  *                          string -    processed/formatted version of the data
  *                          object -    values are the processed version of parts of the data,
  *                                      keys are names given to each portion of the parsed data
- * */
+ * @param {string} ivname - The name of the IV.
+ * @param {function} parserFunc - Function to parse responses. Must conform to the interface above
+ */
 Trials.setIVResponseParserFunc = function (ivname, parserFunc) {
 
     _ErrorIfTrialsAreBuilt();
@@ -18178,6 +18251,10 @@ Trials.setIVResponseParserFunc = function (ivname, parserFunc) {
     _setIVGeneric(ivname, "parserFunc", parserFunc);
 };
 
+/**
+ * Set the number of repeats in the experiment.
+ * @param {int} nRepeats
+ */
 Trials.setRepeats = function (nRepeats) {
 
     _ErrorIfTrialsAreBuilt();
@@ -18186,7 +18263,7 @@ Trials.setRepeats = function (nRepeats) {
         throw new Error("[ setRepeats Error ] - 1st argument to this function must be an integer");
     }
 
-    expRepeats = nRepeats;
+    _expRepeats = nRepeats;
 };
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -18216,12 +18293,19 @@ function _setSetFunc(ivname, setfunc) {
 
 var _isUsingPhases = exports._isUsingPhases = false;
 Trials.Phases = [];
-// Transition function interface: function( promise_resolve) {}
+
+/**
+ * Present IVs sequentially by assigning each IV name to an ordinally numbered phase.
+ * To transition between phases, a function or a delay (in milliseconds) must be provided.
+ * If a function is provided, its first argument is the callback that should be called
+ * to transition to the next phase.
+ * @param {int} phase_num - ordinal number of the phase
+ * @param {array} array_of_iv_names - array of IV names for this phase
+ * @param {function, number} transition_func_or_delay - function to handle transition between phases, or duration until next phase
+ */
 Trials.setIVPhases = function (phase_num, array_of_iv_names) {
     var transition_func_or_delay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
 
-
-    // _ErrorIfTrialsAreBuilt();
 
     if (!NumUtils.isInt(phase_num) || phase_num < 0 || !Array.isArray(array_of_iv_names) || typeof array_of_iv_names[0] !== "string" || typeof transition_func_or_delay !== "function" && !NumUtils.isFloat(transition_func_or_delay) && !NumUtils.isInt(transition_func_or_delay)) {
         throw new Error("[ setIVPhases ERROR ] : Usage (int, array, function/int)");
@@ -18275,14 +18359,21 @@ function _setAllTrials(alltrials) {
     }
 }
 
-// Returns a deep copy of the trials
+/**
+ * Returns a deep copy of the trials array
+ * @returns {array} - a copy of the trials array
+ */
 Trials.getTrials = function () {
     if (_allTrials.length > 0) {
         return _.cloneDeep(_allTrials);
-        // return extend(true, [], _allTrials);
     }
 };
 
+/**
+ * BuildExperiment must be called to generate the trial array from the supplied IVs,
+ * prior to running the experiment.
+ * @param {bool} printTrials - flag to print the trials as they are built.
+ */
 Trials.BuildExperiment = function () {
     var printTrials = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
@@ -18361,7 +18452,7 @@ function _buildTrials() {
     }
 
     temp = [];
-    for (i = 0; i < expRepeats; i++) {
+    for (i = 0; i < _expRepeats; i++) {
         temp = temp.concat(_allTrials);
     }
     exports._allTrials = _allTrials = temp;
@@ -18373,7 +18464,7 @@ function _buildTrials() {
 
     // = = = = = = = = = = = debugging... = = = = = = = = = = = = = =
 
-    console.log("There are ", _allTrials.length, "trials (using", expRepeats, "expRepeats)");
+    console.log("There are ", _allTrials.length, "trials (using", _expRepeats, "_expRepeats)");
     if (printTrials) {
         console.log(_allTrials);
         for (i = 0; i < _allTrials.length; i++) {
@@ -18391,6 +18482,10 @@ function _buildTrials() {
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 var _shouldShuffle = true;
+/**
+ * Determine which
+ * @param {bool} - shouldShuffle
+ */
 Trials.setShuffle = function (shouldShuffle) {
     if (typeof shouldShuffle === "boolean") {
         _shouldShuffle = shouldShuffle;
@@ -18399,6 +18494,12 @@ Trials.setShuffle = function (shouldShuffle) {
     }
 };
 
+/**
+ * Shuffles trials using the Fisher Yates algorithm.
+ * This function can be replaced with a custom shuffling function, as long as the interface is maintained.
+ * Trials must be shuffled in place.
+ * @param {array} - unshuffled trials
+ */
 Trials.shuffleTrials = function (trials) {
 
     if (!Array.isArray(trials)) {
@@ -18428,7 +18529,7 @@ function _ErrorIfTrialsAreBuilt() {
 
 exports.Trials = Trials;
 
-},{"../utils/NumberUtils":17,"../utils/jQueryUtils.js":21,"./UnserializableMap.js":10,"lodash":1}],10:[function(require,module,exports){
+},{"../utils/NumberUtils":17,"./UnserializableMap.js":10,"lodash":1}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18884,142 +18985,6 @@ String.prototype.formatUnicorn = String.prototype.formatUnicorn || function () {
 };
 
 },{}],21:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-exports.extend = extend;
-exports.isPlainObject = isPlainObject;
-/**
- * Created by kai on 6/7/17.
- */
-
-// var arr = [];
-
-// var document = window.document;
-
-var getProto = Object.getPrototypeOf;
-
-// var slice = arr.slice;
-
-// var concat = arr.concat;
-
-// var push = arr.push;
-
-// var indexOf = arr.indexOf;
-
-var class2type = {};
-
-var toString = class2type.toString;
-
-var hasOwn = class2type.hasOwnProperty;
-
-var fnToString = hasOwn.toString;
-
-var ObjectFunctionString = fnToString.call(Object);
-
-var support = {};
-
-// Taken from Jquery
-// extend(bool deep_copy (must be true), object dest, object src, object src2 .... object srcN )
-function extend() {
-    var options,
-        name,
-        src,
-        copy,
-        copyIsArray,
-        clone,
-        target = arguments[0] || {},
-        i = 1,
-        length = arguments.length,
-        deep = false;
-
-    // Handle a deep copy situation
-    if (typeof target === "boolean") {
-        deep = target;
-
-        // Skip the boolean and the target
-        target = arguments[i] || {};
-        i++;
-    }
-
-    // Handle case when target is a string or something (possible in deep copy)
-    if ((typeof target === "undefined" ? "undefined" : _typeof(target)) !== "object" && !(typeof target === "function")) {
-        target = {};
-    }
-
-    // Extend jQuery itself if only one argument is passed
-    if (i === length) {
-        target = this;
-        i--;
-    }
-
-    for (; i < length; i++) {
-
-        // Only deal with non-null/undefined values
-        if ((options = arguments[i]) != null) {
-
-            // Extend the base object
-            for (name in options) {
-                src = target[name];
-                copy = options[name];
-
-                // Prevent never-ending loop
-                if (target === copy) {
-                    continue;
-                }
-
-                // Recurse if we're merging plain objects or arrays
-                if (deep && copy && (isPlainObject(copy) || (copyIsArray = Array.isArray(copy)))) {
-
-                    if (copyIsArray) {
-                        copyIsArray = false;
-                        clone = src && Array.isArray(src) ? src : [];
-                    } else {
-                        clone = src && isPlainObject(src) ? src : {};
-                    }
-
-                    // Never move original objects, clone them
-                    target[name] = extend(deep, clone, copy);
-
-                    // Don't bring in undefined values
-                } else if (copy !== undefined) {
-                    target[name] = copy;
-                }
-            }
-        }
-    }
-
-    // Return the modified object
-    return target;
-}
-
-function isPlainObject(obj) {
-    var proto, Ctor;
-
-    // Detect obvious negatives
-    // Use toString instead of jQuery.type to catch host objects
-    if (!obj || toString.call(obj) !== "[object Object]") {
-        return false;
-    }
-
-    proto = getProto(obj);
-
-    // Objects with no prototype (e.g., `Object.create( null )`) are plain
-    if (!proto) {
-        return true;
-    }
-
-    // Objects with prototype are plain iff they were constructed by a global Object function
-    Ctor = hasOwn.call(proto, "constructor") && proto.constructor;
-    return typeof Ctor === "function" && fnToString.call(Ctor) === ObjectFunctionString;
-}
-
-},{}],22:[function(require,module,exports){
 "use strict";
 
 require("./CreateDownloadLink.js");

@@ -10,6 +10,9 @@ import { Trials } from "./Trials.js";
 export var _pptName = "unnamed_ppt";
 export var _pptNo = 0;
 
+/**
+ * Get participant number and name.
+ */
 Trials.getPptInfo = function () {
     
     while (true) {

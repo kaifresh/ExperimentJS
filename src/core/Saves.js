@@ -17,10 +17,16 @@ import { DOM_remove } from "../utils/DOMUtils.js";
 
 var Saves = {};
 
+/**
+ * Clear the saves stored in local storage.
+ */
 Saves.clearSaves = function(){
     localStorage.removeItem("experimentJSsaves");
 };
 
+/**
+ * Save the remaining trials and stored responses in local storage.
+ */
 Saves.saveBuiltTrialsAndResponses = function() {
 
     if (typeof(Storage) !== "undefined") {
@@ -48,7 +54,9 @@ Saves.saveBuiltTrialsAndResponses = function() {
     }
 };
 
-
+/**
+ * Load the saved trials from local storage.
+ */
 Saves.loadSavedTrialsAndResponses = function(){
 
     if (document.getElementById(saves_dialog_id) !== null) return;                      // Dont display dialog if its already in the DOM

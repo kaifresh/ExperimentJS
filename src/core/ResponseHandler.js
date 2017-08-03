@@ -37,6 +37,8 @@ export function _storeResponse(options) {                       // Used in ./Run
 
 
 export function _FormatStoredResponses(responses) {
+
+    console.log(responses);
     /**
      * GOAL only tokenize & de-tokenize ONCE
      *

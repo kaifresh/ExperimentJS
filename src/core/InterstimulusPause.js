@@ -18,9 +18,9 @@ function _createInterstimulusPause(){
         width: "100vw",
         height: "100vh",
         background: "black",
-        display: "none"                     // block when visible
+        display: "none",                     // block when visible
+        'z-index': 99999999
     };
-
 
     SetCSSOnElement(blackout, css);
     
@@ -37,6 +37,11 @@ document.body.appendChild(_blackOut);
 
 var Pause = {};
 
+/**
+ * Manually fire the interstimulus pause and black out the screen
+ * @param {int} duration - milliseconds to show the interstimulus pause
+ * @returns {Promise}
+ */
 Pause.showInterstimulusPause = function (duration) {
     return new Promise(function (resolve, reject) {
         _interstimulusPause(duration).then(function () {
@@ -46,21 +51,27 @@ Pause.showInterstimulusPause = function (duration) {
 };
 
 var _pause = 500;
-Pause.setPauseTime = function (value) {
-    if (value === parseInt(value, 10)) {
-        _pause = value;
+/**
+ * @param {int} pause_duration - set length of the interstimulus pause
+ */
+Pause.setPauseTime = function (pause_duration) {
+    if (pause_duration === parseInt(pause_duration, 10)) {
+        _pause = pause_duration;
     } else {
         throw new Error("setPauseTime only takes integers");
     }
 };
 
 export var _shouldInterstimulusPause = true;                        //used in: RunExperiment.js
+/**
+ * Turn the interstimulus pause on or off
+ * @param {bool} - value
+ */
 Pause.setShouldInterstimulusPause = function(value){
     if (typeof  value === "boolean"){
         _shouldInterstimulusPause = value;
     }
 };
-
 
 
 var _isInterstimulusPause = false;

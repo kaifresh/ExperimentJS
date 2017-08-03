@@ -10,7 +10,7 @@
 
 import { Trials, setFuncs, _allTrials, _didBuildTrials, _dvName, _isUsingPhases } from "./Trials.js";
 import { _storeResponse, _FormatStoredResponses, _responses } from "./ResponseHandler.js";
-import { _outputResponses } from "./ResponsesOutput.js";
+import { _outputResponses, _createCSVLinkAndDownload } from "./ResponsesOutput.js";
 import { _interstimulusPause, _shouldInterstimulusPause } from "./InterstimulusPause.js";
 import { getParamNames } from "../utils/StringUtils.js";
 import { _ApplyFunctionToHTMLChildren } from "../utils/DOMUtils.js";
@@ -32,12 +32,21 @@ export function _setShouldRunNextTrial(value){
 }
 
 export var _shouldRunNextTrial = true;                                      // used by: InterstimulusPause.js
+var _didStartExperiment = false;
 
+/**
+ * Call Trials.runNextTrial both to start the experiment and to progress to the next trial.
+ * To progress, an object with the field "dv_value" should be passed in as the first arg,
+ * containing the participant's response to the trial that was just run.
+ * @param {object} options - must contain field "dv_value"
+ */
 Trials.runNextTrial = function (options) {                                 // usage -> runNextTrial({shouldStoreResponse: true, dv_value: "inside"});
 
     if (!_didBuildTrials){
         throw new Error("runNextTrial(): Trial were not built");
     }
+
+    if (!_didStartExperiment) _didStartExperiment = true;
 
     if (_shouldRunNextTrial) {
 
@@ -67,13 +76,15 @@ Trials.runNextTrial = function (options) {                                 // us
 
         } else {
 
-            _outputResponses( _responses );
+            Trials.OutputResponses(_outputResponses(_responses));
 
             if ( typeof _endCallBack === "function") _endCallBack();
         }
     }
 
 };
+
+
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                        Experiment Lifecycle - Displaying The Next Trial
@@ -162,9 +173,16 @@ function _fireIVSetFuncWithArgs(cur_iv) {
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 var _startCallback = null;
-Trials.setStartCallback = function (fn) {
-    if (typeof fn === "function"){
-        _startCallback = fn;
+/**
+ * Set a callback to be run at the start of the experiment.
+ * @param {function} start_callback
+ */
+Trials.setStartCallback = function (start_callback) {
+
+    _ErrorIfDidStartExperiment();
+
+    if (typeof start_callback === "function"){
+        _startCallback = start_callback;
     }   else {
         throw new Error("[ setStartCallback ERROR ] - First argument to setStartCallback must be a function");
     }
@@ -189,7 +207,14 @@ function _shouldRunStartCallback() {
 
 
 var _midCallback = null;
+/**
+ * Set a callback to be run at the midpoint of the experiment
+ * @param fn
+ */
 Trials.setMidpointCallback = function (fn) {
+
+    _ErrorIfDidStartExperiment();
+
     if (typeof fn === "function"){
         _midCallback = fn;
     }   else {
@@ -208,7 +233,29 @@ function _shouldRunMidCallback() {
         return true;
     }
 }
-///
+
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//             Experiment Lifecycle - Output responses
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+/**
+ * Function to output URI encoded csv.
+ * Can be re-assigned or overridden to provide additional
+ * functionality (e.g. sending the CSV to a server).
+ * Overriding this function must conform to the interface.
+ * @param {string} uri_csv_string
+ */
+Trials.OutputResponses = function(uri_csv_string){
+    _createCSVLinkAndDownload(uri_csv_string);
+};
+
+function _ErrorIfDidStartExperiment(){
+    if (_didStartExperiment){
+        var funcname = arguments.callee.caller.toString();
+        throw new Error("[ "+funcname+" Error ] Experiment has already begun.");
+    }
+}
+
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //             Experiment Lifecycle - End Callback (a behaviour at the end of the experiment)
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -218,9 +265,14 @@ var _endCallBack = function(){                                                  
         child.style.display = "none";
     });
 };
-Trials.setEndCallback = function (value) {
-    if (typeof value === "function"){
-        _endCallBack = value;
+
+/**
+ * Set a callback to be run at the end of the experiment, after responses are output.
+ * @param {function} end_callback
+ */
+Trials.setEndCallback = function (end_callback) {
+    if (typeof end_callback === "function"){
+        _endCallBack = end_callback;
     }   else {
         throw new Error("[ setEndCallback ERROR ] - First argument to setEndCallback must be a function");
     }

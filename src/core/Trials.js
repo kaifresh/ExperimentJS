@@ -1,4 +1,3 @@
-import { extend } from "../utils/jQueryUtils.js";
 import * as NumUtils from "../utils/NumberUtils";
 import { _Unserializable_Var2Token, _Unserializable_ParserFunc2Token } from "./UnserializableMap.js";
 var _ = require("lodash");
@@ -21,9 +20,14 @@ var Trials = {};
 export var IVs = {};
 export var setFuncs = {};
 
-var expRepeats = 1;
+var _expRepeats = 1;
 
-/** Every IV requires 2 steps: creating the levels and then, setting the target */
+/**
+ * Generating every IV requires 2 steps: creating the levels and creating a set function.
+ * setIVLevels sets the levels used by IV.
+ * @param {string} ivname - The name of the IV.
+ * @param {array} levels - Array of arrays of arguments passed to the set function.
+ */
 Trials.setIVLevels = function ( ivname, levels) {
 
     _ErrorIfTrialsAreBuilt();
@@ -43,6 +47,13 @@ Trials.setIVLevels = function ( ivname, levels) {
     }
 };
 
+/**
+ * Generating every IV requires 2 steps: creating the levels and creating a set function.
+ * setIVsetFunc stores the function that is used to set those levels in the display.
+ * The arguments that this function takes must correspond to the arguments assigned in Trials.setIVLevels.
+ * @param {string} ivname - The name of the IV.
+ * @param {function} setFunc - Function used to set levels in the display.
+ */
 Trials.setIVsetFunc = function(ivname, setFunc) {
 
     _ErrorIfTrialsAreBuilt();
@@ -59,6 +70,10 @@ Trials.setIVsetFunc = function(ivname, setFunc) {
 };
 
 export var _dvName;
+/**
+ * Set the name of the DV
+ * @param {string} dvName
+ */
 Trials.setDVName = function(dvName){
     if (typeof dvName === "string"){
         _csvIllegalCharCheck(dvName);
@@ -68,7 +83,6 @@ Trials.setDVName = function(dvName){
     }
 };
 
-
 /**
  * Parser function interface:
  *                  function ( args_passed_to_this_IV_for_this_trial..., index) {}
@@ -76,7 +90,9 @@ Trials.setDVName = function(dvName){
  *                          string -    processed/formatted version of the data
  *                          object -    values are the processed version of parts of the data,
  *                                      keys are names given to each portion of the parsed data
- * */
+ * @param {string} ivname - The name of the IV.
+ * @param {function} parserFunc - Function to parse responses. Must conform to the interface above
+ */
 Trials.setIVResponseParserFunc = function (ivname, parserFunc) {
 
     _ErrorIfTrialsAreBuilt();
@@ -88,7 +104,10 @@ Trials.setIVResponseParserFunc = function (ivname, parserFunc) {
     _setIVGeneric(ivname, "parserFunc", parserFunc);
 };
 
-
+/**
+ * Set the number of repeats in the experiment.
+ * @param {int} nRepeats
+ */
 Trials.setRepeats = function (nRepeats) {
 
     _ErrorIfTrialsAreBuilt();
@@ -97,7 +116,7 @@ Trials.setRepeats = function (nRepeats) {
         throw new Error("[ setRepeats Error ] - 1st argument to this function must be an integer");
     }
 
-    expRepeats = nRepeats;
+    _expRepeats = nRepeats;
 };
 
 
@@ -128,10 +147,17 @@ function _setSetFunc(ivname, setfunc){
 
 export var _isUsingPhases = false;
 Trials.Phases = [];
-// Transition function interface: function( promise_resolve) {}
-Trials.setIVPhases = function(phase_num, array_of_iv_names, transition_func_or_delay = 0){
 
-    // _ErrorIfTrialsAreBuilt();
+/**
+ * Present IVs sequentially by assigning each IV name to an ordinally numbered phase.
+ * To transition between phases, a function or a delay (in milliseconds) must be provided.
+ * If a function is provided, its first argument is the callback that should be called
+ * to transition to the next phase.
+ * @param {int} phase_num - ordinal number of the phase
+ * @param {array} array_of_iv_names - array of IV names for this phase
+ * @param {function, number} transition_func_or_delay - function to handle transition between phases, or duration until next phase
+ */
+Trials.setIVPhases = function(phase_num, array_of_iv_names, transition_func_or_delay = 0){
 
     if (!NumUtils.isInt(phase_num) || phase_num < 0 || !Array.isArray(array_of_iv_names) || typeof array_of_iv_names[0] !== "string"
         || (typeof transition_func_or_delay !== "function" && !NumUtils.isFloat(transition_func_or_delay) && !NumUtils.isInt(transition_func_or_delay))){
@@ -167,8 +193,6 @@ Trials.setIVPhases = function(phase_num, array_of_iv_names, transition_func_or_d
     } else {
         Trials.Phases.splice(phase_num, 0, phase);
     }
-
-
 };
 
 
@@ -187,16 +211,21 @@ export function _setAllTrials(alltrials){                       // Used in ./Sav
     }
 }
 
-
-// Returns a deep copy of the trials
+/**
+ * Returns a deep copy of the trials array
+ * @returns {array} - a copy of the trials array
+ */
 Trials.getTrials = function(){
     if (_allTrials.length > 0){
         return _.cloneDeep(_allTrials);
-        // return extend(true, [], _allTrials);
     }
 };
 
-
+/**
+ * BuildExperiment must be called to generate the trial array from the supplied IVs,
+ * prior to running the experiment.
+ * @param {bool} printTrials - flag to print the trials as they are built.
+ */
 Trials.BuildExperiment = function (printTrials = false) {
     if (typeof printTrials !== "boolean") {
         throw new Error("[ buildExperiment ERROR ] - first arg to buildExperiment must be a boolean");
@@ -269,7 +298,7 @@ function _buildTrials(printTrials = false) {
 
 
     temp = [];
-    for (i = 0; i < expRepeats; i++) {
+    for (i = 0; i < _expRepeats; i++) {
         temp = temp.concat(_allTrials);
     }
     _allTrials = temp;
@@ -281,7 +310,7 @@ function _buildTrials(printTrials = false) {
 
     // = = = = = = = = = = = debugging... = = = = = = = = = = = = = =
 
-    console.log("There are ", _allTrials.length, "trials (using", expRepeats, "expRepeats)");
+    console.log("There are ", _allTrials.length, "trials (using", _expRepeats, "_expRepeats)");
     if (printTrials){
         console.log(_allTrials);
         for (i = 0; i < _allTrials.length; i++){
@@ -302,6 +331,10 @@ function _buildTrials(printTrials = false) {
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 var _shouldShuffle = true;
+/**
+ * Determine which
+ * @param {bool} - shouldShuffle
+ */
 Trials.setShuffle = function(shouldShuffle){
     if (typeof(shouldShuffle) === "boolean"){
         _shouldShuffle =  shouldShuffle;
@@ -310,6 +343,12 @@ Trials.setShuffle = function(shouldShuffle){
     }
 };
 
+/**
+ * Shuffles trials using the Fisher Yates algorithm.
+ * This function can be replaced with a custom shuffling function, as long as the interface is maintained.
+ * Trials must be shuffled in place.
+ * @param {array} - unshuffled trials
+ */
 Trials.shuffleTrials = function(trials){
 
     if (!Array.isArray(trials)){

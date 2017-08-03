@@ -48,7 +48,7 @@ Trials.runNextTrial = function (options) {                                 // us
         if (_shouldRunMidCallback() && typeof _midCallback === "function") {
             _midCallback();
         }
-        
+
         if (options !== undefined && options.hasOwnProperty("dv_value") ) {
             _storeResponse(options);                                       //Settings contains a field "dv_value" which is also read by _storeResponse
         }
@@ -89,7 +89,6 @@ function _displayNextTrial() {
 
     console.log("Displaying next trial:", _trial_to_run);
 
-    // TODO: Support PROMISES -> Facilitates PHASES of EXPERIMENTS
     if (!_isUsingPhases){
         _displayTrialSimultaneously(_trial_to_run);
     } else {
@@ -99,24 +98,15 @@ function _displayNextTrial() {
 }
 
 function _detokenizeTrial(_trial_to_run){
-
     return _trial_to_run.map(function(_tokenised_trial){
         return _Unserializable_Token2Var(_tokenised_trial);
     });
-    // for (var i = 0; i < _trial_to_run.length; ++i) {
-    //     _trial_to_run[i] = _Unserializable_Token2Var( _trial_to_run[i] );               // UnserializableMap.js - DeTokenize
-    // }
-    // return _trial_to_run
 }
 
 function _displayTrialSimultaneously(_trial_to_run){
     /** Iterate over each IV and set its pointer to its value for that trial */
     for (var i = 0; i < _trial_to_run.length; ++i) {
-
-        // _trial_to_run[i] = _Unserializable_Token2Var( _trial_to_run[i] );               // UnserializableMap.js - DeTokenize
-
         console.log("Now displaying Unserialized IV", _trial_to_run[i]);
-
         _fireIVSetFuncWithArgs(_trial_to_run[i]);
     }
 }
@@ -137,7 +127,6 @@ function _displayTrialPhases(_trial_to_run){
                             _fireIVSetFuncWithArgs(iv_trial);                           // Show them
                         }
                     });
-
                 });
 
                 if (current_phase.phase_transition_function !== undefined) {             // Set in ./Trials.s:Trials.setIvPhases()

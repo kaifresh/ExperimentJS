@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="15a95f82-d721-497f-925e-739aed3019c5" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/experimentJS.js" afterPath="$PROJECT_DIR$/dist/experimentJS.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/experimentJS.min.js" afterPath="$PROJECT_DIR$/dist/experimentJS.min.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/phases-example.html" afterPath="$PROJECT_DIR$/examples/phases-example.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/RunExperiment.js" afterPath="$PROJECT_DIR$/src/core/RunExperiment.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/Trials.js" afterPath="$PROJECT_DIR$/src/core/Trials.js" />
     </list>
     <ignored path="ExperimentJS.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -33,7 +28,7 @@
           <file leaf-file-name="Trials.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/core/Trials.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="265">
+                <state relative-caret-position="1480">
                   <caret line="131" column="0" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
                   <folding>
                     <element signature="e#0#49#0" expanded="true" />
@@ -143,8 +138,8 @@
           <file leaf-file-name="RunExperiment.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/core/RunExperiment.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="235">
-                  <caret line="129" column="4" selection-start-line="129" selection-start-column="4" selection-end-line="129" selection-end-column="4" />
+                <state relative-caret-position="625">
+                  <caret line="130" column="0" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
                   <folding>
                     <element signature="e#303#404#0" expanded="true" />
                   </folding>
@@ -625,12 +620,12 @@
       <workItem from="1501718165968" duration="83000" />
       <workItem from="1501734889270" duration="481000" />
       <workItem from="1501742658968" duration="166000" />
-      <workItem from="1501755199061" duration="4065000" />
+      <workItem from="1501755199061" duration="4187000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="127642000" />
+    <option name="totallyTimeSpent" value="127764000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="1173" extended-state="6" />
@@ -970,7 +965,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/core/Trials.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="265">
+        <state relative-caret-position="1480">
           <caret line="131" column="0" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
           <folding>
             <element signature="e#0#49#0" expanded="true" />
@@ -996,8 +991,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/core/RunExperiment.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="129" column="4" selection-start-line="129" selection-start-column="4" selection-end-line="129" selection-end-column="4" />
+        <state relative-caret-position="625">
+          <caret line="130" column="0" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
           <folding>
             <element signature="e#303#404#0" expanded="true" />
           </folding>

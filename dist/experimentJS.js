@@ -17718,20 +17718,52 @@ function _displayNextTrial() {
     // Deep copy the trial before you replace its tokens.
     // This is because the tokens themselves are just references thus,
     // detokenizing a reference will also detokenize trials elsewhere in _allTrials !!
-    var _trial_to_run = _.cloneDeep(_Trials._allTrials.back()); // Trial is popped in ./ResponseHandler.js:_storeResponse
+    var _trial_to_run = _detokenizeTrial(_.cloneDeep(_Trials._allTrials.back())); // Trial is popped in ./ResponseHandler.js:_storeResponse
 
     console.log("Displaying next trial:", _trial_to_run);
 
     // TODO: Support PROMISES -> Facilitates PHASES of EXPERIMENTS
+    if (!_Trials._isUsingPhases) {
+        _displayTrialSimultaneously(_trial_to_run);
+    } else {}
+}
+
+function _detokenizeTrial(_trial_to_run) {
+
+    return _trial_to_run.map(function (_tokenised_trial) {
+        return (0, _UnserializableMap._Unserializable_Token2Var)(_tokenised_trial);
+    });
+    // for (var i = 0; i < _trial_to_run.length; ++i) {
+    //     _trial_to_run[i] = _Unserializable_Token2Var( _trial_to_run[i] );               // UnserializableMap.js - DeTokenize
+    // }
+    // return _trial_to_run
+}
+
+function _displayTrialSimultaneously(_trial_to_run) {
     /** Iterate over each IV and set its pointer to its value for that trial */
     for (var i = 0; i < _trial_to_run.length; ++i) {
 
-        _trial_to_run[i] = (0, _UnserializableMap._Unserializable_Token2Var)(_trial_to_run[i]); // UnserializableMap.js - DeTokenize
+        // _trial_to_run[i] = _Unserializable_Token2Var( _trial_to_run[i] );               // UnserializableMap.js - DeTokenize
 
         console.log("Now displaying Unserialized IV", _trial_to_run[i]);
 
         _fireIVSetFuncWithArgs(_trial_to_run[i]);
     }
+}
+
+function _displayTrialPhases(_trial_to_run) {
+    // Get IV names from trial
+    // Get IV names in each phase
+
+    // Build a chain of promises... (responses are asynchronus)
+
+    // Trials.Phases.map(function(phase){
+    //
+    //     // phase{phase_ivs, phase_transition_function};
+    //
+    //
+    //
+    // });
 }
 
 function _fireIVSetFuncWithArgs(cur_iv) {
@@ -17992,7 +18024,7 @@ exports.Saves = Saves;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.Trials = exports._didBuildTrials = exports._allTrials = exports._dvName = exports.setFuncs = exports.IVs = undefined;
+exports.Trials = exports._didBuildTrials = exports._allTrials = exports._isUsingPhases = exports._dvName = exports.setFuncs = exports.IVs = undefined;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -18001,7 +18033,15 @@ exports._setAllTrials = _setAllTrials;
 
 var _jQueryUtils = require("../utils/jQueryUtils.js");
 
+var _NumberUtils = require("../utils/NumberUtils");
+
+var NumUtils = _interopRequireWildcard(_NumberUtils);
+
 var _UnserializableMap = require("./UnserializableMap.js");
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+var _ = require("lodash");
 
 /**
  * To set Trial IVs
@@ -18026,6 +18066,8 @@ var expRepeats = 1;
 /** Every IV requires 2 steps: creating the levels and then, setting the target */
 Trials.setIVLevels = function (ivname, levels) {
 
+    _ErrorIfTrialsAreBuilt();
+
     if (Array.isArray(levels)) {
         // Enforce the type system: Levels must be an array of arrays
 
@@ -18042,6 +18084,8 @@ Trials.setIVLevels = function (ivname, levels) {
 };
 
 Trials.setIVsetFunc = function (ivname, setFunc) {
+
+    _ErrorIfTrialsAreBuilt();
 
     if (typeof setFunc !== "function") {
         throw new Error("[ setIVsetFunc Error ] - parser function for " + ivname + " was not a function");
@@ -18074,6 +18118,8 @@ Trials.setDVName = function (dvName) {
  * */
 Trials.setIVResponseParserFunc = function (ivname, parserFunc) {
 
+    _ErrorIfTrialsAreBuilt();
+
     if (typeof parserFunc !== "function") {
         throw new Error("[ setIVResponseParserFunc Error ] - parser function for " + ivname + " was not a function: ", typeof parserFunc === "undefined" ? "undefined" : _typeof(parserFunc));
     }
@@ -18082,6 +18128,8 @@ Trials.setIVResponseParserFunc = function (ivname, parserFunc) {
 };
 
 Trials.setRepeats = function (nRepeats) {
+
+    _ErrorIfTrialsAreBuilt();
 
     if (!Number.isInteger(nRepeats)) {
         throw new Error("[ setRepeats Error ] - 1st argument to this function must be an integer");
@@ -18094,7 +18142,7 @@ Trials.setRepeats = function (nRepeats) {
 //                            Trials - Setting IV Levels & Functions (private)
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 /*
-* */
+ * */
 function _setIVGeneric(ivName, fieldName, fieldVal) {
     _csvIllegalCharCheck(ivName);
     _csvIllegalCharCheck(fieldName);
@@ -18112,12 +18160,55 @@ function _setSetFunc(ivname, setfunc) {
 }
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                                      Trials - Phases
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+var _isUsingPhases = exports._isUsingPhases = false;
+Trials.Phases = [];
+// Transition function interface: function( promise_resolve) {}
+Trials.setIVPhases = function (phase_num, array_of_iv_names, transition_func_or_delay) {
+
+    // _ErrorIfTrialsAreBuilt();
+
+    if (!NumUtils.isInt(phase_num) || phase_num < 0 || !Array.isArray(array_of_iv_names) || typeof array_of_iv_names[0] !== "string" || typeof transition_func_or_delay !== "function" && !NumUtils.isFloat(transition_func_or_delay) && !NumUtils.isInt(transition_func_or_delay)) {
+        throw new Error("[ setIVPhases ERROR ] : Usage (int, array, function/int)");
+    }
+
+    exports._isUsingPhases = _isUsingPhases = true;
+
+    /*
+    Confirm that:
+    1. The transition function conforms to the interface (receives a Promise resolve(), and calls it internally)
+            - call function.toString() & regex for a call to resolve()
+     2. The IV names are right
+     */
+    var current_iv_names = Object.keys(IVs);
+    array_of_iv_names.map(function (iv_name) {
+        // Confirm IV name exists
+        if (_.indexOf(current_iv_names, iv_name) == -1) {
+            throw new Error("[ setIVPhases ERROR ] - iv name {0} in phase {1} has not been defined".formatUnicorn(iv_name, phase_num));
+        }
+    });
+
+    var phase = {
+        phase_ivs: array_of_iv_names,
+        phase_transition_function: transition_func_or_delay
+    };
+
+    if (phase_num > Trials.Phases.length) {
+        Phases.push(phase);
+    } else {
+        Phases.splice(phase_num, 0, phase);
+    }
+};
+
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                                      Trials - Building
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 
 var _allTrials = exports._allTrials = [];
-var _totalTrials = -1; //Assigned but never used
+var _totalTrials = -1; // Assigned but never used
 var _didBuildTrials = exports._didBuildTrials = false;
 
 function _setAllTrials(alltrials) {
@@ -18127,12 +18218,21 @@ function _setAllTrials(alltrials) {
     }
 }
 
-var _ = require("lodash");
 // Returns a deep copy of the trials
 Trials.getTrials = function () {
     if (_allTrials.length > 0) {
         return _.cloneDeep(_allTrials);
         // return extend(true, [], _allTrials);
+    }
+};
+
+Trials.BuildExperiment = function (printTrials) {
+    if (typeof printTrials !== "boolean") {
+        throw new Error("[ buildExperiment ERROR ] - first arg to buildExperiment must be a boolean");
+    } else if (_didBuildTrials) {
+        throw new Error("[ buildExperiment ERROR ] - buildExperiment should only be called once!");
+    } else {
+        _buildTrials(printTrials);
     }
 };
 
@@ -18227,16 +18327,6 @@ function _buildTrials() {
     }
 }
 
-Trials.BuildExperiment = function (printTrials) {
-    if (typeof printTrials !== "boolean") {
-        throw new Error("[ buildExperiment ERROR ] - first arg to buildExperiment must be a boolean");
-    } else if (_didBuildTrials) {
-        throw new Error("[ buildExperiment ERROR ] - buildExperiment should only be called once!");
-    } else {
-        _buildTrials(printTrials);
-    }
-};
-
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                                      Trials - sub functions
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -18270,9 +18360,16 @@ function _csvIllegalCharCheck(string) {
     }
 }
 
+function _ErrorIfTrialsAreBuilt() {
+    if (_didBuildTrials) {
+        var funcname = arguments.callee.caller.toString();
+        throw new Error("[ " + funcname + " Error ] Trials have already been built.");
+    }
+}
+
 exports.Trials = Trials;
 
-},{"../utils/jQueryUtils.js":21,"./UnserializableMap.js":10,"lodash":1}],10:[function(require,module,exports){
+},{"../utils/NumberUtils":17,"../utils/jQueryUtils.js":21,"./UnserializableMap.js":10,"lodash":1}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18509,13 +18606,13 @@ _2AFC.SetCounterBalanceParserFunc = function (iv_name, parser_func) {
     _Trials.Trials.setIVResponseParserFunc("counterbalance_" + iv_name, parser_func);
 };
 
-_2AFC.BuildExperiment = function () {
+_2AFC.BuildExperiment = function (print) {
 
     if (!(_didSetCounterBalance && _didSetStandard && _didSetVarying)) {
         throw new Error("[ 2AFC BuildExperiment Error ] - To run a 2AFC experiment a standard variable, varying variable and counterbalancer must be set");
     }
 
-    _Trials.Trials.BuildExperiment();
+    _Trials.Trials.BuildExperiment(print);
 };
 
 exports._2AFC = _2AFC;
@@ -18608,14 +18705,23 @@ function DOM_remove(elem) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 exports.isFloat = isFloat;
+exports.isInt = isInt;
 /**
  * Created by kai on 5/1/17.
  */
 function isFloat(n) {
-  return Number(n) === n && n % 1 !== 0;
+    return Number(n) === n && n % 1 !== 0;
+}
+
+function isInt(value) {
+    if (isNaN(value)) {
+        return false;
+    }
+    var x = parseFloat(value);
+    return (x | 0) === x;
 }
 
 },{}],18:[function(require,module,exports){
@@ -18673,6 +18779,9 @@ Array.prototype.back = function () {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 exports.camelToSentenceCase = camelToSentenceCase;
 exports.getParamNames = getParamNames;
 
@@ -18697,6 +18806,23 @@ function getParamNames(fn) {
 
     return _getParamNames(fn);
 }
+
+String.prototype.formatUnicorn = String.prototype.formatUnicorn || function () {
+    "use strict";
+
+    var str = this.toString();
+    if (arguments.length) {
+        var t = _typeof(arguments[0]);
+        var key;
+        var args = "string" === t || "number" === t ? Array.prototype.slice.call(arguments) : arguments[0];
+
+        for (key in args) {
+            str = str.replace(new RegExp("\\{" + key + "\\}", "gi"), args[key]);
+        }
+    }
+
+    return str;
+};
 
 },{}],21:[function(require,module,exports){
 "use strict";

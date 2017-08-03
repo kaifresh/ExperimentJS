@@ -77,13 +77,13 @@ _2AFC.SetCounterBalanceParserFunc = function(iv_name, parser_func){
     Trials.setIVResponseParserFunc("counterbalance_"+iv_name, parser_func);
 };
 
-_2AFC.BuildExperiment = function(){
+_2AFC.BuildExperiment = function(print){
 
     if ( !(_didSetCounterBalance && _didSetStandard && _didSetVarying) ){
         throw new Error("[ 2AFC BuildExperiment Error ] - To run a 2AFC experiment a standard variable, varying variable and counterbalancer must be set");
     }
 
-    Trials.BuildExperiment();
+    Trials.BuildExperiment(print);
 };
 
 export { _2AFC }

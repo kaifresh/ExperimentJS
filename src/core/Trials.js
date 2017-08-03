@@ -1,5 +1,7 @@
 import { extend } from "../utils/jQueryUtils.js";
+import * as NumUtils from "../utils/NumberUtils";
 import { _Unserializable_Var2Token, _Unserializable_ParserFunc2Token } from "./UnserializableMap.js";
+var _ = require("lodash");
 
 /**
  * To set Trial IVs
@@ -24,6 +26,8 @@ var expRepeats = 1;
 /** Every IV requires 2 steps: creating the levels and then, setting the target */
 Trials.setIVLevels = function ( ivname, levels) {
 
+    _ErrorIfTrialsAreBuilt();
+
     if (Array.isArray(levels)){                                     // Enforce the type system: Levels must be an array of arrays
 
         levels.map(function(elem, i){
@@ -40,6 +44,8 @@ Trials.setIVLevels = function ( ivname, levels) {
 };
 
 Trials.setIVsetFunc = function(ivname, setFunc) {
+
+    _ErrorIfTrialsAreBuilt();
 
     if (typeof setFunc !== "function"){
         throw new Error("[ setIVsetFunc Error ] - parser function for "+ivname+" was not a function");
@@ -73,6 +79,8 @@ Trials.setDVName = function(dvName){
  * */
 Trials.setIVResponseParserFunc = function (ivname, parserFunc) {
 
+    _ErrorIfTrialsAreBuilt();
+
     if (typeof parserFunc !== "function"){
         throw new Error("[ setIVResponseParserFunc Error ] - parser function for "+ivname+" was not a function: ", typeof parserFunc);
     }
@@ -83,6 +91,8 @@ Trials.setIVResponseParserFunc = function (ivname, parserFunc) {
 
 Trials.setRepeats = function (nRepeats) {
 
+    _ErrorIfTrialsAreBuilt();
+
     if (!Number.isInteger(nRepeats)){
         throw new Error("[ setRepeats Error ] - 1st argument to this function must be an integer");
     }
@@ -90,11 +100,12 @@ Trials.setRepeats = function (nRepeats) {
     expRepeats = nRepeats;
 };
 
+
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                            Trials - Setting IV Levels & Functions (private)
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 /*
-* */
+ * */
 export function _setIVGeneric(ivName, fieldName, fieldVal) {
     _csvIllegalCharCheck(ivName);
     _csvIllegalCharCheck(fieldName);
@@ -112,21 +123,68 @@ function _setSetFunc(ivname, setfunc){
 }
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                                      Trials - Phases
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+export var _isUsingPhases = false;
+Trials.Phases = [];
+// Transition function interface: function( promise_resolve) {}
+Trials.setIVPhases = function(phase_num, array_of_iv_names, transition_func_or_delay){
+
+    // _ErrorIfTrialsAreBuilt();
+
+    if (!NumUtils.isInt(phase_num) || phase_num < 0 || !Array.isArray(array_of_iv_names) || typeof array_of_iv_names[0] !== "string"
+        || (typeof transition_func_or_delay !== "function" && !NumUtils.isFloat(transition_func_or_delay) && !NumUtils.isInt(transition_func_or_delay))){
+        throw new Error("[ setIVPhases ERROR ] : Usage (int, array, function/int)" );
+    }
+
+    _isUsingPhases = true;
+
+    /*
+    Confirm that:
+    1. The transition function conforms to the interface (receives a Promise resolve(), and calls it internally)
+            - call function.toString() & regex for a call to resolve()
+
+    2. The IV names are right
+     */
+    var current_iv_names = Object.keys(IVs);
+    array_of_iv_names.map(function(iv_name){                    // Confirm IV name exists
+        if (_.indexOf(current_iv_names, iv_name) == -1){
+            throw new Error ("[ setIVPhases ERROR ] - iv name {0} in phase {1} has not been defined".formatUnicorn(iv_name, phase_num));
+        }
+    });
+
+    var phase = {
+        phase_ivs:  array_of_iv_names,
+        phase_transition_function: transition_func_or_delay
+    };
+
+    if (phase_num > Trials.Phases.length){
+        Phases.push(phase);
+    } else {
+        Phases.splice(phase_num, 0, phase);
+    }
+
+
+};
+
+
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                                      Trials - Building
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 
 export var _allTrials = [];
-var _totalTrials = -1;                                          //Assigned but never used
+var _totalTrials = -1;                                          // Assigned but never used
 export var _didBuildTrials = false;
 
-export function _setAllTrials(alltrials){                      // Used in ./Saves.js. Has to live here as it redefines _allTrials
+export function _setAllTrials(alltrials){                       // Used in ./Saves.js. Has to live here as it redefines _allTrials
     if (alltrials.constructor === Array){
         _allTrials = alltrials;
     }
 }
 
-var _ = require("lodash");
+
 // Returns a deep copy of the trials
 Trials.getTrials = function(){
     if (_allTrials.length > 0){
@@ -134,6 +192,18 @@ Trials.getTrials = function(){
         // return extend(true, [], _allTrials);
     }
 };
+
+
+Trials.BuildExperiment = function (printTrials) {
+    if (typeof printTrials !== "boolean") {
+        throw new Error("[ buildExperiment ERROR ] - first arg to buildExperiment must be a boolean");
+    } else if (_didBuildTrials){
+        throw new Error("[ buildExperiment ERROR ] - buildExperiment should only be called once!");
+    } else {
+        _buildTrials( printTrials );
+    }
+};
+
 
 function _buildTrials(printTrials = false) {
 
@@ -145,9 +215,9 @@ function _buildTrials(printTrials = false) {
 
         if (IVs[iv].levels === undefined)  throw new Error("Levels not supplied for " + iv);
         if (IVs[iv].setFunc === undefined) throw new Error("Setter function not supplied for " + iv);   // TODO: two setfunc checks? this seems wrong
-        
+
         console.log("Extending all trials array with: " + iv + " (" + IVs[iv].levels.length + " levels)");
-        
+
         // Serialise functions & objects stored in the map
         var _tokenized_iv_levels = _Unserializable_Var2Token(IVs[iv].levels, iv);               // From UnserializableMap.js - replace unserializable object with token
         var _tokenized_parser_func = _Unserializable_ParserFunc2Token(IVs[iv].parserFunc, iv);
@@ -224,16 +294,6 @@ function _buildTrials(printTrials = false) {
 
 
 
-Trials.BuildExperiment = function (printTrials) {
-    if (typeof printTrials !== "boolean") {
-        throw new Error("[ buildExperiment ERROR ] - first arg to buildExperiment must be a boolean");
-    } else if (_didBuildTrials){
-        throw new Error("[ buildExperiment ERROR ] - buildExperiment should only be called once!");
-    } else {
-        _buildTrials( printTrials );
-    }
-};
-
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                                      Trials - sub functions
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -265,6 +325,13 @@ function _csvIllegalCharCheck(string){
 
     if (string.indexOf(",") !== -1){
         throw new Error("Strings used by ExperimentJS may not contain commas: " + string);
+    }
+}
+
+function _ErrorIfTrialsAreBuilt(){
+    if (_didBuildTrials){
+        var funcname = arguments.callee.caller.toString();
+        throw new Error("[ "+funcname+" Error ] Trials have already been built.");
     }
 }
 

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ExperimentJS Tests</title>
+    <style>
+
+        #std {
+            position: fixed;
+            left: 12.5vw;
+            top: 25vw;
+            width: 25vw;
+            height: 25vw;
+            background: red;
+        }
+
+        #varying {
+            position: fixed;
+            right: 12.5vw;
+            top: 25vw;
+            width: 25vw;
+            height: 25vw;
+            background: green;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<h1> Phases example...</h1>
+<h3> Select the red square </h3>
+
+<div id="std"></div>
+
+
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script src="../dist/experimentJS.js"></script>
+
+<script>
+
+    ExperimentJS.Trials.setIVLevels("Phase 1", ["phase uno", "phase one"]);
+    ExperimentJS.Trials.setIVsetFunc("Phase 1", function(word){
+        $("std").text(word);
+    });
+
+    ExperimentJS.Trials.setIVLevels("Phase 2", ["phase two", "phase two"]);
+    ExperimentJS.Trials.setIVsetFunc("Phase 2", function(word){
+        $("std").text(word);
+    });
+
+
+    //    ExperimentJS.Trials.getPptInfo();                         // turn off in development
+    ExperimentJS.Trials.setRepeats(1);
+    ExperimentJS.Trials.BuildExperiment(true);                      // true logs trials to console
+    ExperimentJS.Trials.runNextTrial();
+
+    $(window).keydown(function(event){
+
+        console.log(event.which);
+
+        if (event.which === 37){ //left arrow
+            ExperimentJS.Trials.runNextTrial({shouldStoreResponse: true, dv_value: 'left'});
+        }
+        else if (event.which === 39){ //right arrow
+            ExperimentJS.Trials.runNextTrial({shouldStoreResponse: true, dv_value: 'right'});
+        }
+
+    });
+
+</script>
+
+
+
+</body>
+</html>

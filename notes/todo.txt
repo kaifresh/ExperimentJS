@@ -1,7 +1,10 @@
 - Add multi phase experiments in -> use Promises
+    - How to implement the Event that triggers phase 1 -> phase 2?
+        - Need a timeout or an event handler that calls resolve()
 
 - 2AFC
 - Method of Adjustment
 - Method of Constant Stimuli
 - Staircase
+
 

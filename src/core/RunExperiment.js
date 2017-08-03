@@ -8,7 +8,7 @@
 //      - Outputting responses
 //      - Mid/end callbacks
 
-import { Trials, setFuncs, _allTrials, _didBuildTrials, _dvName } from "./Trials.js";
+import { Trials, setFuncs, _allTrials, _didBuildTrials, _dvName, _isUsingPhases } from "./Trials.js";
 import { _storeResponse, _FormatStoredResponses, _responses } from "./ResponseHandler.js";
 import { _outputResponses } from "./ResponsesOutput.js";
 import { _interstimulusPause, _shouldInterstimulusPause } from "./InterstimulusPause.js";
@@ -64,7 +64,7 @@ Trials.runNextTrial = function (options) {                                 // us
         } else {
 
             _outputResponses( _responses );
-            
+
             if ( typeof _endCallBack === "function") _endCallBack();
         }
     }
@@ -81,21 +81,55 @@ function _displayNextTrial() {
     // Deep copy the trial before you replace its tokens.
     // This is because the tokens themselves are just references thus,
     // detokenizing a reference will also detokenize trials elsewhere in _allTrials !!
-    var  _trial_to_run = _.cloneDeep( _allTrials.back() );                                // Trial is popped in ./ResponseHandler.js:_storeResponse
+    var  _trial_to_run = _detokenizeTrial(_.cloneDeep( _allTrials.back() ));                // Trial is popped in ./ResponseHandler.js:_storeResponse
 
     console.log("Displaying next trial:", _trial_to_run);
 
     // TODO: Support PROMISES -> Facilitates PHASES of EXPERIMENTS
+    if (!_isUsingPhases){
+        _displayTrialSimultaneously(_trial_to_run);
+    } else {
+
+    }
+
+}
+
+function _detokenizeTrial(_trial_to_run){
+
+    return _trial_to_run.map(function(_tokenised_trial){
+        return _Unserializable_Token2Var(_tokenised_trial);
+    });
+    // for (var i = 0; i < _trial_to_run.length; ++i) {
+    //     _trial_to_run[i] = _Unserializable_Token2Var( _trial_to_run[i] );               // UnserializableMap.js - DeTokenize
+    // }
+    // return _trial_to_run
+}
+
+function _displayTrialSimultaneously(_trial_to_run){
     /** Iterate over each IV and set its pointer to its value for that trial */
     for (var i = 0; i < _trial_to_run.length; ++i) {
 
-        _trial_to_run[i] = _Unserializable_Token2Var( _trial_to_run[i] );               // UnserializableMap.js - DeTokenize
+        // _trial_to_run[i] = _Unserializable_Token2Var( _trial_to_run[i] );               // UnserializableMap.js - DeTokenize
 
         console.log("Now displaying Unserialized IV", _trial_to_run[i]);
 
         _fireIVSetFuncWithArgs(_trial_to_run[i]);
     }
+}
 
+function _displayTrialPhases(_trial_to_run){
+    // Get IV names from trial
+    // Get IV names in each phase
+
+    // Build a chain of promises... (responses are asynchronus)
+
+    // Trials.Phases.map(function(phase){
+    //
+    //     // phase{phase_ivs, phase_transition_function};
+    //
+    //
+    //
+    // });
 }
 
 function _fireIVSetFuncWithArgs(cur_iv) {

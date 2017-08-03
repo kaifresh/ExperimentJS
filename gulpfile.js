@@ -5,16 +5,16 @@
 // var babelify = require('babelify');
 // var source = require('vinyl-source-stream');
 //
-// gulp.task('build', function () {
+// gulp.task('dist', function () {
 //     return browserify({entries: './src/ExperimentJS.js', extensions: ['.js'], debug: true})
 //         .transform(babelify)
 //         .bundle()
 //         .pipe(source('bundle.js'))
-//         .pipe(gulp.dest('build'));
+//         .pipe(gulp.dest('dist'));
 // });
 //
-// gulp.task('watch', ['build'], function () {
-//     gulp.watch('*.js', ['build']);
+// gulp.task('watch', ['dist'], function () {
+//     gulp.watch('*.js', ['dist']);
 // });
 //
 // gulp.task('default', ['watch']);
@@ -38,11 +38,11 @@
 //     function rebundle() {
 //         bundler.bundle()
 //             .on('error', function(err) { console.error(err); this.emit('end'); })
-//             .pipe(source('build.js'))
+//             .pipe(source('dist.js'))
 //             .pipe(buffer())
 //             .pipe(sourcemaps.init({ loadMaps: true }))
 //             .pipe(sourcemaps.write('./'))
-//             .pipe(gulp.dest('./build'));
+//             .pipe(gulp.dest('./dist'));
 //     }
 //
 //     if (watch) {
@@ -59,7 +59,7 @@
 //     return compile(true);
 // };
 //
-// gulp.task('build', function() { return compile(); });
+// gulp.task('dist', function() { return compile(); });
 // gulp.task('watch', function() { return watch(); });
 //
 // gulp.task('default', ['watch']);
@@ -86,7 +86,7 @@ gulp.task('es6', function() {
         .bundle()
         .on('error',gutil.log)
         .pipe(source('bundle.js'))
-        .pipe(gulp.dest('./build'));
+        .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('watch',function() {

@@ -129,7 +129,7 @@ function _setSetFunc(ivname, setfunc){
 export var _isUsingPhases = false;
 Trials.Phases = [];
 // Transition function interface: function( promise_resolve) {}
-Trials.setIVPhases = function(phase_num, array_of_iv_names, transition_func_or_delay){
+Trials.setIVPhases = function(phase_num, array_of_iv_names, transition_func_or_delay = 0){
 
     // _ErrorIfTrialsAreBuilt();
 
@@ -154,15 +154,18 @@ Trials.setIVPhases = function(phase_num, array_of_iv_names, transition_func_or_d
         }
     });
 
-    var phase = {
-        phase_ivs:  array_of_iv_names,
-        phase_transition_function: transition_func_or_delay
-    };
+    var phase = { phase_ivs:  array_of_iv_names };
+
+    if (typeof transition_func_or_delay === "function"){                    // Used in ./RunExperiment.js:_displayTrialPhases()
+        phase['phase_transition_function'] = transition_func_or_delay;
+    } else {
+        phase['phase_transition_delay'] = transition_func_or_delay;
+    }
 
     if (phase_num > Trials.Phases.length){
-        Phases.push(phase);
+        Trials.Phases.push(phase);
     } else {
-        Phases.splice(phase_num, 0, phase);
+        Trials.Phases.splice(phase_num, 0, phase);
     }
 
 
@@ -194,7 +197,7 @@ Trials.getTrials = function(){
 };
 
 
-Trials.BuildExperiment = function (printTrials) {
+Trials.BuildExperiment = function (printTrials = false) {
     if (typeof printTrials !== "boolean") {
         throw new Error("[ buildExperiment ERROR ] - first arg to buildExperiment must be a boolean");
     } else if (_didBuildTrials){

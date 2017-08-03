@@ -17688,17 +17688,21 @@ _Trials.Trials.runNextTrial = function (options) {
             _midCallback();
         }
 
-        if (_InterstimulusPause._shouldInterstimulusPause) {
-            (0, _InterstimulusPause._interstimulusPause)();
-        }
-
         if (options !== undefined && options.hasOwnProperty("dv_value")) {
             (0, _ResponseHandler._storeResponse)(options); //Settings contains a field "dv_value" which is also read by _storeResponse
         }
 
         if (_Trials._allTrials.length > 0) {
-            _displayNextTrial();
+
             console.log("There are ", _Trials._allTrials.length, " trials remaining.");
+
+            if (_InterstimulusPause._shouldInterstimulusPause) {
+                (0, _InterstimulusPause._interstimulusPause)().then(function () {
+                    _displayNextTrial();
+                });
+            } else {
+                _displayNextTrial();
+            }
         } else {
 
             (0, _ResponsesOutput._outputResponses)(_ResponseHandler._responses);
@@ -17725,7 +17729,9 @@ function _displayNextTrial() {
     // TODO: Support PROMISES -> Facilitates PHASES of EXPERIMENTS
     if (!_Trials._isUsingPhases) {
         _displayTrialSimultaneously(_trial_to_run);
-    } else {}
+    } else {
+        _displayTrialPhases(_trial_to_run);
+    }
 }
 
 function _detokenizeTrial(_trial_to_run) {
@@ -17754,6 +17760,51 @@ function _displayTrialSimultaneously(_trial_to_run) {
 function _displayTrialPhases(_trial_to_run) {
     // Get IV names from trial
     // Get IV names in each phase
+
+    console.log("RUN A PHASE BIATCH", _trial_to_run);
+
+    console.log("M PHAZES NICCCUUH", _Trials.Trials.Phases);
+
+    var promise_array = [];
+
+    _Trials.Trials.Phases.map(function (current_phase, i) {
+        // Iterate over phases
+
+        //A CHAIN NEEDED HERE
+        var promise = function promise() {
+            return new Promise(function (resolve, reject) {
+                // Build promises chain of phases
+
+                current_phase.phase_ivs.map(function (iv_description) {
+                    // Iterate over IVs named in phase
+
+                    console.log("Phase ", i, iv_description);
+
+                    _trial_to_run.map(function (iv_trial) {
+                        // Find those IVs in the trial array
+                        if (iv_trial.description === iv_description) {
+                            _fireIVSetFuncWithArgs(iv_trial); // Show them
+                        }
+                    });
+                });
+
+                if (current_phase.phase_transition_function !== undefined) {
+                    // Set in ./Trials.s:Trials.setIvPhases()
+                    current_phase.phase_transition_function(resolve); // Transition function must call resolve
+                } else if (current_phase.phase_transition_delay !== undefined) {
+                    setTimeout(function () {
+                        resolve(); // Resolve after delay
+                    }, current_phase.phase_transition_delay);
+                }
+            });
+        };
+
+        promise_array.push(promise);
+    });
+
+    promise_array.reduce(function (p, f) {
+        return p.then(f);
+    }, Promise.resolve()); // Run array of promises in a chain
 
     // Build a chain of promises... (responses are asynchronus)
 
@@ -18166,7 +18217,9 @@ function _setSetFunc(ivname, setfunc) {
 var _isUsingPhases = exports._isUsingPhases = false;
 Trials.Phases = [];
 // Transition function interface: function( promise_resolve) {}
-Trials.setIVPhases = function (phase_num, array_of_iv_names, transition_func_or_delay) {
+Trials.setIVPhases = function (phase_num, array_of_iv_names) {
+    var transition_func_or_delay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
 
     // _ErrorIfTrialsAreBuilt();
 
@@ -18190,15 +18243,19 @@ Trials.setIVPhases = function (phase_num, array_of_iv_names, transition_func_or_
         }
     });
 
-    var phase = {
-        phase_ivs: array_of_iv_names,
-        phase_transition_function: transition_func_or_delay
-    };
+    var phase = { phase_ivs: array_of_iv_names };
+
+    if (typeof transition_func_or_delay === "function") {
+        // Used in ./RunExperiment.js:_displayTrialPhases()
+        phase['phase_transition_function'] = transition_func_or_delay;
+    } else {
+        phase['phase_transition_delay'] = transition_func_or_delay;
+    }
 
     if (phase_num > Trials.Phases.length) {
-        Phases.push(phase);
+        Trials.Phases.push(phase);
     } else {
-        Phases.splice(phase_num, 0, phase);
+        Trials.Phases.splice(phase_num, 0, phase);
     }
 };
 
@@ -18226,7 +18283,9 @@ Trials.getTrials = function () {
     }
 };
 
-Trials.BuildExperiment = function (printTrials) {
+Trials.BuildExperiment = function () {
+    var printTrials = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
     if (typeof printTrials !== "boolean") {
         throw new Error("[ buildExperiment ERROR ] - first arg to buildExperiment must be a boolean");
     } else if (_didBuildTrials) {

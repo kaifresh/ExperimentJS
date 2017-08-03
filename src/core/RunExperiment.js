@@ -48,18 +48,22 @@ Trials.runNextTrial = function (options) {                                 // us
         if (_shouldRunMidCallback() && typeof _midCallback === "function") {
             _midCallback();
         }
-
-        if (_shouldInterstimulusPause) {
-            _interstimulusPause();
-        }
-
+        
         if (options !== undefined && options.hasOwnProperty("dv_value") ) {
             _storeResponse(options);                                       //Settings contains a field "dv_value" which is also read by _storeResponse
         }
 
         if (_allTrials.length > 0) {
-            _displayNextTrial();
+
             console.log("There are ", _allTrials.length, " trials remaining.");
+
+            if (_shouldInterstimulusPause) {
+                _interstimulusPause().then(function(){
+                    _displayNextTrial();
+                });
+            } else {
+                _displayNextTrial();
+            }
 
         } else {
 
@@ -89,7 +93,7 @@ function _displayNextTrial() {
     if (!_isUsingPhases){
         _displayTrialSimultaneously(_trial_to_run);
     } else {
-
+        _displayTrialPhases(_trial_to_run);
     }
 
 }
@@ -118,18 +122,39 @@ function _displayTrialSimultaneously(_trial_to_run){
 }
 
 function _displayTrialPhases(_trial_to_run){
-    // Get IV names from trial
-    // Get IV names in each phase
 
-    // Build a chain of promises... (responses are asynchronus)
+    var promise_array = [];
 
-    // Trials.Phases.map(function(phase){
-    //
-    //     // phase{phase_ivs, phase_transition_function};
-    //
-    //
-    //
-    // });
+    Trials.Phases.map(function( current_phase, i ){                                 // Iterate over phases
+
+        var phase_promise = function() {
+            return new Promise(function (resolve, reject) {                        // Build promises chain of phases
+
+                current_phase.phase_ivs.map(function (iv_description) {             // Iterate over IVs named in phase
+
+                    _trial_to_run.map(function (iv_trial) {                         // Find those IVs in the trial array
+                        if (iv_trial.description === iv_description) {
+                            _fireIVSetFuncWithArgs(iv_trial);                           // Show them
+                        }
+                    });
+
+                });
+
+                if (current_phase.phase_transition_function !== undefined) {             // Set in ./Trials.s:Trials.setIvPhases()
+                    current_phase.phase_transition_function(resolve);                   // Transition function must call resolve
+                } else if (current_phase.phase_transition_delay !== undefined) {
+                    setTimeout(function () {
+                        resolve();                                                      // Resolve after delay
+                    }, current_phase.phase_transition_delay);
+                }
+            });
+        };
+
+        promise_array.push(phase_promise);
+
+    });
+
+    promise_array.reduce((p, f) => p.then(f), Promise.resolve());                   // Run array of promises in a chain
 }
 
 function _fireIVSetFuncWithArgs(cur_iv) {

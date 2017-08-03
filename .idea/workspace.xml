@@ -3,14 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="15a95f82-d721-497f-925e-739aed3019c5" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/experimentJS.js" afterPath="$PROJECT_DIR$/build/experimentJS.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/experimentJS.min.js" afterPath="$PROJECT_DIR$/build/experimentJS.min.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notes/todo.txt" afterPath="$PROJECT_DIR$/notes/todo.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/experimentJS.js" afterPath="$PROJECT_DIR$/dist/experimentJS.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/experimentJS.min.js" afterPath="$PROJECT_DIR$/dist/experimentJS.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/phases-example.html" afterPath="$PROJECT_DIR$/examples/phases-example.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/RunExperiment.js" afterPath="$PROJECT_DIR$/src/core/RunExperiment.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/Trials.js" afterPath="$PROJECT_DIR$/src/core/Trials.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/methods/2AFC.js" afterPath="$PROJECT_DIR$/src/methods/2AFC.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/utils/NumberUtils.js" afterPath="$PROJECT_DIR$/src/utils/NumberUtils.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/utils/StringUtils.js" afterPath="$PROJECT_DIR$/src/utils/StringUtils.js" />
     </list>
     <ignored path="ExperimentJS.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -33,11 +30,11 @@
     <splitter split-orientation="horizontal" split-proportion="0.5">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="Trials.js" pinned="false" current-in-tab="false">
+          <file leaf-file-name="Trials.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/core/Trials.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="315">
-                  <caret line="148" column="7" selection-start-line="148" selection-start-column="7" selection-end-line="148" selection-end-column="7" />
+                <state relative-caret-position="265">
+                  <caret line="131" column="0" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
                   <folding>
                     <element signature="e#0#49#0" expanded="true" />
                   </folding>
@@ -45,11 +42,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="phases-example.html" pinned="false" current-in-tab="true">
+          <file leaf-file-name="phases-example.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/examples/phases-example.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="502">
-                  <caret line="49" column="71" selection-start-line="49" selection-start-column="71" selection-end-line="49" selection-end-column="71" />
+                <state relative-caret-position="382">
+                  <caret line="56" column="43" selection-start-line="56" selection-start-column="43" selection-end-line="56" selection-end-column="43" />
                   <folding />
                 </state>
               </provider>
@@ -107,23 +104,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="ResponsesOutput.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/core/ResponsesOutput.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="780">
-                  <caret line="56" column="69" selection-start-line="56" selection-start-column="69" selection-end-line="56" selection-end-column="69" />
-                  <folding>
-                    <element signature="e#1#38#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="ResponseHandler.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/core/ResponseHandler.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2385">
-                  <caret line="161" column="2" selection-start-line="161" selection-start-column="2" selection-end-line="161" selection-end-column="2" />
+                <state relative-caret-position="480">
+                  <caret line="32" column="7" selection-start-line="32" selection-start-column="7" selection-end-line="32" selection-end-column="7" />
                   <folding>
                     <element signature="e#2#59#0" expanded="true" />
                   </folding>
@@ -134,8 +119,8 @@
           <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/package.json">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="225">
-                  <caret line="15" column="55" selection-start-line="15" selection-start-column="55" selection-end-line="15" selection-end-column="55" />
+                <state relative-caret-position="570">
+                  <caret line="38" column="24" selection-start-line="38" selection-start-column="24" selection-end-line="38" selection-end-column="24" />
                   <folding />
                 </state>
               </provider>
@@ -158,11 +143,21 @@
           <file leaf-file-name="RunExperiment.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/core/RunExperiment.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="525">
-                  <caret line="131" column="10" selection-start-line="131" selection-start-column="10" selection-end-line="131" selection-end-column="10" />
+                <state relative-caret-position="235">
+                  <caret line="129" column="4" selection-start-line="129" selection-start-column="4" selection-end-line="129" selection-end-column="4" />
                   <folding>
                     <element signature="e#303#404#0" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="InterstimulusPause.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/core/InterstimulusPause.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="565">
+                  <caret line="79" column="32" selection-start-line="79" selection-start-column="32" selection-end-line="79" selection-end-column="32" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -220,7 +215,6 @@
         <option value="$PROJECT_DIR$/build/bundle.js" />
         <option value="$PROJECT_DIR$/build/ExperimentJS.js" />
         <option value="$PROJECT_DIR$/build/experimentJS.min.js" />
-        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/core/ObjectSerialiser.js" />
         <option value="$PROJECT_DIR$/test/Test_UnserializableMap.html" />
         <option value="$PROJECT_DIR$/src/utils/jQueryUtils.js" />
@@ -242,10 +236,12 @@
         <option value="$PROJECT_DIR$/notes/todo.txt" />
         <option value="$PROJECT_DIR$/src/utils/NumberUtils.js" />
         <option value="$PROJECT_DIR$/src/utils/StringUtils.js" />
-        <option value="$PROJECT_DIR$/src/core/Trials.js" />
-        <option value="$PROJECT_DIR$/src/core/RunExperiment.js" />
         <option value="$PROJECT_DIR$/src/methods/2AFC.js" />
+        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/src/utils/ExperimentUSUtils.js" />
+        <option value="$PROJECT_DIR$/src/core/Trials.js" />
         <option value="$PROJECT_DIR$/examples/phases-example.html" />
+        <option value="$PROJECT_DIR$/src/core/RunExperiment.js" />
       </list>
     </option>
   </component>
@@ -411,7 +407,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="build" />
+              <option name="myItemId" value="dist" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -629,20 +625,21 @@
       <workItem from="1501718165968" duration="83000" />
       <workItem from="1501734889270" duration="481000" />
       <workItem from="1501742658968" duration="166000" />
-      <workItem from="1501755199061" duration="502000" />
+      <workItem from="1501755199061" duration="4065000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="124079000" />
+    <option name="totallyTimeSpent" value="127642000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="1173" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.096875" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.096875" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32789856" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -654,7 +651,6 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3998674" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32789856" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -674,13 +670,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/contributors.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/examples/create-experiment.js" />
     <entry file="file://$PROJECT_DIR$/examples/basic-example.html" />
     <entry file="file://$PROJECT_DIR$/src/utils/SetCSSOnElement.js">
@@ -739,13 +728,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/InterstimulusPause.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/serially/lib/index.js" />
     <entry file="file://$PROJECT_DIR$/build/demo.js" />
     <entry file="file://$PROJECT_DIR$/build/bundle.js.tmp-browserify-37600537537670053467" />
@@ -757,14 +739,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build/experimentJS.min.js">
+    <entry file="file://$PROJECT_DIR$/dist/experimentJS.min.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
           <caret line="0" column="1491" selection-start-line="0" selection-start-column="1491" selection-end-line="0" selection-end-column="1491" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build/experimentJS.js">
+    <entry file="file://$PROJECT_DIR$/dist/experimentJS.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2565">
           <caret line="420" column="9" selection-start-line="420" selection-start-column="9" selection-end-line="420" selection-end-column="9" />
@@ -869,14 +851,6 @@
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Downloads/colorSchemeTool-master/intellijThemes/Cobalt.icls" />
-    <entry file="file://$PROJECT_DIR$/src/methods/ConstantStimuli.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="11" column="26" selection-start-line="11" selection-start-column="26" selection-end-line="11" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/notes/subtrees-info.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="420">
@@ -893,24 +867,6 @@
           <folding>
             <element signature="e#1#38#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/ResponseHandler.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2385">
-          <caret line="161" column="2" selection-start-line="161" selection-start-column="2" selection-end-line="161" selection-end-column="2" />
-          <folding>
-            <element signature="e#2#59#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="55" selection-start-line="15" selection-start-column="55" selection-end-line="15" selection-end-column="55" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -960,6 +916,32 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/ResponseHandler.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="32" column="7" selection-start-line="32" selection-start-column="7" selection-end-line="32" selection-end-column="7" />
+          <folding>
+            <element signature="e#2#59#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="38" column="24" selection-start-line="38" selection-start-column="24" selection-end-line="38" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/utils/ExperimentUSUtils.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/utils/utils.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
@@ -978,31 +960,47 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/RunExperiment.js">
+    <entry file="file://$PROJECT_DIR$/examples/phases-example.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="131" column="10" selection-start-line="131" selection-start-column="10" selection-end-line="131" selection-end-column="10" />
-          <folding>
-            <element signature="e#303#404#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="382">
+          <caret line="56" column="43" selection-start-line="56" selection-start-column="43" selection-end-line="56" selection-end-column="43" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/core/Trials.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="148" column="7" selection-start-line="148" selection-start-column="7" selection-end-line="148" selection-end-column="7" />
+        <state relative-caret-position="265">
+          <caret line="131" column="0" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
           <folding>
             <element signature="e#0#49#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples/phases-example.html">
+    <entry file="file://$PROJECT_DIR$/src/methods/ConstantStimuli.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="502">
-          <caret line="49" column="71" selection-start-line="49" selection-start-column="71" selection-end-line="49" selection-end-column="71" />
+        <state relative-caret-position="135">
+          <caret line="11" column="26" selection-start-line="11" selection-start-column="26" selection-end-line="11" selection-end-column="26" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/InterstimulusPause.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="565">
+          <caret line="79" column="32" selection-start-line="79" selection-start-column="32" selection-end-line="79" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/RunExperiment.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="235">
+          <caret line="129" column="4" selection-start-line="129" selection-start-column="4" selection-end-line="129" selection-end-column="4" />
+          <folding>
+            <element signature="e#303#404#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

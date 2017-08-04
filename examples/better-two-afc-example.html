@@ -104,6 +104,8 @@
 
     // ===================== Set up other experimental  =====================
 
+//    ExperimentJS.Trials.setShouldTrackResponseTime(true);
+
     //    ExperimentJS.Trials.getPptInfo();                         // turn off in development
     ExperimentJS.Trials.setRepeats(1);
     ExperimentJS.Methods._2AFC.BuildExperiment(true);                      // true logs trials to console
@@ -119,7 +121,6 @@
         else if (event.which === 39){ //right arrow
             ExperimentJS.Trials.runNextTrial({shouldStoreResponse: true, dv_value: 'right'});
         }
-
     });
 
 </script>

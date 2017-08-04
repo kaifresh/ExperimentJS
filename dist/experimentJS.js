@@ -17329,19 +17329,26 @@ function _storeResponse(options) {
 
     var lastTrial = _Trials._allTrials.pop();
 
-    _responses.push({
+    var response = {
         trial: lastTrial, // Store the tokenised trial (detokenization occurs at output time)
         dv: options.dv_value
-    });
+    };
+    //
+    // if (options['response_time'] !== null && options.hasOwnProperty("response_time")){
+    //     response['response_time'] = options['response_time'];     // Add response time.
+    // }
 
-    console.log("STORED THIS RESPONSE: ", _responses.back());
+    _responses.push(response);
+
+    console.log("Stored response:", _responses.back());
 }
 
 function _FormatStoredResponses(responses) {
 
     console.log(responses);
+
     /**
-     * GOAL only tokenize & de-tokenize ONCE
+     * GOAL: only tokenize & de-tokenize ONCE
      *
      * Trials
      *      - Tokenuzed on creation
@@ -17357,39 +17364,32 @@ function _FormatStoredResponses(responses) {
      *
      * Result
      *      - Store all run trials + their DV response in tokenised form as the Response array
-     *      - On output, de-tokenize them & pass them to this current method
-     *      - TODO: create a way to store the run trials that works with JSON. eg -> { trials: []run_trials, dv: []responses }
+     *      - On output, de-tokenize them & pass them to this method to be converted into a csv friendly format
      * */
 
     var formatted_responses = [],
-        lastTrial,
-        dv_value;
+        lastTrial;
 
     for (var resp_idx = 0; resp_idx < responses.length; resp_idx++) {
 
-        // lastTrial = responses[resp_idx]                                                      // (without detokenisation)
         lastTrial = responses[resp_idx].trial.map(function (iv_obj_in_tokenised_format) {
             // DeTokenise the saved responses
             return (0, _UnserializableMap._Unserializable_Token2Var)(iv_obj_in_tokenised_format, true); // 2nd arg = DO detokenize the parser func
         });
 
-        dv_value = responses[resp_idx].dv;
-
         var responseFormatted = {};
 
-        // TODO: UNZSERIALIZABLE ISSUE: By this point, the responses no longer have tokens. So when saved their content is lost. SO the question is where to keep a serialised copy
-        // TODO: Could just store all trials in tokenised/untokensied formats and convert to response format at the end (otherwise you need to indivudally support parsers, and the other shit)
+        // --- By this point, the responses no longer have tokens ---
 
         /** [ Store the IV ] -> Write out each IV (1 IV per array element) to a field */
         for (var i = 0; i < lastTrial.length; ++i) {
 
-            console.log("FORMATTING A RESPONSE FOR ", k, i);
+            console.log("Formatting a response:", k, i);
 
             var ivNum = "IV" + i;
 
             // [ RESPONSE PARSER ]
             if (lastTrial[i].parserFunc !== undefined && typeof lastTrial[i].parserFunc === "function") {
-                //$.isFunction(lastTrial[i].parserFunc)){
 
                 var stdName = ivNum + "_" + lastTrial[i].description;
 
@@ -17446,7 +17446,12 @@ function _FormatStoredResponses(responses) {
 
         /** [ Store the DV ] */
         var value = _Trials._dvName || "value";
-        responseFormatted["DV_" + value] = dv_value;
+        responseFormatted["DV_" + value] = responses[resp_idx].dv;
+
+        /** Store response time */
+        // if (responses[resp_idx].response_time !== undefined){
+        //     responseFormatted["response_time"] = responses[resp_idx].response_time;
+        // }
 
         console.log("FORMATTED THIS RESPONSE: ", responseFormatted);
 
@@ -17455,115 +17460,6 @@ function _FormatStoredResponses(responses) {
 
     return formatted_responses;
 }
-
-//
-// export function _storeResponse_ORIGINAL(options) {                       // Used in ./RunExperiment.js
-//
-//     // var lastTrial = _trial_to_run;                              // _trial_to_run is set in ./RunExperiment.js:_displayNextTrial()
-//
-//     var responseFormatted = {};
-//
-//     /**
-//      * GOAL only tokenize & de-tokenize ONCE
-//      *
-//      * Trials
-//      *      - Tokenuzed on creation
-//      *      - DeTokenized on trial (deep copy)
-//      *      - Nothing on Save               - Still tokenized from creation
-//      *      - Nothing on Load               - DeTokenized as normal
-//      *
-//      * Responses
-//      *      - DeTokenised on creation       - Receivng the detokenised trial
-//      *            - ALT = store Tokenized trials & DeTokenize on output
-//      *            - Nothing on Save - still a token
-//      *            - Nothign on load - still a token
-//      *
-//      * Result
-//      *      - Store all run trials + their DV response in tokenised form as the Response array
-//      *      - On output, de-tokenize them & pass them to this current method
-//      *      - TODO: create a way to store the run trials that works with JSON. eg -> { trials: []run_trials, dv: []responses }
-//      * */
-//
-//     // TODO: UNZSERIALIZABLE ISSUE: By this point, the responses no longer have tokens. So when saved their content is lost. SO the question is where to keep a serialised copy
-//     // TODO: Could just store all trials in tokenised/untokensied formats and convert to response format at the end (otherwise you need to indivudally support parsers, and the other shit)
-//
-//     /** Store the IV -> Write out each IV (1 IV per array element) to a field */
-//     for (var i = 0; i < lastTrial.length; ++i) {
-//         var ivNum = "IV" + i;
-//
-//         // [ RESPONSE PARSER ]
-//         if (lastTrial[i].parserFunc !== undefined && typeof lastTrial[i].parserFunc === "function"){ //$.isFunction(lastTrial[i].parserFunc)){
-//
-//             var stdName = ivNum + "_" + lastTrial[i].description;
-//
-//             /**
-//              * Parser function interface:
-//              *                  function ( args_passed_to_this_IV_for_this_trial..., index) {}
-//              *                  return
-//              *                          string -    processed version of the data
-//              *                          object -    values are the processed version of parts of the data,
-//              *                                      keys are names given to each portion of the parsed data
-//              * */
-//
-//             var parsed_data = lastTrial[i].parserFunc.apply(this, lastTrial[i].value.concat(i) );                               // Refer to interface description above
-//
-//             if (typeof parsed_data === "string" || parsed_data instanceof String){
-//                 responseFormatted[ stdName+"_value" ] = parsed_data;                                                            // Add parsed IV data to response
-//
-//             } else if (parsed_data !== null && typeof parsed_data === "object"){
-//
-//                 // TODO: See if keys output by the parser function can be cached for a performance improvement
-//                 var keys = Object.keys(parsed_data);
-//                 for (var k = 0; k < keys.length; k++){
-//                     var key_and_data_description = keys[k];
-//                     responseFormatted[ stdName+"_"+key_and_data_description ] = parsed_data[key_and_data_description]; // Add parsed data for this key to response
-//                 }
-//
-//             } else {
-//                 throw new Error("[ Parser Function Error ] - Parser function for "+stdName+" must output either a string or an object. You output:", typeof parsed_data);
-//             }
-//
-//             // [ DEFAULT: ARRAY OF INPUT ]
-//         } else if (lastTrial[i].value.constructor === Array) { // Default behaviour: array of args passed to the IV's set function
-//
-//             /** Manually write out each argument (from an array) to a field in the object
-//              *  Only append a number if there are >1 arguments passed in */
-//
-//             if (lastTrial[i].value.length > 1){
-//
-//                 //If using a setFunc function with multiple args -> use the arg names to describe the values written to the response
-//                 var arg_names, arg_name;
-//                 arg_names = getParamNames( setFuncs[ lastTrial[i].description ] );
-//
-//                 for (var j = 0; j < lastTrial[i].value.length; ++j) {
-//                     arg_name = arg_names[j];
-//                     responseFormatted[ivNum + "_" + lastTrial[i].description + "_" + arg_name ] =  lastTrial[i].value[j];
-//                 }
-//
-//             } else {
-//                 responseFormatted[ ivNum + "_" + lastTrial[i].description ] =  lastTrial[i].value[0];
-//             }
-//
-//         } else {
-//             // TODO: Determine if this can be deleted...
-//             responseFormatted[ivNum + "_" + lastTrial[i].description ] = lastTrial[i].value;
-//         }
-//
-//     }
-//
-//     /** Store the DV*/
-//     if (options !== undefined && options.hasOwnProperty("dv_value")) {
-//         var value = _dvName || "value";
-//         responseFormatted["DV_"+value] = options.dv_value;
-//     } else {
-//         responseFormatted["DV_value"] = "ERROR - No DV supplied";
-//         throw new Error("A dependent variable (DV) must be supplied by the calling code. This is an error.");       // Do not continue if DV is not supplied
-//     }
-//
-//     console.log("STORED THIS RESPONSE: ", responseFormatted);
-//
-//     _responses.push(responseFormatted);                         // _responses by one
-// }
 
 },{"../utils/StringUtils.js":20,"./Trials":9,"./UnserializableMap.js":10}],6:[function(require,module,exports){
 "use strict";
@@ -17656,6 +17552,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports._shouldRunNextTrial = undefined;
 exports._setShouldRunNextTrial = _setShouldRunNextTrial;
+exports._ErrorIfDidStartExperiment = _ErrorIfDidStartExperiment;
 
 var _Trials = require("./Trials.js");
 
@@ -17725,6 +17622,10 @@ _Trials.Trials.runNextTrial = function (options) {
         }
 
         if (options !== undefined && options.hasOwnProperty("dv_value")) {
+
+            // _trackResponseTimeEnd();
+            // options['response_time'] = _getResponseTimeDelta();
+
             (0, _ResponseHandler._storeResponse)(options); //Settings contains a field "dv_value" which is also read by _storeResponse
         }
 
@@ -17739,6 +17640,8 @@ _Trials.Trials.runNextTrial = function (options) {
             } else {
                 _displayNextTrial();
             }
+
+            // _trackResponseTimeStart();
         } else {
 
             _Trials.Trials.OutputResponses((0, _ResponsesOutput._outputResponses)(_ResponseHandler._responses));
@@ -17900,7 +17803,7 @@ function _shouldRunMidCallback() {
 }
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//             Experiment Lifecycle - Output responses
+//                          Experiment Lifecycle - Output responses
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 /**
@@ -18144,6 +18047,8 @@ var _NumberUtils = require("../utils/NumberUtils");
 var NumUtils = _interopRequireWildcard(_NumberUtils);
 
 var _UnserializableMap = require("./UnserializableMap.js");
+
+var _RunExperiment = require("./RunExperiment.js");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -18448,10 +18353,10 @@ function _buildTrials() {
             }
         }
 
-        exports._allTrials = _allTrials = temp; // /** Replace your previous trials with Temp (don"t know who to do this in place) */
+        exports._allTrials = _allTrials = temp; // Replace your previous trials with Temp (don"t know who to do this in place)
     }
 
-    temp = [];
+    temp = []; // Duplicate trials for repeats
     for (i = 0; i < _expRepeats; i++) {
         temp = temp.concat(_allTrials);
     }
@@ -18478,12 +18383,12 @@ function _buildTrials() {
 }
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                                      Trials - sub functions
+//                                      Trials - Shuffling
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 var _shouldShuffle = true;
 /**
- * Determine which
+ * Determine whether the trials should be shuffled.
  * @param {bool} - shouldShuffle
  */
 Trials.setShuffle = function (shouldShuffle) {
@@ -18509,6 +18414,50 @@ Trials.shuffleTrials = function (trials) {
     trials.shuffle();
 };
 
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                                      Trials - Tracking Response Time
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//
+// export var _should_track_response_time = false;
+//
+// Trials.setShouldTrackResponseTime = function(shouldTrackResponseTime){
+//
+//     if (typeof window.performance !== 'undefined' && typeof window.performance.now !== 'undefined'){
+//         throw new Error("Response timing is not supported by your browser.");
+//     }
+//
+//     _ErrorIfDidStartExperiment();
+//
+//     if (typeof(shouldTrackResponseTime) === "boolean"){
+//         _should_track_response_time = shouldTrackResponseTime;
+//     } else {
+//         throw new Error("[setShouldTrackResponseTime Error] - usage 1st argument should be a booolean");
+//     }
+// };
+//
+// // Performance.now() = floating point milliseconds since page load
+// // Accurate to 5 microseconds
+// var _response_start_time = null;
+// var _response_end_time = null;
+// export function _trackResponseTimeStart(){
+//     if (_should_track_response_time)  _response_start_time = window.performance.now();
+// }
+// export function _trackResponseTimeEnd(){
+//     if (_should_track_response_time)  _response_end_time = window.performance.now();
+// }
+// export function _getResponseTimeDelta(){
+//     if (_should_track_response_time){
+//         return _response_end_time - _response_start_time;
+//     } else {
+//         return null;
+//     }
+// }
+
+
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                                      Trials - sub functions
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
 function _csvIllegalCharCheck(string) {
 
     if (typeof string !== "string") {
@@ -18529,7 +18478,7 @@ function _ErrorIfTrialsAreBuilt() {
 
 exports.Trials = Trials;
 
-},{"../utils/NumberUtils":17,"./UnserializableMap.js":10,"lodash":1}],10:[function(require,module,exports){
+},{"../utils/NumberUtils":17,"./RunExperiment.js":7,"./UnserializableMap.js":10,"lodash":1}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

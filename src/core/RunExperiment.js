@@ -8,7 +8,8 @@
 //      - Outputting responses
 //      - Mid/end callbacks
 
-import { Trials, setFuncs, _allTrials, _didBuildTrials, _dvName, _isUsingPhases } from "./Trials.js";
+import { Trials, setFuncs, _allTrials, _didBuildTrials, _dvName, _isUsingPhases, _should_track_response_time, _trackResponseTimeStart, _trackResponseTimeEnd, _getResponseTimeDelta   } from "./Trials.js";
+
 import { _storeResponse, _FormatStoredResponses, _responses } from "./ResponseHandler.js";
 import { _outputResponses, _createCSVLinkAndDownload } from "./ResponsesOutput.js";
 import { _interstimulusPause, _shouldInterstimulusPause } from "./InterstimulusPause.js";
@@ -59,6 +60,10 @@ Trials.runNextTrial = function (options) {                                 // us
         }
 
         if (options !== undefined && options.hasOwnProperty("dv_value") ) {
+            
+            // _trackResponseTimeEnd();
+            // options['response_time'] = _getResponseTimeDelta();
+            
             _storeResponse(options);                                       //Settings contains a field "dv_value" which is also read by _storeResponse
         }
 
@@ -73,6 +78,8 @@ Trials.runNextTrial = function (options) {                                 // us
             } else {
                 _displayNextTrial();
             }
+            
+            // _trackResponseTimeStart();
 
         } else {
 
@@ -235,7 +242,7 @@ function _shouldRunMidCallback() {
 }
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//             Experiment Lifecycle - Output responses
+//                          Experiment Lifecycle - Output responses
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 /**
@@ -249,7 +256,7 @@ Trials.OutputResponses = function(uri_csv_string){
     _createCSVLinkAndDownload(uri_csv_string);
 };
 
-function _ErrorIfDidStartExperiment(){
+export function _ErrorIfDidStartExperiment(){
     if (_didStartExperiment){
         var funcname = arguments.callee.caller.toString();
         throw new Error("[ "+funcname+" Error ] Experiment has already begun.");

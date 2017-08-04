@@ -1,5 +1,6 @@
 import * as NumUtils from "../utils/NumberUtils";
 import { _Unserializable_Var2Token, _Unserializable_ParserFunc2Token } from "./UnserializableMap.js";
+import { _ErrorIfDidStartExperiment } from "./RunExperiment.js";
 var _ = require("lodash");
 
 /**
@@ -45,6 +46,7 @@ Trials.setIVLevels = function ( ivname, levels) {
     } else{
         throw new Error("[ setIVLevels Error ] - The second argument to setIVLevels must be an array of arrays, containing the arguments passsed to the set function for "+ ivname);
     }
+    
 };
 
 /**
@@ -236,7 +238,6 @@ Trials.BuildExperiment = function (printTrials = false) {
     }
 };
 
-
 function _buildTrials(printTrials = false) {
 
     console.log("Build Trials. IVS:", IVs);
@@ -293,11 +294,10 @@ function _buildTrials(printTrials = false) {
             }
         }
 
-        _allTrials = temp;                                                                      // /** Replace your previous trials with Temp (don"t know who to do this in place) */
+        _allTrials = temp;                                                                      // Replace your previous trials with Temp (don"t know who to do this in place)
     }
 
-
-    temp = [];
+    temp = [];                                                                                  // Duplicate trials for repeats
     for (i = 0; i < _expRepeats; i++) {
         temp = temp.concat(_allTrials);
     }
@@ -323,16 +323,13 @@ function _buildTrials(printTrials = false) {
     }
 }
 
-
-
-
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                                      Trials - sub functions
+//                                      Trials - Shuffling
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 var _shouldShuffle = true;
 /**
- * Determine which
+ * Determine whether the trials should be shuffled.
  * @param {bool} - shouldShuffle
  */
 Trials.setShuffle = function(shouldShuffle){
@@ -358,6 +355,49 @@ Trials.shuffleTrials = function(trials){
     trials.shuffle();
 };
 
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                                      Trials - Tracking Response Time
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//
+// export var _should_track_response_time = false;
+//
+// Trials.setShouldTrackResponseTime = function(shouldTrackResponseTime){
+//
+//     if (typeof window.performance !== 'undefined' && typeof window.performance.now !== 'undefined'){
+//         throw new Error("Response timing is not supported by your browser.");
+//     }
+//
+//     _ErrorIfDidStartExperiment();
+//
+//     if (typeof(shouldTrackResponseTime) === "boolean"){
+//         _should_track_response_time = shouldTrackResponseTime;
+//     } else {
+//         throw new Error("[setShouldTrackResponseTime Error] - usage 1st argument should be a booolean");
+//     }
+// };
+//
+// // Performance.now() = floating point milliseconds since page load
+// // Accurate to 5 microseconds
+// var _response_start_time = null;
+// var _response_end_time = null;
+// export function _trackResponseTimeStart(){
+//     if (_should_track_response_time)  _response_start_time = window.performance.now();
+// }
+// export function _trackResponseTimeEnd(){
+//     if (_should_track_response_time)  _response_end_time = window.performance.now();
+// }
+// export function _getResponseTimeDelta(){
+//     if (_should_track_response_time){
+//         return _response_end_time - _response_start_time;
+//     } else {
+//         return null;
+//     }
+// }
+
+
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                                      Trials - sub functions
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 function _csvIllegalCharCheck(string){
 

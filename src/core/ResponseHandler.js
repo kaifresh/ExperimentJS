@@ -28,10 +28,10 @@ export function _storeResponse(options) {                       // Used in ./Run
         trial: lastTrial,                                           // Store the tokenised trial (detokenization occurs at output time)
         dv: options.dv_value
     };
-    //
-    // if (options['response_time'] !== null && options.hasOwnProperty("response_time")){
-    //     response['response_time'] = options['response_time'];     // Add response time.
-    // }
+
+    if (options['response_time'] !== null && options.hasOwnProperty("response_time")){
+        response['response_time'] = options['response_time'];     // Add response time.
+    }
 
     _responses.push(response);
 
@@ -146,9 +146,9 @@ export function _FormatStoredResponses(responses) {
         responseFormatted["DV_"+value] = responses[resp_idx].dv;
 
         /** Store response time */
-        // if (responses[resp_idx].response_time !== undefined){
-        //     responseFormatted["response_time"] = responses[resp_idx].response_time;
-        // }
+        if (responses[resp_idx].response_time !== undefined){
+            responseFormatted["response_time_ms"] = responses[resp_idx].response_time;
+        }
 
         console.log("FORMATTED THIS RESPONSE: ", responseFormatted);
 

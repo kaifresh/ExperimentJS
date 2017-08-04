@@ -1,6 +1,5 @@
 import * as NumUtils from "../utils/NumberUtils";
 import { _Unserializable_Var2Token, _Unserializable_ParserFunc2Token } from "./UnserializableMap.js";
-import { _ErrorIfDidStartExperiment } from "./RunExperiment.js";
 var _ = require("lodash");
 
 /**
@@ -354,45 +353,6 @@ Trials.shuffleTrials = function(trials){
 
     trials.shuffle();
 };
-
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                                      Trials - Tracking Response Time
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//
-// export var _should_track_response_time = false;
-//
-// Trials.setShouldTrackResponseTime = function(shouldTrackResponseTime){
-//
-//     if (typeof window.performance !== 'undefined' && typeof window.performance.now !== 'undefined'){
-//         throw new Error("Response timing is not supported by your browser.");
-//     }
-//
-//     _ErrorIfDidStartExperiment();
-//
-//     if (typeof(shouldTrackResponseTime) === "boolean"){
-//         _should_track_response_time = shouldTrackResponseTime;
-//     } else {
-//         throw new Error("[setShouldTrackResponseTime Error] - usage 1st argument should be a booolean");
-//     }
-// };
-//
-// // Performance.now() = floating point milliseconds since page load
-// // Accurate to 5 microseconds
-// var _response_start_time = null;
-// var _response_end_time = null;
-// export function _trackResponseTimeStart(){
-//     if (_should_track_response_time)  _response_start_time = window.performance.now();
-// }
-// export function _trackResponseTimeEnd(){
-//     if (_should_track_response_time)  _response_end_time = window.performance.now();
-// }
-// export function _getResponseTimeDelta(){
-//     if (_should_track_response_time){
-//         return _response_end_time - _response_start_time;
-//     } else {
-//         return null;
-//     }
-// }
 
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =

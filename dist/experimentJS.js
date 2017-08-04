@@ -17119,7 +17119,26 @@ Object.keys(_methods).forEach(function (key) {
 
 require("./utils/utils.js");
 
-},{"./core/core.js":11,"./methods/methods.js":14,"./utils/utils.js":21}],3:[function(require,module,exports){
+},{"./core/core.js":12,"./methods/methods.js":15,"./utils/utils.js":22}],3:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports._ErrorIfDidStartExperiment = _ErrorIfDidStartExperiment;
+
+var _RunExperiment = require("./RunExperiment.js");
+
+function _ErrorIfDidStartExperiment() {
+    if (_RunExperiment._didStartExperiment) {
+        var funcname = arguments.callee.caller.toString();
+        throw new Error("[ " + funcname + " Error ] Experiment has already begun.");
+    }
+} /**
+   * Created by kai on 4/8/17.
+   */
+
+},{"./RunExperiment.js":8}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17166,7 +17185,7 @@ _Trials.Trials.getPptInfo = function () {
     console.log("Participant name: ", _pptName, "\tParticipant number: ", _pptNo);
 };
 
-},{"./Trials.js":9}],4:[function(require,module,exports){
+},{"./Trials.js":10}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17285,7 +17304,7 @@ function _showInterstimulusPause(blackout) {
 
 exports.Pause = Pause;
 
-},{"../utils/SetCSSOnElement.js":18,"./RunExperiment.js":7}],5:[function(require,module,exports){
+},{"../utils/SetCSSOnElement.js":19,"./RunExperiment.js":8}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17333,10 +17352,10 @@ function _storeResponse(options) {
         trial: lastTrial, // Store the tokenised trial (detokenization occurs at output time)
         dv: options.dv_value
     };
-    //
-    // if (options['response_time'] !== null && options.hasOwnProperty("response_time")){
-    //     response['response_time'] = options['response_time'];     // Add response time.
-    // }
+
+    if (options['response_time'] !== null && options.hasOwnProperty("response_time")) {
+        response['response_time'] = options['response_time']; // Add response time.
+    }
 
     _responses.push(response);
 
@@ -17449,9 +17468,9 @@ function _FormatStoredResponses(responses) {
         responseFormatted["DV_" + value] = responses[resp_idx].dv;
 
         /** Store response time */
-        // if (responses[resp_idx].response_time !== undefined){
-        //     responseFormatted["response_time"] = responses[resp_idx].response_time;
-        // }
+        if (responses[resp_idx].response_time !== undefined) {
+            responseFormatted["response_time"] = responses[resp_idx].response_time;
+        }
 
         console.log("FORMATTED THIS RESPONSE: ", responseFormatted);
 
@@ -17461,7 +17480,7 @@ function _FormatStoredResponses(responses) {
     return formatted_responses;
 }
 
-},{"../utils/StringUtils.js":20,"./Trials":9,"./UnserializableMap.js":10}],6:[function(require,module,exports){
+},{"../utils/StringUtils.js":21,"./Trials":10,"./UnserializableMap.js":11}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17544,15 +17563,17 @@ function _createCSVLinkAndDownload(csvContent) {
     a.click();
 }
 
-},{"../utils/CreateDownloadLink.js":15,"./GetPptInfo.js":3,"./ResponseHandler.js":5,"./Trials.js":9,"lodash":1}],7:[function(require,module,exports){
+},{"../utils/CreateDownloadLink.js":16,"./GetPptInfo.js":4,"./ResponseHandler.js":6,"./Trials.js":10,"lodash":1}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports._shouldRunNextTrial = undefined;
+exports._didStartExperiment = exports._shouldRunNextTrial = undefined;
 exports._setShouldRunNextTrial = _setShouldRunNextTrial;
-exports._ErrorIfDidStartExperiment = _ErrorIfDidStartExperiment;
+exports._trackResponseTimeStart = _trackResponseTimeStart;
+exports._trackResponseTimeEnd = _trackResponseTimeEnd;
+exports._getResponseTimeDelta = _getResponseTimeDelta;
 
 var _Trials = require("./Trials.js");
 
@@ -17568,13 +17589,7 @@ var _DOMUtils = require("../utils/DOMUtils.js");
 
 var _UnserializableMap = require("./UnserializableMap.js");
 
-var _ = require("lodash"); // Browserify will resolve this package
-
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                         Experiment Lifecycle - Start & Game Loop
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
-//Cannot reassign imported values, so you need a setter (used in InterstimlusPause.js)
+var _Errors = require("./Errors.js");
 
 // RunExperiment.js
 // Adds core functionality facilitating the experimental life cycle to the Trials Object.
@@ -17585,6 +17600,13 @@ var _ = require("lodash"); // Browserify will resolve this package
 //      - Outputting responses
 //      - Mid/end callbacks
 
+var _ = require("lodash"); // Browserify will resolve this package
+
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                         Experiment Lifecycle - Start & Game Loop
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+//Cannot reassign imported values, so you need a setter (used in InterstimlusPause.js)
 function _setShouldRunNextTrial(value) {
     if (typeof value === "boolean") {
         exports._shouldRunNextTrial = _shouldRunNextTrial = value;
@@ -17594,7 +17616,7 @@ function _setShouldRunNextTrial(value) {
 }
 
 var _shouldRunNextTrial = exports._shouldRunNextTrial = true; // used by: InterstimulusPause.js
-var _didStartExperiment = false;
+var _didStartExperiment = exports._didStartExperiment = false;
 
 /**
  * Call Trials.runNextTrial both to start the experiment and to progress to the next trial.
@@ -17609,7 +17631,7 @@ _Trials.Trials.runNextTrial = function (options) {
         throw new Error("runNextTrial(): Trial were not built");
     }
 
-    if (!_didStartExperiment) _didStartExperiment = true;
+    if (!_didStartExperiment) exports._didStartExperiment = _didStartExperiment = true;
 
     if (_shouldRunNextTrial) {
 
@@ -17623,10 +17645,10 @@ _Trials.Trials.runNextTrial = function (options) {
 
         if (options !== undefined && options.hasOwnProperty("dv_value")) {
 
-            // _trackResponseTimeEnd();
-            // options['response_time'] = _getResponseTimeDelta();
+            _trackResponseTimeEnd();
+            options['response_time'] = _getResponseTimeDelta();
 
-            (0, _ResponseHandler._storeResponse)(options); //Settings contains a field "dv_value" which is also read by _storeResponse
+            (0, _ResponseHandler._storeResponse)(options); // options must contain a field "dv_value". This is read by _storeResponse
         }
 
         if (_Trials._allTrials.length > 0) {
@@ -17641,7 +17663,7 @@ _Trials.Trials.runNextTrial = function (options) {
                 _displayNextTrial();
             }
 
-            // _trackResponseTimeStart();
+            _trackResponseTimeStart();
         } else {
 
             _Trials.Trials.OutputResponses((0, _ResponsesOutput._outputResponses)(_ResponseHandler._responses));
@@ -17738,6 +17760,45 @@ function _fireIVSetFuncWithArgs(cur_iv) {
 }
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                            Experiment Life Cycle - Tracking Response Time
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//
+var _should_track_response_time = false;
+
+_Trials.Trials.setShouldTrackResponseTime = function (shouldTrackResponseTime) {
+
+    if (typeof window.performance === 'undefined' || typeof window.performance.now === 'undefined') {
+        throw new Error("Response timing is not supported by your browser.");
+    }
+
+    (0, _Errors._ErrorIfDidStartExperiment)();
+
+    if (typeof shouldTrackResponseTime === "boolean") {
+        _should_track_response_time = shouldTrackResponseTime;
+    } else {
+        throw new Error("[setShouldTrackResponseTime Error] - usage 1st argument should be a booolean");
+    }
+};
+
+// Performance.now() = floating point milliseconds since page load
+// Accurate to 5 microseconds
+var _response_start_time = null;
+var _response_end_time = null;
+function _trackResponseTimeStart() {
+    if (_should_track_response_time) _response_start_time = window.performance.now();
+}
+function _trackResponseTimeEnd() {
+    if (_should_track_response_time) _response_end_time = window.performance.now();
+}
+function _getResponseTimeDelta() {
+    if (_should_track_response_time) {
+        return _response_end_time - _response_start_time;
+    } else {
+        return null;
+    }
+}
+
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                  Experiment Lifecycle - Star Point Callback (i.e. the "instructions" message)
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
@@ -17748,7 +17809,7 @@ var _startCallback = null;
  */
 _Trials.Trials.setStartCallback = function (start_callback) {
 
-    _ErrorIfDidStartExperiment();
+    (0, _Errors._ErrorIfDidStartExperiment)();
 
     if (typeof start_callback === "function") {
         _startCallback = start_callback;
@@ -17781,7 +17842,7 @@ var _midCallback = null;
  */
 _Trials.Trials.setMidpointCallback = function (fn) {
 
-    _ErrorIfDidStartExperiment();
+    (0, _Errors._ErrorIfDidStartExperiment)();
 
     if (typeof fn === "function") {
         _midCallback = fn;
@@ -17817,13 +17878,6 @@ _Trials.Trials.OutputResponses = function (uri_csv_string) {
     (0, _ResponsesOutput._createCSVLinkAndDownload)(uri_csv_string);
 };
 
-function _ErrorIfDidStartExperiment() {
-    if (_didStartExperiment) {
-        var funcname = arguments.callee.caller.toString();
-        throw new Error("[ " + funcname + " Error ] Experiment has already begun.");
-    }
-}
-
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //             Experiment Lifecycle - End Callback (a behaviour at the end of the experiment)
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -17847,7 +17901,7 @@ _Trials.Trials.setEndCallback = function (end_callback) {
     }
 };
 
-},{"../utils/DOMUtils.js":16,"../utils/StringUtils.js":20,"./InterstimulusPause.js":4,"./ResponseHandler.js":5,"./ResponsesOutput.js":6,"./Trials.js":9,"./UnserializableMap.js":10,"lodash":1}],8:[function(require,module,exports){
+},{"../utils/DOMUtils.js":17,"../utils/StringUtils.js":21,"./Errors.js":3,"./InterstimulusPause.js":5,"./ResponseHandler.js":6,"./ResponsesOutput.js":7,"./Trials.js":10,"./UnserializableMap.js":11,"lodash":1}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18029,7 +18083,7 @@ function _createDropDownSelect(all_saves) {
 
 exports.Saves = Saves;
 
-},{"../utils/DOMUtils.js":16,"../utils/SetCSSOnElement.js":18,"./ResponseHandler.js":5,"./Trials.js":9}],9:[function(require,module,exports){
+},{"../utils/DOMUtils.js":17,"../utils/SetCSSOnElement.js":19,"./ResponseHandler.js":6,"./Trials.js":10}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18047,8 +18101,6 @@ var _NumberUtils = require("../utils/NumberUtils");
 var NumUtils = _interopRequireWildcard(_NumberUtils);
 
 var _UnserializableMap = require("./UnserializableMap.js");
-
-var _RunExperiment = require("./RunExperiment.js");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -18415,46 +18467,6 @@ Trials.shuffleTrials = function (trials) {
 };
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                                      Trials - Tracking Response Time
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//
-// export var _should_track_response_time = false;
-//
-// Trials.setShouldTrackResponseTime = function(shouldTrackResponseTime){
-//
-//     if (typeof window.performance !== 'undefined' && typeof window.performance.now !== 'undefined'){
-//         throw new Error("Response timing is not supported by your browser.");
-//     }
-//
-//     _ErrorIfDidStartExperiment();
-//
-//     if (typeof(shouldTrackResponseTime) === "boolean"){
-//         _should_track_response_time = shouldTrackResponseTime;
-//     } else {
-//         throw new Error("[setShouldTrackResponseTime Error] - usage 1st argument should be a booolean");
-//     }
-// };
-//
-// // Performance.now() = floating point milliseconds since page load
-// // Accurate to 5 microseconds
-// var _response_start_time = null;
-// var _response_end_time = null;
-// export function _trackResponseTimeStart(){
-//     if (_should_track_response_time)  _response_start_time = window.performance.now();
-// }
-// export function _trackResponseTimeEnd(){
-//     if (_should_track_response_time)  _response_end_time = window.performance.now();
-// }
-// export function _getResponseTimeDelta(){
-//     if (_should_track_response_time){
-//         return _response_end_time - _response_start_time;
-//     } else {
-//         return null;
-//     }
-// }
-
-
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                                      Trials - sub functions
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
@@ -18478,7 +18490,7 @@ function _ErrorIfTrialsAreBuilt() {
 
 exports.Trials = Trials;
 
-},{"../utils/NumberUtils":17,"./RunExperiment.js":7,"./UnserializableMap.js":10,"lodash":1}],10:[function(require,module,exports){
+},{"../utils/NumberUtils":18,"./UnserializableMap.js":11,"lodash":1}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18600,7 +18612,7 @@ function _Unserializable_ParserFunc2Token(parserfunc, iv_name) {
     return unserializable_parserfunc_token;
 }
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18630,7 +18642,7 @@ exports.Trials = _Trials.Trials; //Needs ./ to treat it as an internal (not exte
 exports.Pause = _InterstimulusPause.Pause;
 exports.Saves = _Saves.Saves;
 
-},{"./GetPptInfo.js":3,"./InterstimulusPause.js":4,"./ResponsesOutput.js":6,"./RunExperiment.js":7,"./Saves.js":8,"./Trials.js":9}],12:[function(require,module,exports){
+},{"./GetPptInfo.js":4,"./InterstimulusPause.js":5,"./ResponsesOutput.js":7,"./RunExperiment.js":8,"./Saves.js":9,"./Trials.js":10}],13:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18726,7 +18738,7 @@ _2AFC.BuildExperiment = function (print) {
 
 exports._2AFC = _2AFC;
 
-},{"../core/Trials.js":9}],13:[function(require,module,exports){
+},{"../core/Trials.js":10}],14:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18741,7 +18753,7 @@ var ConstantStimuli = {}; /**
                            */
 exports.ConstantStimuli = ConstantStimuli;
 
-},{"../core/Trials.js":9}],14:[function(require,module,exports){
+},{"../core/Trials.js":10}],15:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18766,7 +18778,7 @@ var Methods = {
  */
 exports.Methods = Methods;
 
-},{"../core/Trials.js":9,"./2AFC.js":12,"./ConstantStimuli.js":13}],15:[function(require,module,exports){
+},{"../core/Trials.js":10,"./2AFC.js":13,"./ConstantStimuli.js":14}],16:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18783,7 +18795,7 @@ function createDownloadLink(filename, data) {
     return a;
 }
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18810,7 +18822,7 @@ function DOM_remove(elem) {
     elem.parentNode.removeChild(elem); //Remove select from dom
 }
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18833,7 +18845,7 @@ function isInt(value) {
     return (x | 0) === x;
 }
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18851,7 +18863,7 @@ function SetCSSOnElement(elem, css) {
     }
 }
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 "use strict";
 
 // - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
@@ -18882,7 +18894,7 @@ Array.prototype.back = function () {
     }
 };
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18933,7 +18945,7 @@ String.prototype.formatUnicorn = String.prototype.formatUnicorn || function () {
     return str;
 };
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 
 require("./CreateDownloadLink.js");
@@ -18944,5 +18956,5 @@ require("./NumberUtils.js");
 
 require("./StringUtils.js");
 
-},{"./CreateDownloadLink.js":15,"./NumberUtils.js":17,"./Shuffle.js":19,"./StringUtils.js":20}]},{},[2])(2)
+},{"./CreateDownloadLink.js":16,"./NumberUtils.js":18,"./Shuffle.js":20,"./StringUtils.js":21}]},{},[2])(2)
 });

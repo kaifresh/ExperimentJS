@@ -8,7 +8,7 @@
 //      - Outputting responses
 //      - Mid/end callbacks
 
-import { Trials, setFuncs, _allTrials, _didBuildTrials, _dvName, _isUsingPhases, _should_track_response_time, _trackResponseTimeStart, _trackResponseTimeEnd, _getResponseTimeDelta   } from "./Trials.js";
+import { Trials, setFuncs, _allTrials, _didBuildTrials, _dvName, _isUsingPhases  } from "./Trials.js";
 
 import { _storeResponse, _FormatStoredResponses, _responses } from "./ResponseHandler.js";
 import { _outputResponses, _createCSVLinkAndDownload } from "./ResponsesOutput.js";
@@ -16,6 +16,7 @@ import { _interstimulusPause, _shouldInterstimulusPause } from "./InterstimulusP
 import { getParamNames } from "../utils/StringUtils.js";
 import { _ApplyFunctionToHTMLChildren } from "../utils/DOMUtils.js";
 import { _Unserializable_Token2Var } from "./UnserializableMap.js";
+import { _ErrorIfDidStartExperiment } from "./Errors.js";
 
 var _ = require("lodash");                                                            // Browserify will resolve this package
 
@@ -33,7 +34,7 @@ export function _setShouldRunNextTrial(value){
 }
 
 export var _shouldRunNextTrial = true;                                      // used by: InterstimulusPause.js
-var _didStartExperiment = false;
+export var _didStartExperiment = false;
 
 /**
  * Call Trials.runNextTrial both to start the experiment and to progress to the next trial.
@@ -42,6 +43,8 @@ var _didStartExperiment = false;
  * @param {object} options - must contain field "dv_value"
  */
 Trials.runNextTrial = function (options) {                                 // usage -> runNextTrial({shouldStoreResponse: true, dv_value: "inside"});
+
+    _trackResponseTimeEnd();
 
     if (!_didBuildTrials){
         throw new Error("runNextTrial(): Trial were not built");
@@ -60,11 +63,10 @@ Trials.runNextTrial = function (options) {                                 // us
         }
 
         if (options !== undefined && options.hasOwnProperty("dv_value") ) {
+
+            options['response_time'] = _getResponseTimeDelta();
             
-            // _trackResponseTimeEnd();
-            // options['response_time'] = _getResponseTimeDelta();
-            
-            _storeResponse(options);                                       //Settings contains a field "dv_value" which is also read by _storeResponse
+            _storeResponse(options);                                    // options must contain a field "dv_value". This is read by _storeResponse
         }
 
         if (_allTrials.length > 0) {
@@ -74,12 +76,14 @@ Trials.runNextTrial = function (options) {                                 // us
             if (_shouldInterstimulusPause) {
                 _interstimulusPause().then(function(){
                     _displayNextTrial();
+                    _trackResponseTimeStart();
                 });
             } else {
                 _displayNextTrial();
+                _trackResponseTimeStart();
             }
             
-            // _trackResponseTimeStart();
+
 
         } else {
 
@@ -88,7 +92,6 @@ Trials.runNextTrial = function (options) {                                 // us
             if ( typeof _endCallBack === "function") _endCallBack();
         }
     }
-
 };
 
 
@@ -176,6 +179,45 @@ function _fireIVSetFuncWithArgs(cur_iv) {
 
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//                            Experiment Life Cycle - Tracking Response Time
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//
+var _should_track_response_time = false;
+
+Trials.setShouldTrackResponseTime = function(shouldTrackResponseTime){
+
+    if (typeof window.performance === 'undefined' || typeof window.performance.now === 'undefined'){
+        throw new Error("Response timing is not supported by your browser.");
+    }
+
+    _ErrorIfDidStartExperiment();
+
+    if (typeof(shouldTrackResponseTime) === "boolean"){
+        _should_track_response_time = shouldTrackResponseTime;
+    } else {
+        throw new Error("[setShouldTrackResponseTime Error] - usage 1st argument should be a booolean");
+    }
+};
+
+// Performance.now() = floating point milliseconds since page load
+// Accurate to 5 microseconds
+var _response_start_time = null;
+var _response_end_time = null;
+export function _trackResponseTimeStart(){
+    if (_should_track_response_time)  _response_start_time = window.performance.now();
+}
+export function _trackResponseTimeEnd(){
+    if (_should_track_response_time)  _response_end_time = window.performance.now();
+}
+export function _getResponseTimeDelta(){
+    if (_should_track_response_time){
+        return _response_end_time - _response_start_time;
+    } else {
+        return null;
+    }
+}
+
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                  Experiment Lifecycle - Star Point Callback (i.e. the "instructions" message)
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
@@ -241,6 +283,7 @@ function _shouldRunMidCallback() {
     }
 }
 
+
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                          Experiment Lifecycle - Output responses
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -256,12 +299,7 @@ Trials.OutputResponses = function(uri_csv_string){
     _createCSVLinkAndDownload(uri_csv_string);
 };
 
-export function _ErrorIfDidStartExperiment(){
-    if (_didStartExperiment){
-        var funcname = arguments.callee.caller.toString();
-        throw new Error("[ "+funcname+" Error ] Experiment has already begun.");
-    }
-}
+
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //             Experiment Lifecycle - End Callback (a behaviour at the end of the experiment)

@@ -1,5 +1,6 @@
 import * as NumUtils from "../utils/NumberUtils";
 import { _Unserializable_Var2Token, _Unserializable_ParserFunc2Token } from "./UnserializableMap.js";
+import { _ErrorIfTrialsAreBuilt } from "./../errors/ErrorIfTrialsAreBuilt.js";
 var _ = require("lodash");
 
 /**
@@ -367,13 +368,6 @@ function _csvIllegalCharCheck(string){
 
     if (string.indexOf(",") !== -1){
         throw new Error("Strings used by ExperimentJS may not contain commas: " + string);
-    }
-}
-
-function _ErrorIfTrialsAreBuilt(){
-    if (_didBuildTrials){
-        var funcname = arguments.callee.caller.toString();
-        throw new Error("[ "+funcname+" Error ] Trials have already been built.");
     }
 }
 

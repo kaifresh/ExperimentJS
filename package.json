@@ -11,6 +11,7 @@
     "build-uglify-old": "rollup -c && uglifyjs dist/three.js -cm --preamble \"// threejs.org/license\" > dist/three.min.js",
     "build-uglify": "rollup -c && uglifyjs dist/experimentJS.js > dist/experimentJS.min.js",
     "build-browserify": "browserify src/ExperimentJS.js -o dist/experimentJS.js -t [ babelify --presets [ es2015 ]  ] -s ExperimentJS && uglifyjs dist/experimentJS.js > dist/experimentJS.min.js",
+    "build-bfy-closure": "browserify src/ExperimentJS.js -o dist/experimentJS.js -t [ babelify --presets [ es2015 ]  ] -s ExperimentJS && java -jar tools/closure-compiler.jar --js dist/experimentJS.js --js_output_file dist/experimentJS.min.js",
     "dev": "rollup -c -w",
     "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,6 +24,7 @@
     "concat-map": "0.0.1",
     "eslint": "^3.12.2",
     "eslint-config-mdcs": "^4.2.2",
+    "google-closure-compiler": "^20170626.0.0",
     "gulp": "^3.9.1",
     "gulp-sourcemaps": "^2.6.0",
     "jquery": "^3.2.1",

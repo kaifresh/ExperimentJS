@@ -145,7 +145,7 @@ export function _FormatStoredResponses(responses) {
         var value = _dvName || "value";
         responseFormatted["DV_"+value] = responses[resp_idx].dv;
 
-        /** Store response time */
+        /** [ Store response time ] */
         if (responses[resp_idx].response_time !== undefined){
             responseFormatted["response_time_ms"] = Number(responses[resp_idx].response_time.toFixed(5));
         }

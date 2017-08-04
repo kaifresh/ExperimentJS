@@ -16,7 +16,7 @@ import { _interstimulusPause, _shouldInterstimulusPause } from "./InterstimulusP
 import { getParamNames } from "../utils/StringUtils.js";
 import { _ApplyFunctionToHTMLChildren } from "../utils/DOMUtils.js";
 import { _Unserializable_Token2Var } from "./UnserializableMap.js";
-import { _ErrorIfDidStartExperiment } from "./Errors.js";
+import { _ErrorIfDidStartExperiment } from "./../errors/ErrorIfDidStartExperiment.js";
 
 var _ = require("lodash");                                                            // Browserify will resolve this package
 

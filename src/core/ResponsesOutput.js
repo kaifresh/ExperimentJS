@@ -43,7 +43,7 @@ export function _formatAllResponsesToCSV(allResponses, log = false){
     }
     csvString = csvString.slice(0, -1) + "\n";          // Cut trailing comma and put in a new row/line
 
-    /** Fill the data - This time its an array of arrays not array of dictionaries */
+    /* Fill the data - This time its an array of arrays not array of dictionaries */
     for (i = 0; i < allResponses.length; i++) {
 
         csvString += _pptName + "," + _pptNo + ",";     // Manaully add content

@@ -1,4 +1,4 @@
-/** = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+/* = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
  *
  *   Store repsonses in localStorage.
  *   Localstorage converts everything to JSON, so object types that cannot be converted will be lost

@@ -42,7 +42,7 @@ export function _FormatStoredResponses(responses) {
 
     console.log(responses);
 
-    /**
+    /*
      * GOAL: only tokenize & de-tokenize ONCE
      *
      * Trials
@@ -74,7 +74,7 @@ export function _FormatStoredResponses(responses) {
 
         // --- By this point, the responses no longer have tokens ---
 
-        /** [ Store the IV ] -> Write out each IV (1 IV per array element) to a field */
+        /* [ Store the IV ] -> Write out each IV (1 IV per array element) to a field */
         for (var i = 0; i < lastTrial.length; ++i) {
 
             console.log("Formatting a response:", k, i);
@@ -86,7 +86,7 @@ export function _FormatStoredResponses(responses) {
 
                 var stdName = ivNum + "_" + lastTrial[i].description;
 
-                /**
+                /*
                  * Parser function interface:
                  *                  function ( args_passed_to_this_IV_for_this_trial..., index) {}
                  *                  return
@@ -116,7 +116,7 @@ export function _FormatStoredResponses(responses) {
                 // [ DEFAULT: ARRAY OF INPUT ]
             } else if (lastTrial[i].value.constructor === Array) { // Default behaviour: array of args passed to the IV's set function
 
-                /** Manually write out each argument (from an array) to a field in the object
+                /* Manually write out each argument (from an array) to a field in the object
                  *  Only append a number if there are >1 arguments passed in */
 
                 if (lastTrial[i].value.length > 1){
@@ -141,11 +141,11 @@ export function _FormatStoredResponses(responses) {
 
         }
 
-        /** [ Store the DV ] */
+        /* [ Store the DV ] */
         var value = _dvName || "value";
         responseFormatted["DV_"+value] = responses[resp_idx].dv;
 
-        /** [ Store response time ] */
+        /* [ Store response time ] */
         if (responses[resp_idx].response_time !== undefined){
             responseFormatted["response_time_ms"] = Number(responses[resp_idx].response_time.toFixed(5));
         }

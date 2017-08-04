@@ -3,7 +3,7 @@ import { Trials } from "../core/Trials.js";
 
 var _2AFC = {};
 
-/**
+/*
  * 2AFC Module.
  *
  * These are lightweight wrappers around the core Trials methods.

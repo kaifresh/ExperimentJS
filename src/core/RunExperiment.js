@@ -174,7 +174,7 @@ function _displayTrialPhases(_trial_to_run){
 
 function _fireIVSetFuncWithArgs(cur_iv) {
 
-    /** Using a FUNCTION to set the display*/
+    /* Using a FUNCTION to set the display*/
     if ( setFuncs[cur_iv.description] !== undefined ) {
         setFuncs[cur_iv.description].apply(null, cur_iv.value);
     } else {

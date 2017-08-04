@@ -3,7 +3,7 @@ import { _Unserializable_Var2Token, _Unserializable_ParserFunc2Token } from "./U
 import { _ErrorIfTrialsAreBuilt } from "./../errors/ErrorIfTrialsAreBuilt.js";
 var _ = require("lodash");
 
-/**
+/*
  * To set Trial IVs
  *      1. Set the setter function:                 this is a function `fn` that will manipulate the display
  *      2. Set the args passed to the setter:       these are the varying args passed to `fn` used to vary the IV
@@ -125,8 +125,7 @@ Trials.setRepeats = function (nRepeats) {
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                            Trials - Setting IV Levels & Functions (private)
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-/*
- * */
+
 export function _setIVGeneric(ivName, fieldName, fieldVal) {
     _csvIllegalCharCheck(ivName);
     _csvIllegalCharCheck(fieldName);
@@ -157,7 +156,7 @@ Trials.Phases = [];
  * to transition to the next phase.
  * @param {int} phase_num - ordinal number of the phase
  * @param {array} array_of_iv_names - array of IV names for this phase
- * @param {function, number} transition_func_or_delay - function to handle transition between phases, or duration until next phase
+ * @param {function | number} transition_func_or_delay - function to handle transition between phases, or duration until next phase
  */
 Trials.setIVPhases = function(phase_num, array_of_iv_names, transition_func_or_delay = 0){
 

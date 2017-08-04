@@ -38,8 +38,13 @@ export var _didStartExperiment = false;
 
 /**
  * Call Trials.runNextTrial both to start the experiment and to progress to the next trial.
- * To progress, an object with the field "dv_value" should be passed in as the first arg,
- * containing the participant's response to the trial that was just run.
+ * To store participant's response, an object should be passed in as the first arg.
+ * This object should contain the key "dv_value", with its value being the participant's response
+ * to the trial that was just run.
+ *
+ * Example:
+ *      ExperimentJS.Trials.runNextTrial({ dv_value: "left" });
+ *      
  * @param {object} options - must contain field "dv_value"
  */
 Trials.runNextTrial = function (options) {                                 // usage -> runNextTrial({shouldStoreResponse: true, dv_value: "inside"});

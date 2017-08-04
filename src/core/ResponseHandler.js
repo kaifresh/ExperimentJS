@@ -147,7 +147,7 @@ export function _FormatStoredResponses(responses) {
 
         /** Store response time */
         if (responses[resp_idx].response_time !== undefined){
-            responseFormatted["response_time_ms"] = responses[resp_idx].response_time;
+            responseFormatted["response_time_ms"] = Number(responses[resp_idx].response_time.toFixed(5));
         }
 
         console.log("FORMATTED THIS RESPONSE: ", responseFormatted);

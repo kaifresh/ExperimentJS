@@ -17469,7 +17469,7 @@ function _FormatStoredResponses(responses) {
 
         /** Store response time */
         if (responses[resp_idx].response_time !== undefined) {
-            responseFormatted["response_time"] = responses[resp_idx].response_time;
+            responseFormatted["response_time_ms"] = Number(responses[resp_idx].response_time.toFixed(5));
         }
 
         console.log("FORMATTED THIS RESPONSE: ", responseFormatted);
@@ -17627,6 +17627,8 @@ var _didStartExperiment = exports._didStartExperiment = false;
 _Trials.Trials.runNextTrial = function (options) {
     // usage -> runNextTrial({shouldStoreResponse: true, dv_value: "inside"});
 
+    _trackResponseTimeEnd();
+
     if (!_Trials._didBuildTrials) {
         throw new Error("runNextTrial(): Trial were not built");
     }
@@ -17645,7 +17647,6 @@ _Trials.Trials.runNextTrial = function (options) {
 
         if (options !== undefined && options.hasOwnProperty("dv_value")) {
 
-            _trackResponseTimeEnd();
             options['response_time'] = _getResponseTimeDelta();
 
             (0, _ResponseHandler._storeResponse)(options); // options must contain a field "dv_value". This is read by _storeResponse
@@ -17658,12 +17659,12 @@ _Trials.Trials.runNextTrial = function (options) {
             if (_InterstimulusPause._shouldInterstimulusPause) {
                 (0, _InterstimulusPause._interstimulusPause)().then(function () {
                     _displayNextTrial();
+                    _trackResponseTimeStart();
                 });
             } else {
                 _displayNextTrial();
+                _trackResponseTimeStart();
             }
-
-            _trackResponseTimeStart();
         } else {
 
             _Trials.Trials.OutputResponses((0, _ResponsesOutput._outputResponses)(_ResponseHandler._responses));

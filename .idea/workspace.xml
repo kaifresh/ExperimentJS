@@ -2,14 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="15a95f82-d721-497f-925e-739aed3019c5" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/Errors.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/experimentJS.js" afterPath="$PROJECT_DIR$/dist/experimentJS.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/experimentJS.min.js" afterPath="$PROJECT_DIR$/dist/experimentJS.min.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/better-two-afc-example.html" afterPath="$PROJECT_DIR$/examples/better-two-afc-example.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/ResponseHandler.js" afterPath="$PROJECT_DIR$/src/core/ResponseHandler.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/RunExperiment.js" afterPath="$PROJECT_DIR$/src/core/RunExperiment.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/Trials.js" afterPath="$PROJECT_DIR$/src/core/Trials.js" />
     </list>
     <ignored path="ExperimentJS.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -57,8 +54,8 @@
           <file leaf-file-name="RunExperiment.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/core/RunExperiment.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="258">
-                  <caret line="46" column="28" selection-start-line="46" selection-start-column="28" selection-end-line="46" selection-end-column="28" />
+                <state relative-caret-position="465">
+                  <caret line="46" column="8" selection-start-line="46" selection-start-column="8" selection-end-line="46" selection-end-column="8" />
                   <folding>
                     <element signature="e#303#405#0" expanded="true" />
                   </folding>
@@ -100,7 +97,7 @@
             <entry file="file://$PROJECT_DIR$/dist/experimentJS.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="146655">
-                  <caret line="9789" column="0" selection-start-line="9789" selection-start-column="0" selection-end-line="9789" selection-end-column="0" />
+                  <caret line="9790" column="0" selection-start-line="9790" selection-start-column="0" selection-end-line="9790" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -147,8 +144,8 @@
           <file leaf-file-name="ResponseHandler.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/core/ResponseHandler.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2250">
-                  <caret line="150" column="9" selection-start-line="150" selection-start-column="9" selection-end-line="150" selection-end-column="9" />
+                <state relative-caret-position="960">
+                  <caret line="149" column="105" selection-start-line="149" selection-start-column="105" selection-end-line="149" selection-end-column="105" />
                   <folding>
                     <element signature="e#0#57#0" expanded="true" />
                   </folding>
@@ -579,12 +576,12 @@
       <workItem from="1501742658968" duration="166000" />
       <workItem from="1501755199061" duration="9806000" />
       <workItem from="1501803009550" duration="2746000" />
-      <workItem from="1501806070389" duration="634000" />
+      <workItem from="1501806070389" duration="1170000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="136763000" />
+    <option name="totallyTimeSpent" value="137299000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-1577" width="2560" height="1577" extended-state="6" />
@@ -594,18 +591,18 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1856764" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3998674" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32789856" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -877,7 +874,7 @@
     <entry file="file://$PROJECT_DIR$/dist/experimentJS.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="146655">
-          <caret line="9789" column="0" selection-start-line="9789" selection-start-column="0" selection-end-line="9789" selection-end-column="0" />
+          <caret line="9790" column="0" selection-start-line="9790" selection-start-column="0" selection-end-line="9790" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -934,6 +931,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/InterstimulusPause.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="615">
+          <caret line="77" column="16" selection-start-line="77" selection-start-column="16" selection-end-line="77" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/ResponseHandler.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="960">
+          <caret line="149" column="105" selection-start-line="149" selection-start-column="105" selection-end-line="149" selection-end-column="105" />
+          <folding>
+            <element signature="e#0#57#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/core/Trials.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
@@ -944,28 +959,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/ResponseHandler.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2250">
-          <caret line="150" column="9" selection-start-line="150" selection-start-column="9" selection-end-line="150" selection-end-column="9" />
-          <folding>
-            <element signature="e#0#57#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/InterstimulusPause.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="615">
-          <caret line="77" column="16" selection-start-line="77" selection-start-column="16" selection-end-line="77" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/core/RunExperiment.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="258">
-          <caret line="46" column="28" selection-start-line="46" selection-start-column="28" selection-end-line="46" selection-end-column="28" />
+        <state relative-caret-position="465">
+          <caret line="46" column="8" selection-start-line="46" selection-start-column="8" selection-end-line="46" selection-end-column="8" />
           <folding>
             <element signature="e#303#405#0" expanded="true" />
           </folding>

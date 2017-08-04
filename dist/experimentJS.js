@@ -17117,9 +17117,21 @@ Object.keys(_methods).forEach(function (key) {
   });
 });
 
+var _stimuli = require("./stimuli/stimuli.js");
+
+Object.keys(_stimuli).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _stimuli[key];
+    }
+  });
+});
+
 require("./utils/utils.js");
 
-},{"./core/core.js":11,"./methods/methods.js":16,"./utils/utils.js":23}],3:[function(require,module,exports){
+},{"./core/core.js":11,"./methods/methods.js":16,"./stimuli/stimuli.js":18,"./utils/utils.js":25}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17285,7 +17297,7 @@ function _showInterstimulusPause(blackout) {
 
 exports.Pause = Pause;
 
-},{"../utils/SetCSSOnElement.js":20,"./RunExperiment.js":7}],5:[function(require,module,exports){
+},{"../utils/SetCSSOnElement.js":22,"./RunExperiment.js":7}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17347,7 +17359,7 @@ function _FormatStoredResponses(responses) {
 
     console.log(responses);
 
-    /**
+    /*
      * GOAL: only tokenize & de-tokenize ONCE
      *
      * Trials
@@ -17381,7 +17393,7 @@ function _FormatStoredResponses(responses) {
 
         // --- By this point, the responses no longer have tokens ---
 
-        /** [ Store the IV ] -> Write out each IV (1 IV per array element) to a field */
+        /* [ Store the IV ] -> Write out each IV (1 IV per array element) to a field */
         for (var i = 0; i < lastTrial.length; ++i) {
 
             console.log("Formatting a response:", k, i);
@@ -17393,7 +17405,7 @@ function _FormatStoredResponses(responses) {
 
                 var stdName = ivNum + "_" + lastTrial[i].description;
 
-                /**
+                /*
                  * Parser function interface:
                  *                  function ( args_passed_to_this_IV_for_this_trial..., index) {}
                  *                  return
@@ -17422,7 +17434,7 @@ function _FormatStoredResponses(responses) {
             } else if (lastTrial[i].value.constructor === Array) {
                 // Default behaviour: array of args passed to the IV's set function
 
-                /** Manually write out each argument (from an array) to a field in the object
+                /* Manually write out each argument (from an array) to a field in the object
                  *  Only append a number if there are >1 arguments passed in */
 
                 if (lastTrial[i].value.length > 1) {
@@ -17444,11 +17456,11 @@ function _FormatStoredResponses(responses) {
             }
         }
 
-        /** [ Store the DV ] */
+        /* [ Store the DV ] */
         var value = _Trials._dvName || "value";
         responseFormatted["DV_" + value] = responses[resp_idx].dv;
 
-        /** [ Store response time ] */
+        /* [ Store response time ] */
         if (responses[resp_idx].response_time !== undefined) {
             responseFormatted["response_time_ms"] = Number(responses[resp_idx].response_time.toFixed(5));
         }
@@ -17461,7 +17473,7 @@ function _FormatStoredResponses(responses) {
     return formatted_responses;
 }
 
-},{"../utils/StringUtils.js":22,"./Trials":9,"./UnserializableMap.js":10}],6:[function(require,module,exports){
+},{"../utils/StringUtils.js":24,"./Trials":9,"./UnserializableMap.js":10}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17517,7 +17529,7 @@ function _formatAllResponsesToCSV(allResponses) {
     }
     csvString = csvString.slice(0, -1) + "\n"; // Cut trailing comma and put in a new row/line
 
-    /** Fill the data - This time its an array of arrays not array of dictionaries */
+    /* Fill the data - This time its an array of arrays not array of dictionaries */
     for (i = 0; i < allResponses.length; i++) {
 
         csvString += _GetPptInfo._pptName + "," + _GetPptInfo._pptNo + ","; // Manaully add content
@@ -17544,7 +17556,7 @@ function _createCSVLinkAndDownload(csvContent) {
     a.click();
 }
 
-},{"../utils/CreateDownloadLink.js":17,"./GetPptInfo.js":3,"./ResponseHandler.js":5,"./Trials.js":9,"lodash":1}],7:[function(require,module,exports){
+},{"../utils/CreateDownloadLink.js":19,"./GetPptInfo.js":3,"./ResponseHandler.js":5,"./Trials.js":9,"lodash":1}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17738,7 +17750,7 @@ function _displayTrialPhases(_trial_to_run) {
 
 function _fireIVSetFuncWithArgs(cur_iv) {
 
-    /** Using a FUNCTION to set the display*/
+    /* Using a FUNCTION to set the display*/
     if (_Trials.setFuncs[cur_iv.description] !== undefined) {
         _Trials.setFuncs[cur_iv.description].apply(null, cur_iv.value);
     } else {
@@ -17888,7 +17900,7 @@ _Trials.Trials.setEndCallback = function (end_callback) {
     }
 };
 
-},{"../utils/DOMUtils.js":18,"../utils/StringUtils.js":22,"./../errors/ErrorIfDidStartExperiment.js":12,"./InterstimulusPause.js":4,"./ResponseHandler.js":5,"./ResponsesOutput.js":6,"./Trials.js":9,"./UnserializableMap.js":10,"lodash":1}],8:[function(require,module,exports){
+},{"../utils/DOMUtils.js":20,"../utils/StringUtils.js":24,"./../errors/ErrorIfDidStartExperiment.js":12,"./InterstimulusPause.js":4,"./ResponseHandler.js":5,"./ResponsesOutput.js":6,"./Trials.js":9,"./UnserializableMap.js":10,"lodash":1}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18070,7 +18082,7 @@ function _createDropDownSelect(all_saves) {
 
 exports.Saves = Saves;
 
-},{"../utils/DOMUtils.js":18,"../utils/SetCSSOnElement.js":20,"./ResponseHandler.js":5,"./Trials.js":9}],9:[function(require,module,exports){
+},{"../utils/DOMUtils.js":20,"../utils/SetCSSOnElement.js":22,"./ResponseHandler.js":5,"./Trials.js":9}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18095,7 +18107,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 var _ = require("lodash");
 
-/**
+/*
  * To set Trial IVs
  *      1. Set the setter function:                 this is a function `fn` that will manipulate the display
  *      2. Set the args passed to the setter:       these are the varying args passed to `fn` used to vary the IV
@@ -18215,8 +18227,7 @@ Trials.setRepeats = function (nRepeats) {
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 //                            Trials - Setting IV Levels & Functions (private)
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-/*
- * */
+
 function _setIVGeneric(ivName, fieldName, fieldVal) {
     _csvIllegalCharCheck(ivName);
     _csvIllegalCharCheck(fieldName);
@@ -18247,7 +18258,7 @@ Trials.Phases = [];
  * to transition to the next phase.
  * @param {int} phase_num - ordinal number of the phase
  * @param {array} array_of_iv_names - array of IV names for this phase
- * @param {function, number} transition_func_or_delay - function to handle transition between phases, or duration until next phase
+ * @param {function | number} transition_func_or_delay - function to handle transition between phases, or duration until next phase
  */
 Trials.setIVPhases = function (phase_num, array_of_iv_names) {
     var transition_func_or_delay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
@@ -18472,7 +18483,7 @@ function _csvIllegalCharCheck(string) {
 
 exports.Trials = Trials;
 
-},{"../utils/NumberUtils":19,"./../errors/ErrorIfTrialsAreBuilt.js":13,"./UnserializableMap.js":10,"lodash":1}],10:[function(require,module,exports){
+},{"../utils/NumberUtils":21,"./../errors/ErrorIfTrialsAreBuilt.js":13,"./UnserializableMap.js":10,"lodash":1}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18484,7 +18495,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 exports._Unserializable_Token2Var = _Unserializable_Token2Var;
 exports._Unserializable_Var2Token = _Unserializable_Var2Token;
 exports._Unserializable_ParserFunc2Token = _Unserializable_ParserFunc2Token;
-/** = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+/* = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
  *
  *   Store repsonses in localStorage.
  *   Localstorage converts everything to JSON, so object types that cannot be converted will be lost
@@ -18697,7 +18708,7 @@ var _Trials = require("../core/Trials.js");
 
 var _2AFC = {};
 
-/**
+/*
  * 2AFC Module.
  *
  * These are lightweight wrappers around the core Trials methods.
@@ -18827,6 +18838,102 @@ exports.Methods = Methods;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.ImageStimuli = ImageStimuli;
+exports.ImageStimuliIV = ImageStimuliIV;
+
+var _Trials = require("../core/Trials.js");
+
+function ImageStimuli(list_of_img_paths) {
+
+    return list_of_img_paths.map(function (img_path) {
+        var img = new Image();
+        img.src = img_path;
+
+        return img;
+    });
+}
+
+function ImageStimuliIV(iv_name, list_of_img_paths) {
+
+    if (typeof iv_name !== "string" || !Array.isArray(list_of_img_paths)) {
+        throw new Error("[ ImageStimuli ERROR ] usage: (string iv_name, array list_of_image_paths)");
+    }
+
+    var images_as_args = ImageStimuli(list_of_img_paths).map(function (img) {
+        img.addEventListener("click", _GoToNextTrial);
+        img.setAttribute("iv_name", iv_name);
+        return [img];
+    });
+
+    _Trials.Trials.setIVLevels(iv_name, images_as_args);
+    _Trials.Trials.setIVsetFunc(iv_name, _SetImageOnScreen);
+    _Trials.Trials.setIVResponseParserFunc(iv_name, _ImageIVParser);
+}
+
+var ImgStimWraps = {};
+
+function _SetImageOnScreen(img_elem) {
+
+    var iv_name = img_elem.getAttribute("iv_name");
+
+    if (ImgStimWraps[iv_name] === undefined) {
+        // make the wrap if it doesn't exist
+        ImgStimWraps[iv_name] = document.createElement("div");
+        ImgStimWraps[iv_name].classList.add("img-stimulus-wrap");
+        ImgStimWraps[iv_name].id = iv_name + "img-wrap";
+        document.body.appendChild(ImgStimWraps[iv_name]);
+    }
+
+    // empty the wrap
+    while (ImgStimWraps[iv_name].firstChild) {
+        ImgStimWraps[iv_name].removeChild(ImgStimWraps[iv_name].firstChild);
+    }
+
+    // var div = document.createElement("div");
+
+    ImgStimWraps[iv_name].appendChild(img_elem);
+
+    console.log("Set this on screen: ", img_elem);
+    console.log(ImgStimWraps[iv_name], ImgStimWraps);
+}
+
+function _GoToNextTrial(event) {
+
+    _Trials.Trials.runNextTrial({
+        dv_value: "clicked: " + event.target.src.split(/[\\/]/).pop() // get basename
+    });
+    // console.log("image was clicked; ", event, event.target.src);
+}
+
+function _ImageIVParser(img_elem) {
+    return img_elem.src.split(/[\\/]/).pop();
+}
+
+},{"../core/Trials.js":9}],18:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Stimuli = undefined;
+
+var _ImageStimuli = require("./ImageStimuli.js");
+
+var Stimuli = {
+  ImageStimuli: _ImageStimuli.ImageStimuli,
+  ImageStimuliIV: _ImageStimuli.ImageStimuliIV
+}; /**
+    * Created by kai on 4/8/17.
+    */
+
+exports.Stimuli = Stimuli;
+
+},{"./ImageStimuli.js":17}],19:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 exports.createDownloadLink = createDownloadLink;
 function createDownloadLink(filename, data) {
     ////http://stackoverflow.com/questions/17836273/export-javascript-data-to-csv-file-without-server-interaction
@@ -18838,7 +18945,7 @@ function createDownloadLink(filename, data) {
     return a;
 }
 
-},{}],18:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18865,7 +18972,7 @@ function DOM_remove(elem) {
     elem.parentNode.removeChild(elem); //Remove select from dom
 }
 
-},{}],19:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18888,7 +18995,7 @@ function isInt(value) {
     return (x | 0) === x;
 }
 
-},{}],20:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18906,7 +19013,7 @@ function SetCSSOnElement(elem, css) {
     }
 }
 
-},{}],21:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 "use strict";
 
 // - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
@@ -18937,7 +19044,7 @@ Array.prototype.back = function () {
     }
 };
 
-},{}],22:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18988,7 +19095,7 @@ String.prototype.formatUnicorn = String.prototype.formatUnicorn || function () {
     return str;
 };
 
-},{}],23:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 "use strict";
 
 require("./CreateDownloadLink.js");
@@ -18999,5 +19106,5 @@ require("./NumberUtils.js");
 
 require("./StringUtils.js");
 
-},{"./CreateDownloadLink.js":17,"./NumberUtils.js":19,"./Shuffle.js":21,"./StringUtils.js":22}]},{},[2])(2)
+},{"./CreateDownloadLink.js":19,"./NumberUtils.js":21,"./Shuffle.js":23,"./StringUtils.js":24}]},{},[2])(2)
 });

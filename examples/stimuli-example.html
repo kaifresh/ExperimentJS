@@ -7,8 +7,8 @@
 
         #std {
             position: fixed;
-            left: 25vw;
-            top: 10vh;
+            left: 37.5vw;
+            top: 25vw;
             width: 25vw;
             height: 25vw;
             background: red;
@@ -23,12 +23,11 @@
             background: green;
         }
 
-
     </style>
 </head>
 <body>
 
-<h1> Phases example...</h1>
+<h1> Stimuli Experiment example...</h1>
 <h3> Select the red square </h3>
 
 <div id="std"></div>
@@ -42,53 +41,16 @@
 
 <script>
 
+
     var phase_one_levels = ["phase uno", "phase one"].map(function(elem){ return [elem] });
     ExperimentJS.Trials.setIVLevels("Run first", phase_one_levels);
     ExperimentJS.Trials.setIVsetFunc("Run first", function(word){
         console.log("Phase 1", word);
         $("#std").text(word);
-    });
-
-    ExperimentJS.Trials.setIVLevels("Run first also", ["OKAY"].map(function(elem){ return [elem] }));
-    ExperimentJS.Trials.setIVsetFunc("Run first also", function(word){
-        console.log("Phase 1 is being run!", word);
-        $("#std").text( $("#std").text() + word);
-
-        $("#std").css({'background': "#8866dd"});
 
     });
 
-    var phase_two_levels = ["phase two", "phase two"].map(function(elem){ return [elem] })
-    ExperimentJS.Trials.setIVLevels("Run second",  phase_two_levels);
-    ExperimentJS.Trials.setIVsetFunc("Run second", function(word){
-        console.log("Phase 2 is being run", word);
-        $("#std").text(word);
-
-        $("#std").css({'background': "#ff00ff"});
-    });
-
-
-    //function(phase_num, array_of_iv_names, transition_func_or_delay){
-    ExperimentJS.Trials.setIVPhases(0, ["Run first", "Run first also"], function(continue_to_next_phase){
-
-        var countdown = 4;
-
-        var id = setInterval(function(){
-
-            $("#std").text(countdown+"....");
-
-            countdown--;
-
-            if (countdown < 0){
-                continue_to_next_phase();
-                clearInterval(id);
-            }
-
-        }, 1000);
-
-    });
-
-    ExperimentJS.Trials.setIVPhases(1, ["Run second"], 4000);
+    ExperimentJS.Stimuli.ImageStimuliIV("Faces", ['./img/face_1.jpg','./img/face_2.jpg','./img/face_3.jpg']);
 
     //    ExperimentJS.Trials.getPptInfo();                         // turn off in development
     ExperimentJS.Trials.setRepeats(1);
@@ -109,6 +71,7 @@
         }
 
     });
+
 
 </script>
 

@@ -1,1 +1,1 @@
-npm run-script build-bfy-closure >/dev/null 2>&1
+npm run-script build-bfy-closure  #>/dev/null 2>&1

@@ -71,6 +71,9 @@ Trials.setIVsetFunc = function(ivname, setFunc) {
     _setSetFunc(ivname, setFunc);
 };
 
+
+Trials.setIVSetFunc = Trials.setIVsetFunc;  // papering over deprecated naming system
+
 export var _dvName;
 /**
  * Set the name of the DV

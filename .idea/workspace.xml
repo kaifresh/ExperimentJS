@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="15a95f82-d721-497f-925e-739aed3019c5" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/Trials.js" afterPath="$PROJECT_DIR$/src/core/Trials.js" />
     </list>
     <ignored path="ExperimentJS.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -48,8 +50,8 @@
       <file leaf-file-name="Trials.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/core/Trials.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="163">
-              <caret line="308" column="4" selection-start-line="308" selection-start-column="4" selection-end-line="308" selection-end-column="4" />
+            <state relative-caret-position="555">
+              <caret line="74" column="85" selection-start-line="74" selection-start-column="85" selection-end-line="74" selection-end-column="85" />
               <folding />
             </state>
           </provider>
@@ -98,8 +100,8 @@
       <file leaf-file-name="stimuli-example.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/examples/stimuli-example.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="684">
-              <caret line="71" column="7" selection-start-line="59" selection-start-column="0" selection-end-line="71" selection-end-column="7" />
+            <state relative-caret-position="474">
+              <caret line="57" column="0" selection-start-line="57" selection-start-column="0" selection-end-line="57" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -112,11 +114,18 @@
               <first_editor relative-caret-position="15">
                 <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
                 <folding>
-                  <marker date="1502026072000" expanded="true" signature="576:626" placeholder="{...}" />
-                  <marker date="1502026072000" expanded="true" signature="630:681" placeholder="//..." />
-                  <marker date="1502026072000" expanded="true" signature="1041:1264" placeholder="{...}" />
-                  <marker date="1502026072000" expanded="true" signature="1070:1148" placeholder="{...}" />
-                  <marker date="1502026072000" expanded="true" signature="1182:1262" placeholder="{...}" />
+                  <marker date="1502027260000" expanded="true" signature="610:699" placeholder="{...}" />
+                  <marker date="1502027260000" expanded="true" signature="703:754" placeholder="//..." />
+                  <marker date="1502027260000" expanded="true" signature="1037:1106" placeholder="//..." />
+                  <marker date="1502027260000" expanded="true" signature="1140:1363" placeholder="{...}" />
+                  <marker date="1502027260000" expanded="true" signature="1169:1247" placeholder="{...}" />
+                  <marker date="1502027260000" expanded="true" signature="1281:1361" placeholder="{...}" />
+                  <marker date="1502027260000" expanded="true" signature="2023:2073" placeholder="{...}" />
+                  <marker date="1502027260000" expanded="true" signature="2370:2494" placeholder="//..." />
+                  <marker date="1502027260000" expanded="true" signature="2493:2494" placeholder="//..." />
+                  <marker date="1502027260000" expanded="true" signature="2528:2787" placeholder="{...}" />
+                  <marker date="1502027260000" expanded="true" signature="2557:2653" placeholder="{...}" />
+                  <marker date="1502027260000" expanded="true" signature="2687:2785" placeholder="{...}" />
                 </folding>
               </first_editor>
               <second_editor />
@@ -124,14 +133,21 @@
           </provider>
           <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="644">
-                <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+              <first_editor relative-caret-position="255">
+                <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
                 <folding>
-                  <marker date="1502026072000" expanded="true" signature="576:626" placeholder="{...}" />
-                  <marker date="1502026072000" expanded="true" signature="630:681" placeholder="//..." />
-                  <marker date="1502026072000" expanded="true" signature="1041:1264" placeholder="{...}" />
-                  <marker date="1502026072000" expanded="true" signature="1070:1148" placeholder="{...}" />
-                  <marker date="1502026072000" expanded="true" signature="1182:1262" placeholder="{...}" />
+                  <marker date="1502027260000" expanded="true" signature="610:699" placeholder="{...}" />
+                  <marker date="1502027260000" expanded="true" signature="703:754" placeholder="//..." />
+                  <marker date="1502027260000" expanded="true" signature="1037:1106" placeholder="//..." />
+                  <marker date="1502027260000" expanded="true" signature="1140:1363" placeholder="{...}" />
+                  <marker date="1502027260000" expanded="true" signature="1169:1247" placeholder="{...}" />
+                  <marker date="1502027260000" expanded="true" signature="1281:1361" placeholder="{...}" />
+                  <marker date="1502027260000" expanded="true" signature="2023:2073" placeholder="{...}" />
+                  <marker date="1502027260000" expanded="true" signature="2370:2494" placeholder="//..." />
+                  <marker date="1502027260000" expanded="true" signature="2493:2494" placeholder="//..." />
+                  <marker date="1502027260000" expanded="true" signature="2528:2787" placeholder="{...}" />
+                  <marker date="1502027260000" expanded="true" signature="2557:2653" placeholder="{...}" />
+                  <marker date="1502027260000" expanded="true" signature="2687:2785" placeholder="{...}" />
                 </folding>
               </first_editor>
               <second_editor>
@@ -211,13 +227,13 @@
         <option value="$PROJECT_DIR$/src/stimuli/stimuli.js" />
         <option value="$PROJECT_DIR$/src/css/ImageStimuliCSS.js" />
         <option value="$PROJECT_DIR$/src/stimuli/ImageStimuli.js" />
-        <option value="$PROJECT_DIR$/src/core/Trials.js" />
         <option value="$PROJECT_DIR$/src/core/RunExperiment.js" />
         <option value="$PROJECT_DIR$/src/ExperimentJS.js" />
         <option value="$PROJECT_DIR$/src/core/ResponseHandler.js" />
         <option value="$PROJECT_DIR$/examples/stimuli-example.html" />
         <option value="$PROJECT_DIR$/src/components/components.js" />
         <option value="$PROJECT_DIR$/src/components/Instructions.js" />
+        <option value="$PROJECT_DIR$/src/core/Trials.js" />
         <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
@@ -713,12 +729,12 @@
       <workItem from="1501742658968" duration="166000" />
       <workItem from="1501755199061" duration="9806000" />
       <workItem from="1501803009550" duration="2746000" />
-      <workItem from="1501806070389" duration="18187000" />
+      <workItem from="1501806070389" duration="19339000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="154316000" />
+    <option name="totallyTimeSpent" value="155468000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="1173" extended-state="6" />
@@ -3085,7 +3101,7 @@
         <state relative-caret-position="180">
           <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
           <folding>
-            <element signature="e#38#82#0" expanded="true" />
+            <element signature="e#38#82#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -3130,14 +3146,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/Trials.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="308" column="4" selection-start-line="308" selection-start-column="4" selection-end-line="308" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/core/ResponseHandler.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="522">
@@ -3162,14 +3170,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples/stimuli-example.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="684">
-          <caret line="71" column="7" selection-start-line="59" selection-start-column="0" selection-end-line="71" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/core/RunExperiment.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="375">
@@ -3177,6 +3177,22 @@
           <folding>
             <element signature="e#303#405#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/Trials.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="555">
+          <caret line="74" column="85" selection-start-line="74" selection-start-column="85" selection-end-line="74" selection-end-column="85" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/stimuli-example.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="474">
+          <caret line="57" column="0" selection-start-line="57" selection-start-column="0" selection-end-line="57" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -3192,8 +3208,8 @@
       </provider>
       <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="644">
-            <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+          <first_editor relative-caret-position="255">
+            <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
             <folding />
           </first_editor>
           <second_editor>

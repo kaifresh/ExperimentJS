@@ -93,6 +93,7 @@ export function _FormatStoredResponses(responses) {
                  *                          string -    processed version of the data
                  *                          object -    values are the processed version of parts of the data,
                  *                                      keys are names given to each portion of the parsed data
+                 *                          null   -    ignore the data
                  * */
 
                 var parsed_data = lastTrial[i].parserFunc.apply(this, lastTrial[i].value.concat(i) );                               // Refer to interface description above
@@ -108,6 +109,8 @@ export function _FormatStoredResponses(responses) {
                         var key_and_data_description = keys[k];
                         responseFormatted[ stdName+"_"+key_and_data_description ] = parsed_data[key_and_data_description]; // Add parsed data for this key to response
                     }
+                } else if (parsed_data === null) {
+                    // Ignore the data
 
                 } else {
                     throw new Error("[ Parser Function Error ] - Parser function for "+stdName+" must output either a string or an object. You output:", typeof parsed_data);

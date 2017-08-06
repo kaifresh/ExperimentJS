@@ -305,6 +305,7 @@ function _buildTrials(printTrials = false) {
     if (_shouldShuffle)    Trials.shuffleTrials( _allTrials );
 
     _totalTrials = _allTrials.length; //Used to determine where you are in the trial process
+    
     _didBuildTrials = true;
 
     // = = = = = = = = = = = debugging... = = = = = = = = = = = = = =

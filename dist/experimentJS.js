@@ -17129,9 +17129,87 @@ Object.keys(_stimuli).forEach(function (key) {
   });
 });
 
+var _components = require("./components/components.js");
+
+Object.keys(_components).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _components[key];
+    }
+  });
+});
+
 require("./utils/utils.js");
 
-},{"./core/core.js":11,"./methods/methods.js":16,"./stimuli/stimuli.js":18,"./utils/utils.js":25}],3:[function(require,module,exports){
+},{"./components/components.js":4,"./core/core.js":13,"./methods/methods.js":18,"./stimuli/stimuli.js":20,"./utils/utils.js":27}],3:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.Instructions = undefined;
+
+var _Trials = require("../core/Trials.js");
+
+var instructions_iv_key = "%%INSTRUCTIONS%%";
+
+function Instructions(instructions_text) {
+
+    _Trials.Trials.setIVLevels(instructions_iv_key, [[instructions_text]]);
+    _Trials.Trials.setIVsetFunc(instructions_iv_key, _SetInstructions);
+    _Trials.Trials.setIVResponseParserFunc(instructions_iv_key, _InstructionsIVParser);
+
+    console.log("INSTRUCTIONESS!");
+}
+
+// You dont want these included in the output....
+function _InstructionsIVParser() {
+    return null;
+}
+
+var _didCreateInstructionsInDOM = false;
+function _SetInstructions(instructions_text) {
+    // Atach some div to dom
+
+    if (!_didCreateInstructionsInDOM) {
+        _CreateInstructionsInDOM();
+    }
+
+    var instructions = document.getElementById(instructions_iv_key);
+    instructions.textContent = instructions_text;
+}
+
+function _CreateInstructionsInDOM() {
+    var instructions = document.createElement("div");
+    instructions.id = instructions_iv_key;
+
+    //TODO ADD STYLE!!!!
+    Object.assign(instructions.style, { "font-size": "30px", "font-weight": "bold" });
+
+    document.body.appendChild(instructions);
+}
+
+exports.Instructions = Instructions;
+
+},{"../core/Trials.js":11}],4:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.Components = undefined;
+
+var _Instructions = require("./Instructions.js");
+
+var Components = {
+    Instructions: _Instructions.Instructions
+};
+
+exports.Components = Components;
+
+},{"./Instructions.js":3}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17178,7 +17256,7 @@ _Trials.Trials.getPptInfo = function () {
     console.log("Participant name: ", _pptName, "\tParticipant number: ", _pptNo);
 };
 
-},{"./Trials.js":9}],4:[function(require,module,exports){
+},{"./Trials.js":11}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17297,7 +17375,7 @@ function _showInterstimulusPause(blackout) {
 
 exports.Pause = Pause;
 
-},{"../utils/SetCSSOnElement.js":22,"./RunExperiment.js":7}],5:[function(require,module,exports){
+},{"../utils/SetCSSOnElement.js":24,"./RunExperiment.js":9}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17412,6 +17490,7 @@ function _FormatStoredResponses(responses) {
                  *                          string -    processed version of the data
                  *                          object -    values are the processed version of parts of the data,
                  *                                      keys are names given to each portion of the parsed data
+                 *                          null   -    ignore the data
                  * */
 
                 var parsed_data = lastTrial[i].parserFunc.apply(this, lastTrial[i].value.concat(i)); // Refer to interface description above
@@ -17426,6 +17505,9 @@ function _FormatStoredResponses(responses) {
                         var key_and_data_description = keys[k];
                         responseFormatted[stdName + "_" + key_and_data_description] = parsed_data[key_and_data_description]; // Add parsed data for this key to response
                     }
+                } else if (parsed_data === null) {
+                    // Ignore the data
+
                 } else {
                     throw new Error("[ Parser Function Error ] - Parser function for " + stdName + " must output either a string or an object. You output:", typeof parsed_data === "undefined" ? "undefined" : _typeof(parsed_data));
                 }
@@ -17473,7 +17555,7 @@ function _FormatStoredResponses(responses) {
     return formatted_responses;
 }
 
-},{"../utils/StringUtils.js":24,"./Trials":9,"./UnserializableMap.js":10}],6:[function(require,module,exports){
+},{"../utils/StringUtils.js":26,"./Trials":11,"./UnserializableMap.js":12}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17556,7 +17638,7 @@ function _createCSVLinkAndDownload(csvContent) {
     a.click();
 }
 
-},{"../utils/CreateDownloadLink.js":19,"./GetPptInfo.js":3,"./ResponseHandler.js":5,"./Trials.js":9,"lodash":1}],7:[function(require,module,exports){
+},{"../utils/CreateDownloadLink.js":21,"./GetPptInfo.js":5,"./ResponseHandler.js":7,"./Trials.js":11,"lodash":1}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17628,7 +17710,7 @@ _Trials.Trials.runNextTrial = function (options) {
     _trackResponseTimeEnd();
 
     if (!_Trials._didBuildTrials) {
-        throw new Error("runNextTrial(): Trial were not built");
+        _Trials.Trials.BuildExperiment();
     }
 
     if (!_didStartExperiment) exports._didStartExperiment = _didStartExperiment = true;
@@ -17900,7 +17982,7 @@ _Trials.Trials.setEndCallback = function (end_callback) {
     }
 };
 
-},{"../utils/DOMUtils.js":20,"../utils/StringUtils.js":24,"./../errors/ErrorIfDidStartExperiment.js":12,"./InterstimulusPause.js":4,"./ResponseHandler.js":5,"./ResponsesOutput.js":6,"./Trials.js":9,"./UnserializableMap.js":10,"lodash":1}],8:[function(require,module,exports){
+},{"../utils/DOMUtils.js":22,"../utils/StringUtils.js":26,"./../errors/ErrorIfDidStartExperiment.js":14,"./InterstimulusPause.js":6,"./ResponseHandler.js":7,"./ResponsesOutput.js":8,"./Trials.js":11,"./UnserializableMap.js":12,"lodash":1}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18082,7 +18164,7 @@ function _createDropDownSelect(all_saves) {
 
 exports.Saves = Saves;
 
-},{"../utils/DOMUtils.js":20,"../utils/SetCSSOnElement.js":22,"./ResponseHandler.js":5,"./Trials.js":9}],9:[function(require,module,exports){
+},{"../utils/DOMUtils.js":22,"../utils/SetCSSOnElement.js":24,"./ResponseHandler.js":7,"./Trials.js":11}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18417,6 +18499,7 @@ function _buildTrials() {
     if (_shouldShuffle) Trials.shuffleTrials(_allTrials);
 
     _totalTrials = _allTrials.length; //Used to determine where you are in the trial process
+
     exports._didBuildTrials = _didBuildTrials = true;
 
     // = = = = = = = = = = = debugging... = = = = = = = = = = = = = =
@@ -18483,7 +18566,7 @@ function _csvIllegalCharCheck(string) {
 
 exports.Trials = Trials;
 
-},{"../utils/NumberUtils":21,"./../errors/ErrorIfTrialsAreBuilt.js":13,"./UnserializableMap.js":10,"lodash":1}],10:[function(require,module,exports){
+},{"../utils/NumberUtils":23,"./../errors/ErrorIfTrialsAreBuilt.js":15,"./UnserializableMap.js":12,"lodash":1}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18605,7 +18688,7 @@ function _Unserializable_ParserFunc2Token(parserfunc, iv_name) {
     return unserializable_parserfunc_token;
 }
 
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18635,7 +18718,7 @@ exports.Trials = _Trials.Trials; //Needs ./ to treat it as an internal (not exte
 exports.Pause = _InterstimulusPause.Pause;
 exports.Saves = _Saves.Saves;
 
-},{"./GetPptInfo.js":3,"./InterstimulusPause.js":4,"./ResponsesOutput.js":6,"./RunExperiment.js":7,"./Saves.js":8,"./Trials.js":9}],12:[function(require,module,exports){
+},{"./GetPptInfo.js":5,"./InterstimulusPause.js":6,"./ResponsesOutput.js":8,"./RunExperiment.js":9,"./Saves.js":10,"./Trials.js":11}],14:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18666,7 +18749,7 @@ function _ErrorIfDidStartExperiment() {
    * Created by kai on 4/8/17.
    */
 
-},{"./../core/RunExperiment.js":7}],13:[function(require,module,exports){
+},{"./../core/RunExperiment.js":9}],15:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18696,7 +18779,7 @@ function _ErrorIfTrialsAreBuilt() {
    * Created by kai on 4/8/17.
    */
 
-},{"./../core/Trials.js":9}],14:[function(require,module,exports){
+},{"./../core/Trials.js":11}],16:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18792,7 +18875,7 @@ _2AFC.BuildExperiment = function (print) {
 
 exports._2AFC = _2AFC;
 
-},{"../core/Trials.js":9}],15:[function(require,module,exports){
+},{"../core/Trials.js":11}],17:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18807,7 +18890,7 @@ var ConstantStimuli = {}; /**
                            */
 exports.ConstantStimuli = ConstantStimuli;
 
-},{"../core/Trials.js":9}],16:[function(require,module,exports){
+},{"../core/Trials.js":11}],18:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18832,7 +18915,7 @@ var Methods = {
  */
 exports.Methods = Methods;
 
-},{"../core/Trials.js":9,"./2AFC.js":14,"./ConstantStimuli.js":15}],17:[function(require,module,exports){
+},{"../core/Trials.js":11,"./2AFC.js":16,"./ConstantStimuli.js":17}],19:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18882,6 +18965,8 @@ function _SetImageOnScreen(img_elem) {
         ImgStimWraps[iv_name].classList.add("img-stimulus-wrap");
         ImgStimWraps[iv_name].id = iv_name + "img-wrap";
         document.body.appendChild(ImgStimWraps[iv_name]);
+
+        // Here would be a good place to set the style...
     }
 
     // empty the wrap
@@ -18889,12 +18974,7 @@ function _SetImageOnScreen(img_elem) {
         ImgStimWraps[iv_name].removeChild(ImgStimWraps[iv_name].firstChild);
     }
 
-    // var div = document.createElement("div");
-
     ImgStimWraps[iv_name].appendChild(img_elem);
-
-    console.log("Set this on screen: ", img_elem);
-    console.log(ImgStimWraps[iv_name], ImgStimWraps);
 }
 
 function _GoToNextTrial(event) {
@@ -18909,7 +18989,7 @@ function _ImageIVParser(img_elem) {
     return img_elem.src.split(/[\\/]/).pop();
 }
 
-},{"../core/Trials.js":9}],18:[function(require,module,exports){
+},{"../core/Trials.js":11}],20:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18928,7 +19008,7 @@ var Stimuli = {
 
 exports.Stimuli = Stimuli;
 
-},{"./ImageStimuli.js":17}],19:[function(require,module,exports){
+},{"./ImageStimuli.js":19}],21:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18945,7 +19025,7 @@ function createDownloadLink(filename, data) {
     return a;
 }
 
-},{}],20:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18972,7 +19052,7 @@ function DOM_remove(elem) {
     elem.parentNode.removeChild(elem); //Remove select from dom
 }
 
-},{}],21:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18995,7 +19075,7 @@ function isInt(value) {
     return (x | 0) === x;
 }
 
-},{}],22:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19013,7 +19093,7 @@ function SetCSSOnElement(elem, css) {
     }
 }
 
-},{}],23:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 "use strict";
 
 // - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
@@ -19044,7 +19124,7 @@ Array.prototype.back = function () {
     }
 };
 
-},{}],24:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19095,7 +19175,7 @@ String.prototype.formatUnicorn = String.prototype.formatUnicorn || function () {
     return str;
 };
 
-},{}],25:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 "use strict";
 
 require("./CreateDownloadLink.js");
@@ -19106,5 +19186,5 @@ require("./NumberUtils.js");
 
 require("./StringUtils.js");
 
-},{"./CreateDownloadLink.js":19,"./NumberUtils.js":21,"./Shuffle.js":23,"./StringUtils.js":24}]},{},[2])(2)
+},{"./CreateDownloadLink.js":21,"./NumberUtils.js":23,"./Shuffle.js":25,"./StringUtils.js":26}]},{},[2])(2)
 });

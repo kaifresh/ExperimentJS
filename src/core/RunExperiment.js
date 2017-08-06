@@ -52,7 +52,7 @@ Trials.runNextTrial = function (options) {                                 // us
     _trackResponseTimeEnd();
 
     if (!_didBuildTrials){
-        throw new Error("runNextTrial(): Trial were not built");
+        Trials.BuildExperiment();
     }
 
     if (!_didStartExperiment) _didStartExperiment = true;

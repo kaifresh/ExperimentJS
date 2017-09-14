@@ -13,7 +13,7 @@ To run a basic experiment, all you need to do is:
 
 Create the necessary elements to view the stimuli in your HTML. In this example lets create an image:
 ```HTML
- <img id="your-target-image-element"/>
+<img id="your-target-image-element"/>
 ```
 
 Now, create your first [Independent Variable](https://en.wikipedia.org/wiki/Dependent_and_independent_variables).
@@ -40,7 +40,6 @@ ExperimentJS.Trials.setIVLevels("Emotion faces", face_images.map(function(img_pa
 Write an event handler to capture participants' responses (i.e. the dependent variable).
 
 ```javascript
-
 $(window).keydown(function(event){
     if (event.which === 89){                                    // Y key
         ExperimentJS.Trials.runNextTrial({dv_value: 'yes'});
@@ -49,7 +48,6 @@ $(window).keydown(function(event){
         ExperimentJS.Trials.runNextTrial({dv_value: 'no'});
     }
 });
-
 ```
 
 Optionally, add instructions for your participants.
@@ -76,7 +74,6 @@ create a wide variety of experimental paradigms.
 For example, the experiment above can be easily converted into a forced choice comparison format:
 
 ```javascript
-
 // Set up your setter function & the data it will handle
 var face_images = ["./img/face_1.jpg", "./img/face_2.jpg", "./img/face_3.jpg", "./img/face_4.jpg", "./img/face_5.jpg", "./img/face_6.jpg"];
 var face_img_setter_function = function(id_of_each_image_element, img_path){
@@ -118,7 +115,7 @@ ExperimentJS.Trials.shuffleTrials = function(all_trials_array){ ... }
 
 ### DATA
 
-When your experiment completes, by default the browser will download a CSV formatted output of the current participant's results.
+When your experiment completes, the browser will download a CSV formatted output of the current participant's results.
 
 | Participant Name | Participant Number | IV0_Emotion faces | DV_value |
 |------------------|--------------------|-------------------|----------|
@@ -148,7 +145,6 @@ used stimuli types.
 For example, the independent variable in the basic experiment above can be rewritten using the `ExperimentJS.Stimuli.ImageStimuliIV` preset:
 
 ```javascript
-
 ExperimentJS.Stimuli.ImageStimuliIV("Happy faces", ["./img/face_1.jpg", "./img/face_2.jpg", "./img/face_3.jpg", "./img/face_4.jpg", "./img/face_5.jpg", "./img/face_6.jpg"]);
 
 ExperimentJS.Components.Instructions("Is this face happy? Press the Y or N keys to respond.");
@@ -163,7 +159,6 @@ $(window).keydown(function(event){
 });
 
 ExperimentJS.Trials.runNextTrial();
-
 ```
 
 Presets are simply a loose wrapper around `ExperimentJS.Trials.setIVsetFunc` and `ExperimentJS.Trials.setIVLevels`.

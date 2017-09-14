@@ -37,13 +37,14 @@ export var _shouldRunNextTrial = true;                                      // u
 export var _didStartExperiment = false;
 
 /**
- * Call Trials.runNextTrial both to start the experiment and to progress to the next trial.
+ * Call `ExperimentJS.Trials.runNextTrial()` both to start the experiment and to progress to the next trial.
  * To store participant's response, an object should be passed in as the first arg.
  * This object should contain the key "dv_value", with its value being the participant's response
  * to the trial that was just run.
  *
- * Example:
- *      ExperimentJS.Trials.runNextTrial({ dv_value: "left" });
+ * @example
+ * ExperimentJS.Trials.runNextTrial();                                          // To start the experiment
+ * ExperimentJS.Trials.runNextTrial({ dv_value: "participant's response" });    // To store participant's response and progress to next trial
  *      
  * @param {object} options - must contain field "dv_value"
  */
@@ -189,6 +190,10 @@ function _fireIVSetFuncWithArgs(cur_iv) {
 //
 var _should_track_response_time = false;
 
+/**
+ * Turn tracking of response time on or off.
+ * @param shouldTrackResponseTime {bool}
+ */
 Trials.setShouldTrackResponseTime = function(shouldTrackResponseTime){
 
     if (typeof window.performance === 'undefined' || typeof window.performance.now === 'undefined'){
@@ -228,8 +233,8 @@ export function _getResponseTimeDelta(){
 
 var _startCallback = null;
 /**
- * Set a callback to be run at the start of the experiment.
- * @param {function} start_callback
+ * Set a custom behaviour to be run at the start of the experiment.
+ * @param {function} A callback function implementing this behaviour
  */
 Trials.setStartCallback = function (start_callback) {
 
@@ -262,8 +267,8 @@ function _shouldRunStartCallback() {
 
 var _midCallback = null;
 /**
- * Set a callback to be run at the midpoint of the experiment
- * @param fn
+ * Set a custom behaviour to be run at the midpoint of the experiment.
+ * @param {function} A callback function implementing this behaviour
  */
 Trials.setMidpointCallback = function (fn) {
 
@@ -295,10 +300,13 @@ function _shouldRunMidCallback() {
 
 /**
  * Function to output URI encoded csv.
- * Can be re-assigned or overridden to provide additional
+ * This function can be overridden to support different
  * functionality (e.g. sending the CSV to a server).
- * Overriding this function must conform to the interface.
  * @param {string} uri_csv_string
+ * @example
+ * Trials.OutputResponses = function(uri_csv_string){
+ *      $.post("/custom_uploader.php", {data: uri_csv_string});
+ * };
  */
 Trials.OutputResponses = function(uri_csv_string){
     _createCSVLinkAndDownload(uri_csv_string);
@@ -307,7 +315,7 @@ Trials.OutputResponses = function(uri_csv_string){
 
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//             Experiment Lifecycle - End Callback (a behaviour at the end of the experiment)
+//             Experiment Lifecycle - End Callback (custom behaviour at the end of the experiment)
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 var _endCallBack = function(){                                                  // Default behaviour is to empty the DOM
@@ -317,8 +325,8 @@ var _endCallBack = function(){                                                  
 };
 
 /**
- * Set a callback to be run at the end of the experiment, after responses are output.
- * @param {function} end_callback
+ * Set a custom behaviour to be run at the end of the experiment, after responses are output.
+ * @param {function} A function implementing this behaviour
  */
 Trials.setEndCallback = function (end_callback) {
     if (typeof end_callback === "function"){

@@ -71,7 +71,7 @@ Pause.setPauseTime = function (pause_duration) {
 export var _shouldInterstimulusPause = true;                        //used in: RunExperiment.js
 /**
  * Turn the interstimulus pause on or off
- * @param {bool} - value
+ * @param {bool}
  */
 Pause.setShouldInterstimulusPause = function(value){
     if (typeof  value === "boolean"){

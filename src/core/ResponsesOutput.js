@@ -11,7 +11,8 @@ var _ = require("lodash");                                                      
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 /**
- * Download participant's responses as a csv
+ * Download participant's responses as a csv. This can be called at any time during the experiment
+ * to obtain participant data before all trials are complete. 
  */
 Trials.forceOutputResponses = function(){
     console.log("Forcing output of _responses");

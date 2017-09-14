@@ -3,9 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="15a95f82-d721-497f-925e-739aed3019c5" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/experimentJS.js" afterPath="$PROJECT_DIR$/dist/experimentJS.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/experimentJS.min.js" afterPath="$PROJECT_DIR$/dist/experimentJS.min.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/InterstimulusPause.js" afterPath="$PROJECT_DIR$/src/core/InterstimulusPause.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/ResponsesOutput.js" afterPath="$PROJECT_DIR$/src/core/ResponsesOutput.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/RunExperiment.js" afterPath="$PROJECT_DIR$/src/core/RunExperiment.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/Trials.js" afterPath="$PROJECT_DIR$/src/core/Trials.js" />
     </list>
     <ignored path="ExperimentJS.iws" />
@@ -27,12 +27,22 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="ResponseHandler.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/core/ResponseHandler.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1635">
+              <caret line="111" column="40" selection-start-line="111" selection-start-column="40" selection-end-line="111" selection-end-column="40" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
             <state split_layout="FIRST">
-              <first_editor relative-caret-position="498">
-                <caret line="172" column="83" selection-start-line="172" selection-start-column="83" selection-end-line="172" selection-end-column="83" />
+              <first_editor relative-caret-position="341">
+                <caret line="182" column="31" selection-start-line="182" selection-start-column="31" selection-end-line="182" selection-end-column="31" />
                 <folding>
                   <marker date="1505362803000" expanded="true" signature="1359:1459" placeholder="{...}" />
                   <marker date="1505362803000" expanded="true" signature="1870:1970" placeholder="{...}" />
@@ -82,8 +92,8 @@
       <file leaf-file-name="RunExperiment.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/core/RunExperiment.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="393">
-              <caret line="94" column="12" selection-start-line="94" selection-start-column="12" selection-end-line="94" selection-end-column="34" />
+            <state relative-caret-position="196">
+              <caret line="198" column="0" selection-start-line="198" selection-start-column="0" selection-end-line="198" selection-end-column="0" />
               <folding>
                 <element signature="e#303#405#0" expanded="true" />
               </folding>
@@ -101,22 +111,34 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Trials.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Trials.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/core/Trials.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="24" column="3" selection-start-line="18" selection-start-column="0" selection-end-line="24" selection-end-column="3" />
+            <state relative-caret-position="337">
+              <caret line="201" column="37" selection-start-line="201" selection-start-column="37" selection-end-line="201" selection-end-column="37" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="methods.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/methods/methods.js">
+      <file leaf-file-name="phases-example.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples/phases-example.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
+            <state relative-caret-position="224">
+              <caret line="70" column="4" selection-start-line="70" selection-start-column="4" selection-end-line="70" selection-end-column="105" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ResponsesOutput.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/core/ResponsesOutput.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="435">
+              <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+              <folding>
+                <element signature="e#1#38#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -141,31 +163,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="InterstimulusPause.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="InterstimulusPause.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/core/InterstimulusPause.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="39" column="30" selection-start-line="39" selection-start-column="30" selection-end-line="39" selection-end-column="30" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="phases-example.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples/phases-example.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="434">
-              <caret line="67" column="0" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="basic_example2.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples/basic_example2.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="406">
-              <caret line="29" column="6" selection-start-line="29" selection-start-column="6" selection-end-line="29" selection-end-column="6" />
+            <state relative-caret-position="360">
+              <caret line="41" column="3" selection-start-line="35" selection-start-column="0" selection-end-line="41" selection-end-column="3" />
               <folding />
             </state>
           </provider>
@@ -222,7 +224,6 @@
         <option value="$PROJECT_DIR$/src/stimuli/stimuli.js" />
         <option value="$PROJECT_DIR$/src/css/ImageStimuliCSS.js" />
         <option value="$PROJECT_DIR$/src/stimuli/ImageStimuli.js" />
-        <option value="$PROJECT_DIR$/src/core/RunExperiment.js" />
         <option value="$PROJECT_DIR$/src/core/ResponseHandler.js" />
         <option value="$PROJECT_DIR$/examples/stimuli-example.html" />
         <option value="$PROJECT_DIR$/src/components/components.js" />
@@ -233,12 +234,13 @@
         <option value="$PROJECT_DIR$/src/utils/utils_public.js" />
         <option value="$PROJECT_DIR$/src/components/Instructions.js" />
         <option value="$PROJECT_DIR$/examples/basic_example.html" />
-        <option value="$PROJECT_DIR$/src/core/ResponsesOutput.js" />
         <option value="$PROJECT_DIR$/examples/basic_example2.html" />
         <option value="$PROJECT_DIR$/examples/phases-example.html" />
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/src/core/Trials.js" />
         <option value="$PROJECT_DIR$/src/core/InterstimulusPause.js" />
+        <option value="$PROJECT_DIR$/src/core/ResponsesOutput.js" />
+        <option value="$PROJECT_DIR$/src/core/RunExperiment.js" />
+        <option value="$PROJECT_DIR$/src/core/Trials.js" />
       </list>
     </option>
   </component>
@@ -460,38 +462,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="examples" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ExperimentJS" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ExperimentJS" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="docs" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ExperimentJS" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ExperimentJS" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="docs" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ast" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -734,16 +704,16 @@
       <workItem from="1502325694600" duration="43000" />
       <workItem from="1502426434970" duration="1859000" />
       <workItem from="1502856419080" duration="10000" />
-      <workItem from="1505346330910" duration="17787000" />
+      <workItem from="1505346330910" duration="18907000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="178822000" />
+    <option name="totallyTimeSpent" value="179942000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="1173" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17135416" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -751,7 +721,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.442029" sideWeight="0.49791667" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.442029" sideWeight="0.49791667" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -939,14 +909,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/ResponseHandler.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1635">
-          <caret line="111" column="40" selection-start-line="111" selection-start-column="40" selection-end-line="111" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/components.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
@@ -1039,16 +1001,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/ResponsesOutput.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="715">
-          <caret line="66" column="16" selection-start-line="66" selection-start-column="16" selection-end-line="66" selection-end-column="16" />
-          <folding>
-            <element signature="e#1#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/methods/2AFC.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="83">
@@ -1073,14 +1025,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples/phases-example.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="434">
-          <caret line="67" column="0" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dist/experimentJS.min.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1095,44 +1039,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-10355">
           <caret line="18508" column="0" selection-start-line="18508" selection-start-column="0" selection-end-line="18508" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="FIRST">
-          <first_editor relative-caret-position="498">
-            <caret line="172" column="83" selection-start-line="172" selection-start-column="83" selection-end-line="172" selection-end-column="83" />
-            <folding>
-              <marker date="1505362803000" expanded="true" signature="6698:6916" placeholder="{...}" />
-              <marker date="1505362803000" expanded="true" signature="6727:6804" placeholder="{...}" />
-              <marker date="1505362803000" expanded="true" signature="6838:6914" placeholder="{...}" />
-            </folding>
-          </first_editor>
-          <second_editor>
-            <js_state />
-          </second_editor>
-        </state>
-      </provider>
-      <provider editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="15">
-            <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-            <folding>
-              <marker date="1505362803000" expanded="true" signature="6698:6916" placeholder="{...}" />
-              <marker date="1505362803000" expanded="true" signature="6727:6804" placeholder="{...}" />
-              <marker date="1505362803000" expanded="true" signature="6838:6914" placeholder="{...}" />
-            </folding>
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/methods/ConstantStimuli.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="11" column="17" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
           <folding />
         </state>
       </provider>
@@ -1161,28 +1067,92 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/InterstimulusPause.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="41" column="3" selection-start-line="35" selection-start-column="0" selection-end-line="41" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/ResponsesOutput.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding>
+            <element signature="e#1#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/ResponseHandler.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1635">
+          <caret line="111" column="40" selection-start-line="111" selection-start-column="40" selection-end-line="111" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="341">
+            <caret line="182" column="31" selection-start-line="182" selection-start-column="31" selection-end-line="182" selection-end-column="31" />
+            <folding>
+              <marker date="1505362803000" expanded="true" signature="6698:6916" placeholder="{...}" />
+              <marker date="1505362803000" expanded="true" signature="6727:6804" placeholder="{...}" />
+              <marker date="1505362803000" expanded="true" signature="6838:6914" placeholder="{...}" />
+            </folding>
+          </first_editor>
+          <second_editor>
+            <js_state />
+          </second_editor>
+        </state>
+      </provider>
+      <provider editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="15">
+            <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+            <folding>
+              <marker date="1505362803000" expanded="true" signature="6698:6916" placeholder="{...}" />
+              <marker date="1505362803000" expanded="true" signature="6727:6804" placeholder="{...}" />
+              <marker date="1505362803000" expanded="true" signature="6838:6914" placeholder="{...}" />
+            </folding>
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/phases-example.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="70" column="4" selection-start-line="70" selection-start-column="4" selection-end-line="70" selection-end-column="105" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/core/RunExperiment.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="393">
-          <caret line="94" column="12" selection-start-line="94" selection-start-column="12" selection-end-line="94" selection-end-column="34" />
+        <state relative-caret-position="196">
+          <caret line="198" column="0" selection-start-line="198" selection-start-column="0" selection-end-line="198" selection-end-column="0" />
           <folding>
             <element signature="e#303#405#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/Trials.js">
+    <entry file="file://$PROJECT_DIR$/src/methods/ConstantStimuli.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="24" column="3" selection-start-line="18" selection-start-column="0" selection-end-line="24" selection-end-column="3" />
+        <state relative-caret-position="135">
+          <caret line="11" column="17" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/InterstimulusPause.js">
+    <entry file="file://$PROJECT_DIR$/src/core/Trials.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="39" column="30" selection-start-line="39" selection-start-column="30" selection-end-line="39" selection-end-column="30" />
+        <state relative-caret-position="337">
+          <caret line="201" column="37" selection-start-line="201" selection-start-column="37" selection-end-line="201" selection-end-column="37" />
           <folding />
         </state>
       </provider>

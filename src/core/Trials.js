@@ -104,7 +104,7 @@ Trials.setDVName = function(dvName){
 };
 
 /**
- * In some cases, the arguments that you pass into your Independent Variable (IV) setter function will not be useful
+ * In some cases, the arguments that you pass into your independent variable (IV) setter function will not be useful
  * to include in the output at the end of the experiment.
  * `setIVResponseParserFunc` allows you to set a function that parses the arguments passed to the setter function
  *  into one (or more) output values (with more descriptive value). See example for more detail on output..
@@ -188,13 +188,24 @@ export var _isUsingPhases = false;
 Trials.Phases = [];
 
 /**
- * Present IVs sequentially by assigning each IV name to an ordinally numbered phase.
+ * Present IVs sequentially by assigning each independent variable (IV) name to an ordinally numbered phase.
  * To transition between phases, a function or a delay (in milliseconds) must be provided.
- * If a function is provided, its first argument is the callback that should be called
- * to transition to the next phase.
+ * If a function is provided, it must receive a callback as its first argument.
+ * This callback should be called to transition to the next phase.
  * @param {int} phase_num - ordinal number of the phase
  * @param {array} array_of_iv_names - array of IV names for this phase
  * @param {function | number} transition_func_or_delay - function to handle transition between phases, or duration until next phase
+ * @example
+ * // Using a function
+ * ExperimentJS.Trials.setIVPhases(0, ["Name of an IV to run in phase 0", "Another one"], function(continue_to_next_phase){
+ *      if(some_condition_is_satisified){
+ *          continue_to_next_phase();
+ *      }
+ * });
+ *
+ * // Using a number (i.e. a timeout delay)
+ * ExperimentJS.Trials.setIVPhases(0, ["Name of an IV to run in phase 0", "Another one"], 2000); // after two seconds go to the next phase
+ * ExperimentJS.Trials.setIVPhases(1, ["An IV in the second phase"]); // after two seconds go to the next phase
  */
 Trials.setIVPhases = function(phase_num, array_of_iv_names, transition_func_or_delay = 0){
 
@@ -381,7 +392,7 @@ Trials.setShuffle = function(shouldShuffle){
 /**
  * Shuffles trials using the Fisher Yates algorithm.
  * If you wish to alter the shuffling behaviour, this function can be overridden (see example below).
- * @param {array} - unshuffled trials
+ * @param {array} - an array of unshuffled trials
  * @example
  * Trials.shuffleTrials = function(all_trials){
  *       // shuffle all_trials in some way...

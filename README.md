@@ -11,6 +11,11 @@ like working on stimulus design and experimental structure.
 
 To run a basic experiment, all you need to do is:
 
+Include `experimentJS.js` or `experimentJS.min.js` from /dist.
+```HTML
+<script src="experimentJS.js"></script>
+```
+
 Create the necessary elements to view the stimuli in your HTML. In this example lets create an image:
 ```HTML
 <img id="your-target-image-element"/>
@@ -102,7 +107,6 @@ ExperimentJS.Components.Instructions("Choose the happier face. Use the left and 
 ExperimentJS.Trials.runNextTrial();
 ```
 
-
 ### FULL FACTORIAL RANDOMISED DESIGNS
 
 When you set two or more IVs, ExperimentJS will create a randomised, [full factorial design](https://en.wikipedia.org/wiki/Factorial_experiment).
@@ -112,10 +116,9 @@ If you wish to customise the behaviour of the trial randomiser, simply override 
 ExperimentJS.Trials.shuffleTrials = function(all_trials_array){ ... }
 ```
 
-
 ### DATA
 
-When your experiment completes, the browser will download a CSV formatted output of the current participant's results.
+When a participant completes all trials in the experiment, the browser will download a CSV formatted output of the current participant's results.
 
 | Participant Name | Participant Number | IV0_Emotion faces | DV_value |
 |------------------|--------------------|-------------------|----------|
@@ -137,12 +140,11 @@ Trials.OutputResponses = function(csv_data_string){
 }
 ```
 
-
 ### PRESET STIMULI
 To further speed up development, ExperimentJS contains a range of predefined components for creating frequently
-used stimuli types.
+used stimulus types.
 
-For example, the independent variable in the basic experiment above can be rewritten using the `ExperimentJS.Stimuli.ImageStimuliIV` preset:
+For example, the image based independent variable in the basic experiment above can be rewritten as a one-liner, using the `ExperimentJS.Stimuli.ImageStimuliIV` preset:
 
 ```javascript
 ExperimentJS.Stimuli.ImageStimuliIV("Emotion faces", ["./img/face_1.jpg", "./img/face_2.jpg", "./img/face_3.jpg", "./img/face_4.jpg", "./img/face_5.jpg", "./img/face_6.jpg"]);
@@ -164,14 +166,14 @@ ExperimentJS.Trials.runNextTrial();
 Presets are simply a loose wrapper around `ExperimentJS.Trials.setIVsetFunc` and `ExperimentJS.Trials.setIVLevels`.
 These core elements are highly customisable and can be wrapped with various functionalities to produce many different types of stimuli.
 
+[//]: # ([Click here](TODO) to view a full list of stimuli presets.)
+
 
 ### PRESET PARADIGMS
 ExperimentJS also provides built-in support for a variety of experimental paradigms
 (such as Two Alternative Forced Choice).
 
-
-[Click here](TODO) to view a full list of presets, usage instructions and demos.
-
+[//]: # ( [Click here](TODO) to view a full list of presets, usage instructions and demos.)
 
 ### ADDITIONAL FEATURES
 

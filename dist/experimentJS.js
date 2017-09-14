@@ -17141,9 +17141,21 @@ Object.keys(_components).forEach(function (key) {
   });
 });
 
+var _utils_public = require("./utils/utils_public.js");
+
+Object.keys(_utils_public).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _utils_public[key];
+    }
+  });
+});
+
 require("./utils/utils.js");
 
-},{"./components/components.js":4,"./core/core.js":13,"./methods/methods.js":18,"./stimuli/stimuli.js":20,"./utils/utils.js":27}],3:[function(require,module,exports){
+},{"./components/components.js":4,"./core/core.js":13,"./methods/methods.js":18,"./stimuli/stimuli.js":20,"./utils/utils.js":28,"./utils/utils_public.js":29}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17160,8 +17172,6 @@ function Instructions(instructions_text) {
     _Trials.Trials.setIVLevels(instructions_iv_key, [[instructions_text]]);
     _Trials.Trials.setIVsetFunc(instructions_iv_key, _SetInstructions);
     _Trials.Trials.setIVResponseParserFunc(instructions_iv_key, _InstructionsIVParser);
-
-    console.log("INSTRUCTIONESS!");
 }
 
 // You dont want these included in the output....
@@ -17186,7 +17196,7 @@ function _CreateInstructionsInDOM() {
     instructions.id = instructions_iv_key;
 
     //TODO ADD STYLE!!!!
-    Object.assign(instructions.style, { "font-size": "30px", "font-weight": "bold" });
+    Object.assign(instructions.style, { "font-size": "30px", "font-weight": "bold", "width": "100%", "text-align": "center" });
 
     document.body.appendChild(instructions);
 }
@@ -17375,7 +17385,7 @@ function _showInterstimulusPause(blackout) {
 
 exports.Pause = Pause;
 
-},{"../utils/SetCSSOnElement.js":24,"./RunExperiment.js":9}],7:[function(require,module,exports){
+},{"../utils/SetCSSOnElement.js":25,"./RunExperiment.js":9}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17555,7 +17565,7 @@ function _FormatStoredResponses(responses) {
     return formatted_responses;
 }
 
-},{"../utils/StringUtils.js":26,"./Trials":11,"./UnserializableMap.js":12}],8:[function(require,module,exports){
+},{"../utils/StringUtils.js":27,"./Trials":11,"./UnserializableMap.js":12}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17982,7 +17992,7 @@ _Trials.Trials.setEndCallback = function (end_callback) {
     }
 };
 
-},{"../utils/DOMUtils.js":22,"../utils/StringUtils.js":26,"./../errors/ErrorIfDidStartExperiment.js":14,"./InterstimulusPause.js":6,"./ResponseHandler.js":7,"./ResponsesOutput.js":8,"./Trials.js":11,"./UnserializableMap.js":12,"lodash":1}],10:[function(require,module,exports){
+},{"../utils/DOMUtils.js":22,"../utils/StringUtils.js":27,"./../errors/ErrorIfDidStartExperiment.js":14,"./InterstimulusPause.js":6,"./ResponseHandler.js":7,"./ResponsesOutput.js":8,"./Trials.js":11,"./UnserializableMap.js":12,"lodash":1}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18164,7 +18174,7 @@ function _createDropDownSelect(all_saves) {
 
 exports.Saves = Saves;
 
-},{"../utils/DOMUtils.js":22,"../utils/SetCSSOnElement.js":24,"./ResponseHandler.js":7,"./Trials.js":11}],11:[function(require,module,exports){
+},{"../utils/DOMUtils.js":22,"../utils/SetCSSOnElement.js":25,"./ResponseHandler.js":7,"./Trials.js":11}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18255,6 +18265,8 @@ Trials.setIVsetFunc = function (ivname, setFunc) {
     //Functions are now stored in their own map, keyed by ivname
     _setSetFunc(ivname, setFunc);
 };
+
+Trials.setIVSetFunc = Trials.setIVsetFunc; // papering over deprecated naming system
 
 var _dvName = exports._dvName = undefined;
 /**
@@ -18566,7 +18578,7 @@ function _csvIllegalCharCheck(string) {
 
 exports.Trials = Trials;
 
-},{"../utils/NumberUtils":23,"./../errors/ErrorIfTrialsAreBuilt.js":15,"./UnserializableMap.js":12,"lodash":1}],12:[function(require,module,exports){
+},{"../utils/NumberUtils":24,"./../errors/ErrorIfTrialsAreBuilt.js":15,"./UnserializableMap.js":12,"lodash":1}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19058,6 +19070,30 @@ function DOM_remove(elem) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.preloadImage = preloadImage;
+/**
+ * Created by kai on 14/9/17.
+ */
+
+function preloadImage(path) {
+    return new Promise(function (resolve, reject) {
+        var img = new Image();
+        img.onload = function () {
+            resolve();
+        };
+        img.onerror = function () {
+            reject();
+        };
+        img.src = path;
+    });
+}
+
+},{}],24:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 exports.isFloat = isFloat;
 exports.isInt = isInt;
 /**
@@ -19075,7 +19111,7 @@ function isInt(value) {
     return (x | 0) === x;
 }
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19093,7 +19129,7 @@ function SetCSSOnElement(elem, css) {
     }
 }
 
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 "use strict";
 
 // - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
@@ -19124,7 +19160,7 @@ Array.prototype.back = function () {
     }
 };
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19175,7 +19211,7 @@ String.prototype.formatUnicorn = String.prototype.formatUnicorn || function () {
     return str;
 };
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 "use strict";
 
 require("./CreateDownloadLink.js");
@@ -19186,5 +19222,28 @@ require("./NumberUtils.js");
 
 require("./StringUtils.js");
 
-},{"./CreateDownloadLink.js":21,"./NumberUtils.js":23,"./Shuffle.js":25,"./StringUtils.js":26}]},{},[2])(2)
+require("./ImageUtils.js");
+
+},{"./CreateDownloadLink.js":21,"./ImageUtils.js":23,"./NumberUtils.js":24,"./Shuffle.js":26,"./StringUtils.js":27}],29:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Utils = undefined;
+
+var _ImageUtils = require("./ImageUtils.js");
+
+var Utils = {
+  PreloadImage: _ImageUtils.preloadImage
+};
+
+// Fields of ExperimentJS
+/**
+ * Created by kai on 14/9/17.
+ */
+
+exports.Utils = Utils;
+
+},{"./ImageUtils.js":23}]},{},[2])(2)
 });

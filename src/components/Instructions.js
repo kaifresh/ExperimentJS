@@ -9,8 +9,6 @@ function Instructions(instructions_text){
     Trials.setIVLevels(instructions_iv_key, [ [instructions_text] ]);
     Trials.setIVsetFunc(instructions_iv_key, _SetInstructions);
     Trials.setIVResponseParserFunc(instructions_iv_key, _InstructionsIVParser);
-
-    console.log("INSTRUCTIONESS!");
 }
 
 // You dont want these included in the output....
@@ -39,7 +37,7 @@ function _CreateInstructionsInDOM(){
     instructions.id = instructions_iv_key;
 
     //TODO ADD STYLE!!!!
-    Object.assign(instructions.style,{"font-size":"30px", "font-weight": "bold"});
+    Object.assign(instructions.style,{"font-size":"30px", "font-weight": "bold", "width": "100%", "text-align": "center"});
 
     document.body.appendChild(instructions);
 }

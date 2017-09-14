@@ -6,3 +6,4 @@ import "./CreateDownloadLink.js";
 import "./Shuffle.js";
 import "./NumberUtils.js";
 import "./StringUtils.js";
+import "./ImageUtils.js";

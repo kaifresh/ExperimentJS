@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="15a95f82-d721-497f-925e-739aed3019c5" name="Default" comment="">
+      <change type="MOVED" beforePath="$PROJECT_DIR$/examples/gifs/ExperimentJS basic example demo vid.gif" afterPath="$PROJECT_DIR$/examples/gifs/basic_example_demo_vid.gif" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/basic_example2.html" afterPath="$PROJECT_DIR$/examples/basic_example2.html" />
     </list>
     <ignored path="ExperimentJS.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -23,164 +25,156 @@
     <favorites_list name="ExperimentJS" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="vertical" split-proportion="0.5">
-      <split-first>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="RunExperiment.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/core/RunExperiment.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1410">
-                  <caret line="94" column="12" selection-start-line="94" selection-start-column="12" selection-end-line="94" selection-end-column="34" />
-                  <folding>
-                    <element signature="e#303#405#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="ResponsesOutput.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/core/ResponsesOutput.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="715">
-                  <caret line="66" column="16" selection-start-line="66" selection-start-column="16" selection-end-line="66" selection-end-column="16" />
-                  <folding>
-                    <element signature="e#1#38#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Trials.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/core/Trials.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="15">
-                  <caret line="232" column="13" selection-start-line="232" selection-start-column="13" selection-end-line="232" selection-end-column="13" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Instructions.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/components/Instructions.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="420">
-                  <caret line="28" column="49" selection-start-line="28" selection-start-column="49" selection-end-line="28" selection-end-column="49" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/README.md">
-              <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-                <state split_layout="FIRST">
-                  <first_editor relative-caret-position="165">
-                    <caret line="74" column="86" selection-start-line="74" selection-start-column="86" selection-end-line="74" selection-end-column="86" />
-                    <folding>
-                      <marker date="1505354348000" expanded="true" signature="1103:1203" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="1622:1734" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="1850:2132" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="1879:1991" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="2025:2130" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="3079:3137" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="3647:3994" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="3676:3819" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="3853:3992" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="4953:5028" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="5585:5803" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="5614:5691" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="5725:5801" placeholder="{...}" />
-                    </folding>
-                  </first_editor>
-                  <second_editor>
-                    <js_state />
-                  </second_editor>
-                </state>
-              </provider>
-              <provider editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-                <state split_layout="SPLIT">
-                  <first_editor relative-caret-position="15">
-                    <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-                    <folding>
-                      <marker date="1505354348000" expanded="true" signature="1103:1203" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="1622:1734" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="1850:2132" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="1879:1991" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="2025:2130" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="3079:3137" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="3647:3994" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="3676:3819" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="3853:3992" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="4953:5028" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="5585:5803" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="5614:5691" placeholder="{...}" />
-                      <marker date="1505354348000" expanded="true" signature="5725:5801" placeholder="{...}" />
-                    </folding>
-                  </first_editor>
-                  <second_editor />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="basic_example2.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/examples/basic_example2.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="basic_example.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/examples/basic_example.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="330">
-                  <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="core.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/core/core.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="150">
-                  <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-                  <folding>
-                    <element signature="e#288#318#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="ExperimentJS.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/ExperimentJS.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="105">
-                  <caret line="7" column="38" selection-start-line="7" selection-start-column="38" selection-end-line="7" selection-end-column="38" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf>
-          <file leaf-file-name="basic_example2.html" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/examples/basic_example2.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="244">
-                  <caret line="48" column="39" selection-start-line="48" selection-start-column="39" selection-end-line="48" selection-end-column="39" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="RunExperiment.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/core/RunExperiment.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1410">
+              <caret line="94" column="12" selection-start-line="94" selection-start-column="12" selection-end-line="94" selection-end-column="34" />
+              <folding>
+                <element signature="e#303#405#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ResponsesOutput.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/core/ResponsesOutput.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="715">
+              <caret line="66" column="16" selection-start-line="66" selection-start-column="16" selection-end-line="66" selection-end-column="16" />
+              <folding>
+                <element signature="e#1#38#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Trials.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/core/Trials.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="232" column="13" selection-start-line="232" selection-start-column="13" selection-end-line="232" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Instructions.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/Instructions.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="420">
+              <caret line="28" column="49" selection-start-line="28" selection-start-column="49" selection-end-line="28" selection-end-column="49" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+            <state split_layout="FIRST">
+              <first_editor relative-caret-position="123">
+                <caret line="67" column="79" selection-start-line="67" selection-start-column="79" selection-end-line="67" selection-end-column="79" />
+                <folding>
+                  <marker date="1505355862000" expanded="true" signature="1243:1343" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="1754:1854" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="1970:2252" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="1999:2111" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="2145:2250" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="3235:3293" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="3893:4240" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="3922:4065" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="4099:4238" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="5215:5290" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="5904:6122" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="5933:6010" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="6044:6120" placeholder="{...}" />
+                </folding>
+              </first_editor>
+              <second_editor>
+                <js_state />
+              </second_editor>
+            </state>
+          </provider>
+          <provider editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="15">
+                <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+                <folding>
+                  <marker date="1505355862000" expanded="true" signature="1243:1343" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="1754:1854" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="1970:2252" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="1999:2111" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="2145:2250" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="3235:3293" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="3893:4240" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="3922:4065" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="4099:4238" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="5215:5290" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="5904:6122" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="5933:6010" placeholder="{...}" />
+                  <marker date="1505355862000" expanded="true" signature="6044:6120" placeholder="{...}" />
+                </folding>
+              </first_editor>
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="better-two-afc-example.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples/better-two-afc-example.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="689">
+              <caret line="82" column="45" selection-start-line="82" selection-start-column="45" selection-end-line="82" selection-end-column="45" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="2AFC.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/methods/2AFC.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="83">
+              <caret line="13" column="3" selection-start-line="13" selection-start-column="3" selection-end-line="13" selection-end-column="3" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="basic_example2.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples/basic_example2.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="basic_example.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples/basic_example.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="330">
+              <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="core.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/core/core.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+              <folding>
+                <element signature="e#288#318#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -482,6 +476,24 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="examples" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gifs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ExperimentJS" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ExperimentJS" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="docs" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -743,12 +755,12 @@
       <workItem from="1502325694600" duration="43000" />
       <workItem from="1502426434970" duration="1859000" />
       <workItem from="1502856419080" duration="10000" />
-      <workItem from="1505346330910" duration="7864000" />
+      <workItem from="1505346330910" duration="9373000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="168899000" />
+    <option name="totallyTimeSpent" value="170408000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="1173" extended-state="6" />
@@ -2973,20 +2985,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples/better-two-afc-example.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="464">
-          <caret line="82" column="45" selection-start-line="82" selection-start-column="45" selection-end-line="82" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/methods/2AFC.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="383">
-          <caret line="33" column="61" selection-start-line="33" selection-start-column="61" selection-end-line="33" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/core/InterstimulusPause.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1028">
@@ -3184,15 +3182,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/methods/2AFC.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="83">
+          <caret line="13" column="3" selection-start-line="13" selection-start-column="3" selection-end-line="13" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/better-two-afc-example.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="689">
+          <caret line="82" column="45" selection-start-line="82" selection-start-column="45" selection-end-line="82" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
         <state split_layout="FIRST">
-          <first_editor relative-caret-position="165">
-            <caret line="74" column="86" selection-start-line="74" selection-start-column="86" selection-end-line="74" selection-end-column="86" />
+          <first_editor relative-caret-position="123">
+            <caret line="67" column="79" selection-start-line="67" selection-start-column="79" selection-end-line="67" selection-end-column="79" />
             <folding>
-              <marker date="1505354348000" expanded="true" signature="5585:5803" placeholder="{...}" />
-              <marker date="1505354348000" expanded="true" signature="5614:5691" placeholder="{...}" />
-              <marker date="1505354348000" expanded="true" signature="5725:5801" placeholder="{...}" />
+              <marker date="1505355862000" expanded="true" signature="5904:6122" placeholder="{...}" />
+              <marker date="1505355862000" expanded="true" signature="5933:6010" placeholder="{...}" />
+              <marker date="1505355862000" expanded="true" signature="6044:6120" placeholder="{...}" />
             </folding>
           </first_editor>
           <second_editor>
@@ -3205,9 +3219,9 @@
           <first_editor relative-caret-position="15">
             <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
             <folding>
-              <marker date="1505354348000" expanded="true" signature="5585:5803" placeholder="{...}" />
-              <marker date="1505354348000" expanded="true" signature="5614:5691" placeholder="{...}" />
-              <marker date="1505354348000" expanded="true" signature="5725:5801" placeholder="{...}" />
+              <marker date="1505355862000" expanded="true" signature="5904:6122" placeholder="{...}" />
+              <marker date="1505355862000" expanded="true" signature="5933:6010" placeholder="{...}" />
+              <marker date="1505355862000" expanded="true" signature="6044:6120" placeholder="{...}" />
             </folding>
           </first_editor>
           <second_editor />

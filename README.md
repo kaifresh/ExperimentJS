@@ -1,13 +1,13 @@
 # ExperimentJS
 
-Running behavioural experiments via your web-browser harnesses the internet to make them more widely accessible to participants,
-portable across computers and operating systems, and leverage the simplicity of HTML5 primitives (buttons, images, videos, etc).
+Running behavioural experiments in your browser harnesses the internet to make them more accessible to participants,
+portable across computers/operating systems, and leverages the simplicity of HTML5 primitives (buttons, images, videos, etc) to build interfaces and stimuli.
 The problem is, writing experiments can be time consuming and small changes in your experimental design can result in big
  changes to your code.
 
 ExperimentJS solves this by providing a framework that greatly simplifies this process of building and running experiments.
-ExperimentJS takes care of the small details in implementing experiments, and lets you focus on big picture ideas
-like stimulus design and experimental structure.
+ExperimentJS takes care of the small details in implementing experiments and lets you focus on the big picture,
+like working on stimulus design and experimental structure.
 
 To run a basic experiment, all you need to do is:
 
@@ -16,6 +16,7 @@ Create the necessary elements to view the stimuli in your HTML. In this example 
  <img id="your-target-image-element"/>
 ```
 
+Now, create your first [Independent Variable](https://en.wikipedia.org/wiki/Dependent_and_independent_variables)!
 Write an *IVsetFunc* (i.e. a setter function) that will manage the image that is displayed in this element
 
 ```javascript
@@ -29,11 +30,11 @@ Provide the *levels* (i.e. the data) that will be passed to your setter function
 ```javascript
 var face_images = ["./img/face_1.jpg", "./img/face_2.jpg", "./img/face_3.jpg", "./img/face_4.jpg", "./img/face_5.jpg", "./img/face_6.jpg"];
 
-    // setIVLevels() accepts an array of arrays (of arguments to the setter function)
-    ExperimentJS.Trials.setIVLevels("Emotion faces", face_images.map(function(img_path){      // (iv name, levels)
-        ExperimentJS.Utils.PreloadImage(img_path);
-        return [ img_path ]
-    }));
+// setIVLevels() accepts an array of arrays (of arguments to the setter function)
+ExperimentJS.Trials.setIVLevels("Emotion faces", face_images.map(function(img_path){      // (iv name, levels)
+    ExperimentJS.Utils.PreloadImage(img_path);
+    return [ img_path ]
+}));
 ```
 
 Write an event handler to capture participants' responses
@@ -64,7 +65,7 @@ ExperimentJS.Trials.runNextTrial();
 ```
 
 In less than 20 lines of code, you have created an experiment like this:
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+![alt text](../examples/gifs/basic_example_demo_vid.gif "Video of basic example")
 
 
 ### FLEXIBILITY
@@ -72,22 +73,24 @@ In less than 20 lines of code, you have created an experiment like this:
 ExperimentJS is highly customisable. Individual components can be wired together in many different ways to
 create a wide variety of experimental paradigms.
 
-For example, the experiment above can be easily converted into a forced choice format:
+For example, the experiment above can be easily converted into a forced choice comparison format:
 
 ```javascript
 
+// Set up your setter function & the data it will handle
 var face_images = ["./img/face_1.jpg", "./img/face_2.jpg", "./img/face_3.jpg", "./img/face_4.jpg", "./img/face_5.jpg", "./img/face_6.jpg"];
-
 var face_img_setter_function = function(id_of_each_image_element, img_path){
     $(id_of_each_image_element).attr("src", img_path);
 }
 
+// Use the same images & setter function for both IVs.
 ExperimentJS.Trials.setIVsetFunc("Emotion faces on left", face_img_setter_function);
 ExperimentJS.Trials.setIVLevels("Emotion faces on left", face_images.map( function(img_path){ ExperimentJS.Utils.PreloadImage(img_path); return ["#lh_img", img_path] }) );
 
 ExperimentJS.Trials.setIVsetFunc("Emotion faces on right", face_img_setter_function);
 ExperimentJS.Trials.setIVLevels("Emotion faces on right", face_images.map( function(img_path){ return ["#rh_img", img_path] }) );
 
+// Capture participants' responses
 $(window).keydown(function(event){
     if (event.which === 37){                                                // left arrow key
         ExperimentJS.Trials.runNextTrial({dv_value: 'selected left'});
@@ -105,10 +108,12 @@ ExperimentJS.Trials.runNextTrial();
 
 ### FULL FACTORIAL DESIGNS
 
-When you set two or more IVs, ExperimentJS will create a randomised [full factorial design](https://en.wikipedia.org/wiki/Factorial_experiment) by default.
+When you set two or more IVs, ExperimentJS will create a randomised, [full factorial design](https://en.wikipedia.org/wiki/Factorial_experiment) by default.
 Trial randomisation is performed using the Fischer-Yates shuffle by default.
-If you wish to customise the behaviour of the trial randomiser, simply override ```javascript  ExperimentJS.Trials.shuffleTrials = function(all_trials_array){ ... } ```
-
+If you wish to customise the behaviour of the trial randomiser, simply override *shuffleTrials*:
+```javascript
+ExperimentJS.Trials.shuffleTrials = function(all_trials_array){ ... }
+```
 
 
 ### DATA
@@ -125,13 +130,11 @@ Trials.OutputResponses = function(csv_data_string){
 
 
 
-
-
 ### PRESETS
-ExperimentJS also contains a range of predefined components to quickly create commonly used
-stimuli, components and experimental paradigms.
-These presets are loose wrappers around the core experimental code above,
+To further speed up development, ExperimentJS contains a range of predefined components for creating frequently
+used stimuli types.
 
+For example, the independent variable in the basic experiment above can be rewritten using the `ExperimentJS.Stimuli.ImageStimuliIV` preset:
 
 ```javascript
 
@@ -152,15 +155,10 @@ ExperimentJS.Trials.runNextTrial();
 
 ```
 
- CODE DEMO
-- 2afc
+ExperimentJS also provides built-in support for a variety of experimental paradigms (such as Two Alternative Forced Choice).
+[Click here](TODO) to view usage instructions and demos.
 
 
-### DATA
-At the end of the experiment, ExperimentJS produces a table of results (in CSV format).
-Each row of this table contains information about the independent variables in each trial,
-and the participants' response.
-This csv data can either be downloaded locally or uploaded to a server.
 
 ### ADD ONS
 - csv formatted output

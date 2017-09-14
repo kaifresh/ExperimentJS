@@ -27,7 +27,7 @@
 
     var face_img_setter_function = function(id_of_each_image_element, img_path){
         $(id_of_each_image_element).attr("src", img_path);
-    }
+    };
 
     ExperimentJS.Trials.setIVsetFunc("Emotion faces on left", face_img_setter_function);
     ExperimentJS.Trials.setIVLevels("Emotion faces on left", face_images.map( function(img_path){ ExperimentJS.Utils.PreloadImage(img_path); return ["#lh_img", img_path] }) );

@@ -1,6 +1,3 @@
-/**
- * Created by kai on 14/9/17.
- */
 
 export function preloadImage(path){
     return new Promise(function(resolve, reject){

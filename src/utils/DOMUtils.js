@@ -1,7 +1,3 @@
-/**
- * Created by kai on 6/7/17.
- */
-
 
 export function _ApplyFunctionToHTMLChildren(elem, func){
 

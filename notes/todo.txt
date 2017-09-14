@@ -8,3 +8,30 @@
 - Staircase
 
 
+
+
+Components                          [X]
+Utils                               [ ]
+Methods                             [ ]
+Pause                               [X]
+Saves                               [X]
+Stimuli                             [ ]
+Trials                              [X]
+:
+(...)
+
+:
+(...)
+
+:
+(...)
+
+:
+
+:
+(...)
+
+:
+
+:
+(...)

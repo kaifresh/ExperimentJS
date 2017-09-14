@@ -106,7 +106,7 @@ Trials.runNextTrial = function (options) {                                 // us
 //                        Experiment Lifecycle - Displaying The Next Trial
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
-/** Where view-level elements are set - this is like the CONTROLLER method interfacing between MODEL and VIEW*/
+/* Where view-level elements are set - this is like the CONTROLLER method interfacing between MODEL and VIEW*/
 function _displayNextTrial() {
 
     // Deep copy the trial before you replace its tokens.
@@ -234,7 +234,7 @@ export function _getResponseTimeDelta(){
 var _startCallback = null;
 /**
  * Set a custom behaviour to be run at the start of the experiment.
- * @param {function} A callback function implementing this behaviour
+ * @param {function} start_callback - callback function implementing this behaviour
  */
 Trials.setStartCallback = function (start_callback) {
 

@@ -213,7 +213,7 @@ prior to running the experiment.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line268">line 268</a>
+        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line279">line 279</a>
     </li></ul></dd>
     
 
@@ -255,7 +255,8 @@ prior to running the experiment.
 
 
 <div class="description">
-    Download participant's responses as a csv
+    Download participant's responses as a csv. This can be called at any time during the experiment
+to obtain participant data before all trials are complete.
 </div>
 
 
@@ -299,7 +300,7 @@ prior to running the experiment.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_ResponsesOutput.js.html">core/ResponsesOutput.js</a>, <a href="core_ResponsesOutput.js.html#line16">line 16</a>
+        <a href="core_ResponsesOutput.js.html">core/ResponsesOutput.js</a>, <a href="core_ResponsesOutput.js.html#line17">line 17</a>
     </li></ul></dd>
     
 
@@ -471,7 +472,7 @@ prior to running the experiment.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line257">line 257</a>
+        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line268">line 268</a>
     </li></ul></dd>
     
 
@@ -532,9 +533,8 @@ prior to running the experiment.
 
 <div class="description">
     Function to output URI encoded csv.
-Can be re-assigned or overridden to provide additional
+This function can be overridden to support different
 functionality (e.g. sending the CSV to a server).
-Overriding this function must conform to the interface.
 </div>
 
 
@@ -627,7 +627,7 @@ Overriding this function must conform to the interface.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_RunExperiment.js.html">core/RunExperiment.js</a>, <a href="core_RunExperiment.js.html#line303">line 303</a>
+        <a href="core_RunExperiment.js.html">core/RunExperiment.js</a>, <a href="core_RunExperiment.js.html#line311">line 311</a>
     </li></ul></dd>
     
 
@@ -654,6 +654,13 @@ Overriding this function must conform to the interface.
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>Trials.OutputResponses = function(uri_csv_string){
+     $.post("/custom_uploader.php", {data: uri_csv_string});
+};</code></pre>
+
+
 
         
             
@@ -669,13 +676,10 @@ Overriding this function must conform to the interface.
 
 
 <div class="description">
-    Call Trials.runNextTrial both to start the experiment and to progress to the next trial.
+    Call `ExperimentJS.Trials.runNextTrial()` both to start the experiment and to progress to the next trial.
 To store participant's response, an object should be passed in as the first arg.
 This object should contain the key "dv_value", with its value being the participant's response
 to the trial that was just run.
-
-Example:
-     ExperimentJS.Trials.runNextTrial({ dv_value: "left" });
 </div>
 
 
@@ -768,7 +772,7 @@ Example:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_RunExperiment.js.html">core/RunExperiment.js</a>, <a href="core_RunExperiment.js.html#line50">line 50</a>
+        <a href="core_RunExperiment.js.html">core/RunExperiment.js</a>, <a href="core_RunExperiment.js.html#line51">line 51</a>
     </li></ul></dd>
     
 
@@ -793,6 +797,13 @@ Example:
 
 
 
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>ExperimentJS.Trials.runNextTrial();                                          // To start the experiment
+ExperimentJS.Trials.runNextTrial({ dv_value: "participant's response" });    // To store participant's response and progress to next trial
+     </code></pre>
 
 
 
@@ -937,7 +948,7 @@ Example:
     
 
     
-    <h4 class="name" id=".setEndCallback"><span class="type-signature">(static) </span>setEndCallback<span class="signature">(end_callback)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".setEndCallback"><span class="type-signature">(static) </span>setEndCallback<span class="signature">(A)</span><span class="type-signature"></span></h4>
     
 
     
@@ -945,7 +956,7 @@ Example:
 
 
 <div class="description">
-    Set a callback to be run at the end of the experiment, after responses are output.
+    Set a custom behaviour to be run at the end of the experiment, after responses are output.
 </div>
 
 
@@ -981,7 +992,7 @@ Example:
 
         <tr>
             
-                <td class="name"><code>end_callback</code></td>
+                <td class="name"><code>A</code></td>
             
 
             <td class="type">
@@ -997,7 +1008,7 @@ Example:
 
             
 
-            <td class="description last"></td>
+            <td class="description last">function implementing this behaviour</td>
         </tr>
 
     
@@ -1038,7 +1049,7 @@ Example:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_RunExperiment.js.html">core/RunExperiment.js</a>, <a href="core_RunExperiment.js.html#line323">line 323</a>
+        <a href="core_RunExperiment.js.html">core/RunExperiment.js</a>, <a href="core_RunExperiment.js.html#line331">line 331</a>
     </li></ul></dd>
     
 
@@ -1247,10 +1258,10 @@ ExperimentJS.Trials.setIVLevels("iv name", [ [arg1_a, arg2_a, arg3_a], [arg1_b, 
 
 
 <div class="description">
-    Present IVs sequentially by assigning each IV name to an ordinally numbered phase.
+    Present IVs sequentially by assigning each independent variable (IV) name to an ordinally numbered phase.
 To transition between phases, a function or a delay (in milliseconds) must be provided.
-If a function is provided, its first argument is the callback that should be called
-to transition to the next phase.
+If a function is provided, it must receive a callback as its first argument.
+This callback should be called to transition to the next phase.
 </div>
 
 
@@ -1392,7 +1403,7 @@ to transition to the next phase.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line199">line 199</a>
+        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line210">line 210</a>
     </li></ul></dd>
     
 
@@ -1419,6 +1430,20 @@ to transition to the next phase.
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Using a function
+ExperimentJS.Trials.setIVPhases(0, ["Name of an IV to run in phase 0", "Another one"], function(continue_to_next_phase){
+     if(some_condition_is_satisified){
+         continue_to_next_phase();
+     }
+});
+
+// Using a number (i.e. a timeout delay)
+ExperimentJS.Trials.setIVPhases(0, ["Name of an IV to run in phase 0", "Another one"], 2000); // after two seconds go to the next phase
+ExperimentJS.Trials.setIVPhases(1, ["An IV in the second phase"]); // after two seconds go to the next phase</code></pre>
+
+
 
         
             
@@ -1434,7 +1459,7 @@ to transition to the next phase.
 
 
 <div class="description">
-    In some cases, the arguments that you pass into your Independent Variable (IV) setter function will not be useful
+    In some cases, the arguments that you pass into your independent variable (IV) setter function will not be useful
 to include in the output at the end of the experiment.
 `setIVResponseParserFunc` allows you to set a function that parses the arguments passed to the setter function
  into one (or more) output values (with more descriptive value). See example for more detail on output..
@@ -1802,7 +1827,7 @@ ExperimentJS.Trials.setIVLevels("iv name", [ [arg1_a, arg2_a, arg3_a], [arg1_b, 
     
 
     
-    <h4 class="name" id=".setMidpointCallback"><span class="type-signature">(static) </span>setMidpointCallback<span class="signature">(fn)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".setMidpointCallback"><span class="type-signature">(static) </span>setMidpointCallback<span class="signature">(A)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1810,7 +1835,7 @@ ExperimentJS.Trials.setIVLevels("iv name", [ [arg1_a, arg2_a, arg3_a], [arg1_b, 
 
 
 <div class="description">
-    Set a callback to be run at the midpoint of the experiment
+    Set a custom behaviour to be run at the midpoint of the experiment.
 </div>
 
 
@@ -1846,10 +1871,15 @@ ExperimentJS.Trials.setIVLevels("iv name", [ [arg1_a, arg2_a, arg3_a], [arg1_b, 
 
         <tr>
             
-                <td class="name"><code>fn</code></td>
+                <td class="name"><code>A</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
             
             </td>
 
@@ -1857,7 +1887,7 @@ ExperimentJS.Trials.setIVLevels("iv name", [ [arg1_a, arg2_a, arg3_a], [arg1_b, 
 
             
 
-            <td class="description last"></td>
+            <td class="description last">callback function implementing this behaviour</td>
         </tr>
 
     
@@ -1898,7 +1928,7 @@ ExperimentJS.Trials.setIVLevels("iv name", [ [arg1_a, arg2_a, arg3_a], [arg1_b, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_RunExperiment.js.html">core/RunExperiment.js</a>, <a href="core_RunExperiment.js.html#line268">line 268</a>
+        <a href="core_RunExperiment.js.html">core/RunExperiment.js</a>, <a href="core_RunExperiment.js.html#line273">line 273</a>
     </li></ul></dd>
     
 
@@ -2067,6 +2097,141 @@ ExperimentJS.Trials.setIVLevels("iv name", [ [arg1_a, arg2_a, arg3_a], [arg1_b, 
     
 
     
+    <h4 class="name" id=".setShouldTrackResponseTime"><span class="type-signature">(static) </span>setShouldTrackResponseTime<span class="signature">(shouldTrackResponseTime)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Turn tracking of response time on or off.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>shouldTrackResponseTime</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="core_RunExperiment.js.html">core/RunExperiment.js</a>, <a href="core_RunExperiment.js.html#line197">line 197</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id=".setShuffle"><span class="type-signature">(static) </span>setShuffle<span class="signature">(shouldShuffle)</span><span class="type-signature"></span></h4>
     
 
@@ -2168,7 +2333,7 @@ ExperimentJS.Trials.setIVLevels("iv name", [ [arg1_a, arg2_a, arg3_a], [arg1_b, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line373">line 373</a>
+        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line384">line 384</a>
     </li></ul></dd>
     
 
@@ -2210,7 +2375,7 @@ ExperimentJS.Trials.setIVLevels("iv name", [ [arg1_a, arg2_a, arg3_a], [arg1_b, 
 
 
 <div class="description">
-    Set a callback to be run at the start of the experiment.
+    Set a custom behaviour to be run at the start of the experiment.
 </div>
 
 
@@ -2262,7 +2427,7 @@ ExperimentJS.Trials.setIVLevels("iv name", [ [arg1_a, arg2_a, arg3_a], [arg1_b, 
 
             
 
-            <td class="description last"></td>
+            <td class="description last">callback function implementing this behaviour</td>
         </tr>
 
     
@@ -2303,7 +2468,7 @@ ExperimentJS.Trials.setIVLevels("iv name", [ [arg1_a, arg2_a, arg3_a], [arg1_b, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_RunExperiment.js.html">core/RunExperiment.js</a>, <a href="core_RunExperiment.js.html#line234">line 234</a>
+        <a href="core_RunExperiment.js.html">core/RunExperiment.js</a>, <a href="core_RunExperiment.js.html#line239">line 239</a>
     </li></ul></dd>
     
 
@@ -2398,7 +2563,7 @@ If you wish to alter the shuffling behaviour, this function can be overridden (s
 
             
 
-            <td class="description last">unshuffled trials</td>
+            <td class="description last">an array of unshuffled trials</td>
         </tr>
 
     
@@ -2439,7 +2604,7 @@ If you wish to alter the shuffling behaviour, this function can be overridden (s
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line392">line 392</a>
+        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line403">line 403</a>
     </li></ul></dd>
     
 
@@ -2491,13 +2656,13 @@ If you wish to alter the shuffling behaviour, this function can be overridden (s
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Pause.html">Pause</a></li><li><a href="Trials.html">Trials</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_ApplyFunctionToHTMLChildren">_ApplyFunctionToHTMLChildren</a></li><li><a href="global.html#_didCreateImageStimuliCSS">_didCreateImageStimuliCSS</a></li><li><a href="global.html#_displayNextTrial">_displayNextTrial</a></li><li><a href="global.html#isFloat">isFloat</a></li><li><a href="global.html#preloadImage">preloadImage</a></li><li><a href="global.html#SetCSSOnElement">SetCSSOnElement</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Components.html">Components</a></li><li><a href="Pause.html">Pause</a></li><li><a href="Saves.html">Saves</a></li><li><a href="Trials.html">Trials</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.3</a> on Thu Sep 14 2017 16:22:11 GMT+1000 (AEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.3</a> on Thu Sep 14 2017 17:01:34 GMT+1000 (AEST)
 </footer>
 
 <script> prettyPrint(); </script>

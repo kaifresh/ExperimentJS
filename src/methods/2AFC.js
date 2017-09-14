@@ -14,8 +14,14 @@ var _2AFC = {};
 // ================================== Standard ==================================
 
 var _didSetStandard = false;
-
-// Usage: (string, function, array of args)
+/**
+ * @module Methods
+ * @namespace Methods
+ * @param iv_name
+ * @param {function} std_func - the standard setter function
+ * @param {array} std_func_args - array of arguments to be passed to the standard setter function
+ * @constructor
+ */
 _2AFC.SetStandard = function(iv_name, std_func, std_func_args){
 
     if (typeof iv_name !== "string" || typeof std_func !== "function" || !Array.isArray(std_func_args) ){
@@ -31,6 +37,13 @@ _2AFC.SetStandard = function(iv_name, std_func, std_func_args){
 };
 
 // Usage: (string iv_name, function parser_func);
+/**
+ * TODO: WRITE
+ * @namespace Methods
+ * @param iv_name
+ * @param parser_func
+ * @constructor
+ */
 _2AFC.SetStandardParserFunc = function(iv_name, parser_func){
     Trials.setIVResponseParserFunc("std_"+iv_name, parser_func);
 };
@@ -39,6 +52,13 @@ _2AFC.SetStandardParserFunc = function(iv_name, parser_func){
 
 var _didSetVarying = false;
 // Usage: ( string, function, array of arrays (of args) )
+/**
+ * @namespace Methods
+ * @param iv_name
+ * @param varying_func
+ * @param varying_func_levels
+ * @constructor
+ */
 _2AFC.SetVarying = function(iv_name, varying_func, varying_func_levels){
 
     if (typeof iv_name !== "string" || typeof varying_func !== "function" || !Array.isArray(varying_func_levels) || !Array.isArray(varying_func_levels[0]) ){
@@ -58,6 +78,13 @@ _2AFC.SetVaryingParserFunc = Trials.setIVResponseParserFunc;
 // ================================== Counter Balancer ==================================
 
 var _didSetCounterBalance = false;
+/**
+ * @namespace Methods
+ * @param iv_name
+ * @param counterbalance_func
+ * @param counterbalance_func_levels
+ * @constructor
+ */
 _2AFC.SetCounterBalancePresentation = function(iv_name, counterbalance_func, counterbalance_func_levels){
 
     if (typeof iv_name !== "string" || typeof counterbalance_func !== "function" || !Array.isArray(counterbalance_func_levels) || !Array.isArray(counterbalance_func_levels[0]) ){
@@ -73,10 +100,22 @@ _2AFC.SetCounterBalancePresentation = function(iv_name, counterbalance_func, cou
 };
 
 // Usage: (string iv_name, function parser_func);
+/**
+ *
+ * @param iv_name
+ * @param parser_func
+ * @constructor
+ */
 _2AFC.SetCounterBalanceParserFunc = function(iv_name, parser_func){
     Trials.setIVResponseParserFunc("counterbalance_"+iv_name, parser_func);
 };
 
+/**
+ *
+ * @namespace Methods
+ * @param print
+ * @constructor
+ */
 _2AFC.BuildExperiment = function(print){
 
     if ( !(_didSetCounterBalance && _didSetStandard && _didSetVarying) ){

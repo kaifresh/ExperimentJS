@@ -4,6 +4,13 @@ import { Trials } from "../core/Trials.js";
 
 const instructions_iv_key = "%%INSTRUCTIONS%%";
 
+/**
+ * Set some instructions text for your participants. This text will be displayed on every trial.<br>
+ * If you wish to edit the CSS of the instructions &lt;div&gt;, it can be accessed by the ID "#%%INSTRUCTIONS%%"
+ * @param instructions_text
+ * @module Components
+ * @namespace Components
+ */
 function Instructions(instructions_text){
 
     Trials.setIVLevels(instructions_iv_key, [ [instructions_text] ]);

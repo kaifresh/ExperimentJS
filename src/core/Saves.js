@@ -15,6 +15,12 @@ import { _responses, _setResponses } from "./ResponseHandler.js";
 import { SetCSSOnElement } from "../utils/SetCSSOnElement.js";
 import { DOM_remove } from "../utils/DOMUtils.js";
 
+/**
+ * Saves Module
+ * @module Saves
+ * @exports ExperimentJS.Saves
+ * @namespace Saves
+ */
 var Saves = {};
 
 /**
@@ -25,7 +31,8 @@ Saves.clearSaves = function(){
 };
 
 /**
- * Save the remaining trials and stored responses in local storage.
+ * Save the remaining trials and stored responses in local storage. <br>
+ * A dialogue box will appear requesting a message to identify the saved data. This is stored along with the date.
  */
 Saves.saveBuiltTrialsAndResponses = function() {
 

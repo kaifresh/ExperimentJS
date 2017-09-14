@@ -145,7 +145,7 @@ used stimuli types.
 For example, the independent variable in the basic experiment above can be rewritten using the `ExperimentJS.Stimuli.ImageStimuliIV` preset:
 
 ```javascript
-ExperimentJS.Stimuli.ImageStimuliIV("Happy faces", ["./img/face_1.jpg", "./img/face_2.jpg", "./img/face_3.jpg", "./img/face_4.jpg", "./img/face_5.jpg", "./img/face_6.jpg"]);
+ExperimentJS.Stimuli.ImageStimuliIV("Emotion faces", ["./img/face_1.jpg", "./img/face_2.jpg", "./img/face_3.jpg", "./img/face_4.jpg", "./img/face_5.jpg", "./img/face_6.jpg"]);
 
 ExperimentJS.Components.Instructions("Is this face happy? Press the Y or N keys to respond.");
 
@@ -162,7 +162,7 @@ ExperimentJS.Trials.runNextTrial();
 ```
 
 Presets are simply a loose wrapper around `ExperimentJS.Trials.setIVsetFunc` and `ExperimentJS.Trials.setIVLevels`.
-These core elements are highly customisable and can be wrapped to produce many different types of stimuli.
+These core elements are highly customisable and can be wrapped with various functionalities to produce many different types of stimuli.
 
 
 ### PRESET PARADIGMS
@@ -184,9 +184,3 @@ ExperimentJS supports a variety of other commonly required features:
 - Getting participant information
 - Interstimulus pause (black screen between trials)
 - Callbacks (defining custom behaviours at the start, middle and end of your experiment)
-
-
-<!-- # INSERT GRAPH FLOW IMAGE HERE -->
-<!-- 1. Build independent variables - provide functions and data to manipulate them -->
-<!-- 2. Capture participants' responses -->
-<!-- 3. Set additional -->

@@ -27,9 +27,6 @@ function _SetInstructions(instructions_text){
 
     var instructions = document.getElementById(instructions_iv_key);
     instructions.textContent = instructions_text;
-
-
-
 }
 
 function _CreateInstructionsInDOM(){

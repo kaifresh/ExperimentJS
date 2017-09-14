@@ -18,6 +18,12 @@ Trials.forceOutputResponses = function(){
     Trials.OutputResponses(_outputResponses(_responses, true));
 };
 
+var _is_outputting_csv_format = true;
+Trials.DataOutputFormatModes = {"CSV": "csv", "DATA_ARRAY": "data_array"};
+Trials.SetDataOutputFormatType = function(mode){
+    _is_outputting_csv_format = mode === Trials.DataOutputFormatModes["CSV"];
+};
+
 
 export function _outputResponses(allResponses, log) {
 
@@ -25,10 +31,7 @@ export function _outputResponses(allResponses, log) {
 
     allResponses = _FormatStoredResponses( _.cloneDeep(allResponses) );
 
-    return _formatAllResponsesToCSV(allResponses); // need to decide what to do HERE
-
-    // _createCSVLinkAndDownload(csvContent);
-
+    return _is_outputting_csv_format ? _formatAllResponsesToCSV(allResponses) : allResponses;
 }
 
 export function _formatAllResponsesToCSV(allResponses, log = false){

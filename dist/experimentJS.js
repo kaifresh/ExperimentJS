@@ -17596,15 +17596,19 @@ _Trials.Trials.forceOutputResponses = function () {
     _Trials.Trials.OutputResponses(_outputResponses(_ResponseHandler._responses, true));
 };
 
+var _is_outputting_csv_format = true;
+_Trials.Trials.DataOutputFormatModes = { "CSV": "csv", "DATA_ARRAY": "data_array" };
+_Trials.Trials.SetDataOutputFormatType = function (mode) {
+    _is_outputting_csv_format = mode === _Trials.Trials.DataOutputFormatModes["CSV"];
+};
+
 function _outputResponses(allResponses, log) {
 
     if (allResponses.length === 0) return;
 
     allResponses = (0, _ResponseHandler._FormatStoredResponses)(_.cloneDeep(allResponses));
 
-    return _formatAllResponsesToCSV(allResponses); // need to decide what to do HERE
-
-    // _createCSVLinkAndDownload(csvContent);
+    return _is_outputting_csv_format ? _formatAllResponsesToCSV(allResponses) : allResponses;
 }
 
 function _formatAllResponsesToCSV(allResponses) {

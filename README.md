@@ -16,8 +16,8 @@ Create the necessary elements to view the stimuli in your HTML. In this example 
  <img id="your-target-image-element"/>
 ```
 
-Now, create your first [Independent Variable](https://en.wikipedia.org/wiki/Dependent_and_independent_variables)!
-Write an *IVsetFunc* (i.e. a setter function) that will manage the image that is displayed in this element
+Now, create your first [Independent Variable](https://en.wikipedia.org/wiki/Dependent_and_independent_variables).
+Write an *IVsetFunc* (i.e. a setter function) that will manage the image that is displayed in this element.
 
 ```javascript
 ExperimentJS.Trials.setIVsetFunc("Emotion faces", function(img_path){         // (iv name, setter function)
@@ -37,7 +37,7 @@ ExperimentJS.Trials.setIVLevels("Emotion faces", face_images.map(function(img_pa
 }));
 ```
 
-Write an event handler to capture participants' responses
+Write an event handler to capture participants' responses (i.e. the dependent variable).
 
 ```javascript
 
@@ -52,7 +52,7 @@ $(window).keydown(function(event){
 
 ```
 
-Optionally, add instructions for your participants
+Optionally, add instructions for your participants.
 
 ```javascript
 ExperimentJS.Components.Instructions("Is this face happy? Press the Y or N keys to respond.");
@@ -64,7 +64,7 @@ And of course, run the experiment!
 ExperimentJS.Trials.runNextTrial();
 ```
 
-In less than 20 lines of code, you have created an experiment like this:
+In less than 20 lines of code, you have created an experiment like this
 ![alt text](../examples/gifs/basic_example_demo_vid.gif "Video of basic example")
 
 
@@ -106,10 +106,10 @@ ExperimentJS.Trials.runNextTrial();
 ```
 
 
-### FULL FACTORIAL DESIGNS
+### FULL FACTORIAL RANDOMISED DESIGNS
 
-When you set two or more IVs, ExperimentJS will create a randomised, [full factorial design](https://en.wikipedia.org/wiki/Factorial_experiment) by default.
-Trial randomisation is performed using the Fischer-Yates shuffle by default.
+When you set two or more IVs, ExperimentJS will create a randomised, [full factorial design](https://en.wikipedia.org/wiki/Factorial_experiment).
+Trials are randomised using the Fischer-Yates shuffle, by default.
 If you wish to customise the behaviour of the trial randomiser, simply override *shuffleTrials*:
 ```javascript
 ExperimentJS.Trials.shuffleTrials = function(all_trials_array){ ... }
@@ -119,6 +119,15 @@ ExperimentJS.Trials.shuffleTrials = function(all_trials_array){ ... }
 ### DATA
 
 When your experiment completes, by default the browser will download a CSV formatted output of the current participant's results.
+| Participant Name | Participant Number | IV0_Emotion faces | DV_value |
+|------------------|--------------------|-------------------|----------|
+| unnamed_ppt      | 0                  | ./img/face_5.jpg  | yes      |
+| unnamed_ppt      | 0                  | ./img/face_1.jpg  | no       |
+| unnamed_ppt      | 0                  | ./img/face_6.jpg  | yes      |
+| unnamed_ppt      | 0                  | ./img/face_4.jpg  | no       |
+| unnamed_ppt      | 0                  | ./img/face_3.jpg  | yes      |
+| unnamed_ppt      | 0                  | ./img/face_2.jpg  | no       |
+
 This behaviour can also be overridden, should you choose to do something else with the data.
 For example, if you wanted to upload participant data to your server:
 

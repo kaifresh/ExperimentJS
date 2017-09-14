@@ -119,12 +119,12 @@ When your experiment completes, the browser will download a CSV formatted output
 
 | Participant Name | Participant Number | IV0_Emotion faces | DV_value |
 |------------------|--------------------|-------------------|----------|
-| unnamed_ppt      | 0                  | ./img/face_5.jpg  | yes      |
-| unnamed_ppt      | 0                  | ./img/face_1.jpg  | no       |
-| unnamed_ppt      | 0                  | ./img/face_6.jpg  | yes      |
-| unnamed_ppt      | 0                  | ./img/face_4.jpg  | no       |
-| unnamed_ppt      | 0                  | ./img/face_3.jpg  | yes      |
-| unnamed_ppt      | 0                  | ./img/face_2.jpg  | no       |
+| billy            | 0                  | ./img/face_5.jpg  | yes      |
+| billy            | 0                  | ./img/face_1.jpg  | no       |
+| billy            | 0                  | ./img/face_6.jpg  | yes      |
+| billy            | 0                  | ./img/face_4.jpg  | no       |
+| billy            | 0                  | ./img/face_3.jpg  | yes      |
+| billy            | 0                  | ./img/face_2.jpg  | no       |
 
 
 This automatic downloading behaviour can also be overridden, should you choose

@@ -17328,6 +17328,7 @@ Pause.showInterstimulusPause = function (duration) {
 
 var _pause = 500;
 /**
+ * Set the duration of the interstimulus pause
  * @param {int} pause_duration - set length of the interstimulus pause
  */
 Pause.setPauseTime = function (pause_duration) {
@@ -18217,6 +18218,12 @@ var _ = require("lodash");
 //                                 Trials - Setting IV Levels & Functions
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
+/**
+ * Trials Module
+ * @module Trials
+ * @exports ExperimentJS.Trials
+ * @namespace Trials
+ */
 var Trials = {};
 var IVs = exports.IVs = {};
 var setFuncs = exports.setFuncs = {};
@@ -18224,8 +18231,13 @@ var setFuncs = exports.setFuncs = {};
 var _expRepeats = 1;
 
 /**
- * Generating every IV requires 2 steps: creating the levels and creating a set function.
- * setIVLevels sets the levels used by IV.
+ * `setIVLevels` AND `setIVsetFunc` must both be called once per IV. They are linked by a common `ivname`.\n
+ * Call `setIVLevels` to assign data to the setter function (passed to `setIVsetFunc`).
+ * Data should be an array of arrays.
+ * Each sub array is the arguments passed to the setter function:
+ * @example
+ * ExperimentJS.Trials.setIVsetFunc("iv name", function(arg1, arg2, arg3){ ... });
+ * ExperimentJS.Trials.setIVLevels("iv name", [ [arg1_a, arg2_a, arg3_a], [arg1_b, arg2_b, arg3_b], ...]);
  * @param {string} ivname - The name of the IV.
  * @param {array} levels - Array of arrays of arguments passed to the set function.
  */
@@ -18250,10 +18262,14 @@ Trials.setIVLevels = function (ivname, levels) {
 
 /**
  * Generating every IV requires 2 steps: creating the levels and creating a set function.
- * setIVsetFunc stores the function that is used to set those levels in the display.
- * The arguments that this function takes must correspond to the arguments assigned in Trials.setIVLevels.
+ * `setIVsetFunc` is called to set the function that will be used to set that IV in the display.
+ * The levels it receives are set by `setIVLevels`.
+ * The arguments this function receives must correspond to the elements in the sub-arrays passed to `setIVLevels`.
  * @param {string} ivname - The name of the IV.
  * @param {function} setFunc - Function used to set levels in the display.
+ * @example
+ * ExperimentJS.Trials.setIVsetFunc("iv name", function(arg1, arg2, arg3){ ... });
+ * ExperimentJS.Trials.setIVLevels("iv name", [ [arg1_a, arg2_a, arg3_a], [arg1_b, arg2_b, arg3_b], ...]);
  */
 Trials.setIVsetFunc = function (ivname, setFunc) {
 
@@ -18274,7 +18290,7 @@ Trials.setIVSetFunc = Trials.setIVsetFunc; // papering over deprecated naming sy
 
 var _dvName = exports._dvName = undefined;
 /**
- * Set the name of the DV
+ * Set the name of the dependent variable (DV)
  * @param {string} dvName
  */
 Trials.setDVName = function (dvName) {
@@ -18287,14 +18303,28 @@ Trials.setDVName = function (dvName) {
 };
 
 /**
- * Parser function interface:
- *                  function ( args_passed_to_this_IV_for_this_trial..., index) {}
- *                  return
- *                          string -    processed/formatted version of the data
- *                          object -    values are the processed version of parts of the data,
- *                                      keys are names given to each portion of the parsed data
- * @param {string} ivname - The name of the IV.
- * @param {function} parserFunc - Function to parse responses. Must conform to the interface above
+ * In some cases, the arguments that you pass into your Independent Variable (IV) setter function will not be useful
+ * to include in the output at the end of the experiment.
+ * `setIVResponseParserFunc` allows you to set a function that parses the arguments passed to the setter function
+ *  into one (or more) output values (with more descriptive value). See example for more detail on output..
+ *
+ * @param {string} ivname - The name of the independent variable (IV).
+ * @param {function} parserFunc - Function to parse responses. Must conform to the interface in the example..
+ * @example
+ * Trials.setIVResponseParserFunc("iv name",
+ *      function ( args_passed_to_this_IV_for_this_trial..., index){
+ *
+ *          // Parse the arguments for this independent variable...
+ *
+ *          // eg. three numbers representing a  RGB triplet could be condensed into a color name:
+ *          // out = (arg1 === 255 && arg2 === 0 && arg3 === 0) ? "red" : "not red";
+ *
+ *          // return either a:
+ *                              string -    output a single column of parsed data, in string form
+ *                              object -    output multiple columns of parsed data, where each key is the column header
+ *
+ *      }
+ * );
  */
 Trials.setIVResponseParserFunc = function (ivname, parserFunc) {
 
@@ -18512,7 +18542,7 @@ function _buildTrials() {
     }
     exports._allTrials = _allTrials = temp;
 
-    if (_shouldShuffle) Trials.shuffleTrials(_allTrials);
+    if (_shouldShuffle) exports._allTrials = _allTrials = Trials.shuffleTrials(_allTrials);
 
     _totalTrials = _allTrials.length; //Used to determine where you are in the trial process
 
@@ -18552,9 +18582,14 @@ Trials.setShuffle = function (shouldShuffle) {
 
 /**
  * Shuffles trials using the Fisher Yates algorithm.
- * This function can be replaced with a custom shuffling function, as long as the interface is maintained.
- * Trials must be shuffled in place.
+ * If you wish to alter the shuffling behaviour, this function can be overridden (see example below).
  * @param {array} - unshuffled trials
+ * @example
+ * Trials.shuffleTrials = function(all_trials){
+ *       // shuffle all_trials in some way...
+ *    return all_trials
+ * }
+ *
  */
 Trials.shuffleTrials = function (trials) {
 
@@ -18563,6 +18598,7 @@ Trials.shuffleTrials = function (trials) {
     }
 
     trials.shuffle();
+    return trials;
 };
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =

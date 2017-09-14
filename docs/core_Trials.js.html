@@ -1,4 +1,32 @@
-import * as NumUtils from "../utils/NumberUtils";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: core/Trials.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: core/Trials.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as NumUtils from "../utils/NumberUtils";
 import { _Unserializable_Var2Token, _Unserializable_ParserFunc2Token } from "./UnserializableMap.js";
 import { _ErrorIfTrialsAreBuilt } from "./../errors/ErrorIfTrialsAreBuilt.js";
 var _ = require("lodash");
@@ -14,7 +42,7 @@ var _ = require("lodash");
  * */
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                                 Trials - Setting IV Levels & Functions
+//                                 Trials - Setting IV Levels &amp; Functions
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 /**
@@ -120,7 +148,7 @@ Trials.setDVName = function(dvName){
  *
  *          // eg. three numbers representing an RGB triplet could be condensed into a color name:
  *          var output;
- *          if (arg1 === 255 && arg2 === 0 && arg3 === 0){
+ *          if (arg1 === 255 &amp;&amp; arg2 === 0 &amp;&amp; arg3 === 0){
  *              output = "red";
  *          } else {
  *              output = "not red";
@@ -161,7 +189,7 @@ Trials.setRepeats = function (nRepeats) {
 
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                            Trials - Setting IV Levels & Functions (private)
+//                            Trials - Setting IV Levels &amp; Functions (private)
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 export function _setIVGeneric(ivName, fieldName, fieldVal) {
@@ -198,8 +226,8 @@ Trials.Phases = [];
  */
 Trials.setIVPhases = function(phase_num, array_of_iv_names, transition_func_or_delay = 0){
 
-    if (!NumUtils.isInt(phase_num) || phase_num < 0 || !Array.isArray(array_of_iv_names) || typeof array_of_iv_names[0] !== "string"
-        || (typeof transition_func_or_delay !== "function" && !NumUtils.isFloat(transition_func_or_delay) && !NumUtils.isInt(transition_func_or_delay))){
+    if (!NumUtils.isInt(phase_num) || phase_num &lt; 0 || !Array.isArray(array_of_iv_names) || typeof array_of_iv_names[0] !== "string"
+        || (typeof transition_func_or_delay !== "function" &amp;&amp; !NumUtils.isFloat(transition_func_or_delay) &amp;&amp; !NumUtils.isInt(transition_func_or_delay))){
         throw new Error("[ setIVPhases ERROR ] : Usage (int, array, function/int)" );
     }
 
@@ -208,7 +236,7 @@ Trials.setIVPhases = function(phase_num, array_of_iv_names, transition_func_or_d
     /*
     Confirm that:
     1. The transition function conforms to the interface (receives a Promise resolve(), and calls it internally)
-            - call function.toString() & regex for a call to resolve()
+            - call function.toString() &amp; regex for a call to resolve()
 
     2. The IV names are right
      */
@@ -288,7 +316,7 @@ function _buildTrials(printTrials = false) {
 
         console.log("Extending all trials array with: " + iv + " (" + IVs[iv].levels.length + " levels)");
 
-        // Serialise functions & objects stored in the map
+        // Serialise functions &amp; objects stored in the map
         var _tokenized_iv_levels = _Unserializable_Var2Token(IVs[iv].levels, iv);               // From UnserializableMap.js - replace unserializable object with token
         var _tokenized_parser_func = _Unserializable_ParserFunc2Token(IVs[iv].parserFunc, iv);
 
@@ -298,11 +326,11 @@ function _buildTrials(printTrials = false) {
 
         var len = _allTrials.length === 0 ? 1 : _allTrials.length; // For the first pass
 
-        for (var i = 0; i < len; ++i) {                                                         // For all trials built so far
+        for (var i = 0; i &lt; len; ++i) {                                                         // For all trials built so far
 
             buildingTrial = _allTrials.pop();                                                   // Pop the incomplete array of iv-vals (objects) and extend it
 
-            for (var j = 0; j < _tokenized_iv_levels.length; ++j) {                             //Extend trials so far by all the levels of the next IV
+            for (var j = 0; j &lt; _tokenized_iv_levels.length; ++j) {                             //Extend trials so far by all the levels of the next IV
 
                 var curIVLevel = {};
 
@@ -335,7 +363,7 @@ function _buildTrials(printTrials = false) {
     }
 
     temp = [];                                                                                  // Duplicate trials for repeats
-    for (i = 0; i < _expRepeats; i++) {
+    for (i = 0; i &lt; _expRepeats; i++) {
         temp = temp.concat(_allTrials);
     }
     _allTrials = temp;
@@ -351,9 +379,9 @@ function _buildTrials(printTrials = false) {
     console.log("There are ", _allTrials.length, "trials (using", _expRepeats, "_expRepeats)");
     if (printTrials){
         console.log(_allTrials);
-        for (i = 0; i < _allTrials.length; i++){
+        for (i = 0; i &lt; _allTrials.length; i++){
             console.log("TRIAL ", i);
-            for (j = 0; j < _allTrials[i].length; j++){
+            for (j = 0; j &lt; _allTrials[i].length; j++){
                 console.log( _allTrials[i][j], "\t==>", _allTrials[i][j].value );
             }
             console.log("******* ******* ******* *******");
@@ -415,4 +443,26 @@ function _csvIllegalCharCheck(string){
     }
 }
 
-export { Trials };
+export { Trials };</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Pause.html">Pause</a></li><li><a href="Trials.html">Trials</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_ApplyFunctionToHTMLChildren">_ApplyFunctionToHTMLChildren</a></li><li><a href="global.html#_didCreateImageStimuliCSS">_didCreateImageStimuliCSS</a></li><li><a href="global.html#_displayNextTrial">_displayNextTrial</a></li><li><a href="global.html#isFloat">isFloat</a></li><li><a href="global.html#preloadImage">preloadImage</a></li><li><a href="global.html#SetCSSOnElement">SetCSSOnElement</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.3</a> on Thu Sep 14 2017 16:22:10 GMT+1000 (AEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

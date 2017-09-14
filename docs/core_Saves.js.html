@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: core/Saves.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: core/Saves.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+ *
+ *   Store repsonses in localStorage.
+ *   Localstorage converts everything to JSON, so object types that cannot be converted will be lost
+ *   To preserve these unconvertble data, they are stored in a map,
+ *   and are replaced with tokens in the array of trials.
+ *   When trials are built: replaced serializable data with a serializable token (i.e. an indexed string)
+ *   When Trials are run &amp; formatted into response data: replace the token with the relevant object/function
+ *
+ *  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = */
+
+
+import { Trials,_allTrials, _setAllTrials, _didBuildTrials} from "./Trials.js";
+import { _responses, _setResponses } from "./ResponseHandler.js";
+import { SetCSSOnElement } from "../utils/SetCSSOnElement.js";
+import { DOM_remove } from "../utils/DOMUtils.js";
+
+var Saves = {};
+
+/**
+ * Clear the saves stored in local storage.
+ */
+Saves.clearSaves = function(){
+    localStorage.removeItem("experimentJSsaves");
+};
+
+/**
+ * Save the remaining trials and stored responses in local storage.
+ */
+Saves.saveBuiltTrialsAndResponses = function() {
+
+    if (typeof(Storage) !== "undefined") {
+
+        var experimentJSsaves = {};
+        experimentJSsaves["trials"] = _allTrials;                                           // Safely tokenized
+        experimentJSsaves["responses"] = _responses;
+
+        var msg = prompt("Add a message to this save!");
+
+        if (msg === null){
+            alert("Trials will not be saved");
+            return;
+        }
+
+        var dateKey = (new Date()).toUTCString(); //Very clear date
+
+        var saves_keyed_by_dates = (localStorage.experimentJSsaves === undefined) ? {} : JSON.parse(localStorage.experimentJSsaves);
+
+        saves_keyed_by_dates[msg + " - " +dateKey] = experimentJSsaves;                       //save to it
+
+        localStorage.experimentJSsaves = JSON.stringify(saves_keyed_by_dates);                //serialize!
+
+        console.log("Saved Trials", JSON.parse(localStorage.experimentJSsaves));
+    }
+};
+
+/**
+ * Load the saved trials from local storage.
+ */
+Saves.loadSavedTrialsAndResponses = function(){
+
+    if (document.getElementById(saves_dialog_id) !== null) return;                      // Dont display dialog if its already in the DOM
+
+    var experimentJSsaves = JSON.parse(localStorage.experimentJSsaves);
+
+    console.log("all saves: ", experimentJSsaves);
+
+    var select_dropdown_components = _createDropDownSelect(experimentJSsaves);          // Display the saves in a dropdown select
+
+    select_dropdown_components.button.addEventListener("click", function(){            // TODO reimplement as a js onClick event handler
+
+        // var saves_from_seleced_date = select_dropdown_components.select.find(":selected").text();
+        var select = select_dropdown_components.select;
+        var saves_from_seleced_date = select.options[select.selectedIndex].text;
+
+        saves_from_seleced_date = experimentJSsaves[saves_from_seleced_date];
+
+        _setAllTrials( saves_from_seleced_date["trials"] );                                             // Unparse your trials using custom unserialiser
+        _setResponses( saves_from_seleced_date["responses"] );
+        if (_responses === undefined || _responses === null) _setResponses( [] );
+
+        console.log("restored trials: ", _allTrials);
+        console.log("restored responses: ", _responses);
+
+        Trials.runNextTrial();
+
+        DOM_remove(select_dropdown_components.wrap);
+        // select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap);        //Remove select from dom
+    });
+
+    select_dropdown_components.button_clear.addEventListener("click", function(){
+
+        if (window.confirm("Are you sure you want to delete all saved experiments?")){
+            Saves.clearSaves();
+        }
+
+        DOM_remove(select_dropdown_components.wrap);
+        // select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap);         //Remove select from DOM
+    });
+
+    select_dropdown_components.button_cancel.addEventListener("click", function(){
+        DOM_remove(select_dropdown_components.wrap);
+        // select_dropdown_components.wrap.parentNode.removeChild(select_dropdown_components.wrap);
+    });
+
+
+};
+
+// Remove this functionality if Storage isnt supported
+if (typeof(Storage) === "undefined"){
+    var localStorageIsUnsupported = function(){alert("Your browser does not support local storage or experiment result saving")};
+    Saves.loadSavedTrialsAndResponses = Saves.saveBuiltTrialsAndResponses = localStorageIsUnsupported;
+}
+
+
+
+// TODO: Verify that no jQuery is being used!
+const saves_dialog_id = "ExperimentJS_Saved_Info";
+function _createDropDownSelect(all_saves){
+
+    var saves_dialog_wrap = document.createElement("saves_dialog_wrap");
+    saves_dialog_wrap.id = saves_dialog_id;
+
+    //Make a select to choose from the saves
+    var sel = document.createElement("select");
+
+    Object.keys(all_saves).map(function(elem, i, all){
+
+        var option = document.createElement("option");
+        option.value = i;                                           // Use the all_saves index as the key
+        option.text = elem;
+        sel.appendChild(option);
+        // sel.append($("&lt;option>").attr("value",i).text(elem));
+    });
+
+
+    // Buttons - no functionality here
+    var b = document.createElement("button");
+    b.innerHTML = "Choose";
+
+    var b_clear = document.createElement("button");
+    b_clear.innerHTML = "Clear";
+
+    var b_cancel = document.createElement("button");
+    b_cancel.innerHTML = "Cancel";
+
+
+    [sel, document.createElement("br"), b, b_clear, b_cancel].map(function(elem){
+        saves_dialog_wrap.appendChild(elem);
+    });
+    document.body.appendChild(saves_dialog_wrap);
+
+    var css = {
+        position: "fixed",
+        top: "45vh",
+        left: "25vw",
+        width: "50vw",
+        height: "5vh",
+        background: "white",
+        border: "2vw",
+        "text-align": "center"
+    };
+    SetCSSOnElement(saves_dialog_wrap, css);
+
+
+    return {
+        select: sel,
+        button: b,
+        button_clear: b_clear,
+        button_cancel: b_cancel,
+        wrap: saves_dialog_wrap
+    };
+}
+
+
+export { Saves };</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Pause.html">Pause</a></li><li><a href="Trials.html">Trials</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_ApplyFunctionToHTMLChildren">_ApplyFunctionToHTMLChildren</a></li><li><a href="global.html#_didCreateImageStimuliCSS">_didCreateImageStimuliCSS</a></li><li><a href="global.html#_displayNextTrial">_displayNextTrial</a></li><li><a href="global.html#isFloat">isFloat</a></li><li><a href="global.html#preloadImage">preloadImage</a></li><li><a href="global.html#SetCSSOnElement">SetCSSOnElement</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.3</a> on Thu Sep 14 2017 16:22:10 GMT+1000 (AEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

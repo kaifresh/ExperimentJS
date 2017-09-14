@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ExperimentJS - Basic Example</title>
+
+    <style>
+        #img-wrap {
+            width: 100%;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="img-wrap">
+    <img id="lh_img" />
+    <img id="rh_img" />
+</div>
+
+<script src="../dist/experimentJS.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+<script>
+
+    var face_images = ["./img/face_1.jpg", "./img/face_2.jpg", "./img/face_3.jpg", "./img/face_4.jpg", "./img/face_5.jpg", "./img/face_6.jpg"];
+
+    var face_img_setter_function = function(id_of_each_image_element, img_path){
+        $(id_of_each_image_element).attr("src", img_path);
+    }
+
+    ExperimentJS.Trials.setIVsetFunc("Emotion faces on left", face_img_setter_function);
+    ExperimentJS.Trials.setIVLevels("Emotion faces on left", face_images.map( function(img_path){ ExperimentJS.Utils.PreloadImage(img_path); return ["#lh_img", img_path] }) );
+
+    ExperimentJS.Trials.setIVsetFunc("Emotion faces on right", face_img_setter_function);
+    ExperimentJS.Trials.setIVLevels("Emotion faces on right", face_images.map( function(img_path){ return ["#rh_img", img_path] }) );
+
+    $(window).keydown(function(event){
+        if (event.which === 37){                                                // left arrow key
+            ExperimentJS.Trials.runNextTrial({dv_value: 'selected left'});
+        }
+        else if (event.which === 39 ){                                          // right arrow key
+            ExperimentJS.Trials.runNextTrial({dv_value: 'selected right'});
+        }
+    });
+
+    ExperimentJS.Components.Instructions("Choose the happier face. Use the left and right arrow keys to respond");
+
+    ExperimentJS.Trials.runNextTrial();
+
+
+</script>
+
+</body>
+</html>

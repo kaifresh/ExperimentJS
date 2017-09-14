@@ -66,6 +66,51 @@ ExperimentJS.Trials.runNextTrial();
 In less than 20 lines of code, you have created an experiment like this:
 ![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
 
+
+### FLEXIBILITY
+
+ExperimentJS is highly customisable. Individual components can be wired together in many different ways to
+create a wide variety of experimental paradigms.
+
+For example, the experiment above can be easily converted into a forced choice format:
+
+```javascript
+
+var face_images = ["./img/face_1.jpg", "./img/face_2.jpg", "./img/face_3.jpg", "./img/face_4.jpg", "./img/face_5.jpg", "./img/face_6.jpg"];
+
+var face_img_setter_function = function(id_of_each_image_element, img_path){
+    $(id_of_each_image_element).attr("src", img_path);
+}
+
+ExperimentJS.Trials.setIVsetFunc("Emotion faces on left", face_img_setter_function);
+ExperimentJS.Trials.setIVLevels("Emotion faces on left", face_images.map( function(img_path){ ExperimentJS.Utils.PreloadImage(img_path); return ["#lh_img", img_path] }) );
+
+ExperimentJS.Trials.setIVsetFunc("Emotion faces on right", face_img_setter_function);
+ExperimentJS.Trials.setIVLevels("Emotion faces on right", face_images.map( function(img_path){ return ["#rh_img", img_path] }) );
+
+$(window).keydown(function(event){
+    if (event.which === 37){                                                // left arrow key
+        ExperimentJS.Trials.runNextTrial({dv_value: 'selected left'});
+    }
+    else if (event.which === 39 ){                                          // right arrow key
+        ExperimentJS.Trials.runNextTrial({dv_value: 'selected right'});
+    }
+});
+
+ExperimentJS.Components.Instructions("Choose the happier face. Use the left and right arrow keys to respond");
+
+ExperimentJS.Trials.runNextTrial();
+```
+
+
+### FULL FACTORIAL DESIGNS
+
+When you set two or more IVs, ExperimentJS will create a randomised [full factorial design](https://en.wikipedia.org/wiki/Factorial_experiment) by default.
+Trial randomisation is performed using the Fischer-Yates shuffle by default.
+If you wish to customise the behaviour of the trial randomiser, simply override ```javascript  ExperimentJS.Trials.shuffleTrials = function(all_trials_array){ ... } ```
+
+
+
 ### DATA
 
 When your experiment completes, by default the browser will download a CSV formatted output of the current participant's results.
@@ -74,47 +119,12 @@ For example, if you wanted to upload participant data to your server:
 
 ```javascript
 Trials.OutputResponses = function(csv_data_string){
-    $.post("/upload.php", {data: csv_data_string});
+    $.post("/upload.php", {ExperimentJS_output_data: csv_data_string});
 }
 ```
 
 
 
-
-### FLEXIBILE
-
-ExperimentJS is highly customisable. Components can be wired together in many different ways to
-create a wide range of different experimental paradigms.
-
-For example, the experiment above can be easily converted into a forced choice format.
-
-<!-- INCLUDE AN IMAGE OF THE EXPEIRMETN THSI PRODUCES!! -->
-```javascript
-
-var face_images = ["./img/face_1.jpg", "./img/face_2.jpg", "./img/face_3.jpg", "./img/face_4.jpg", "./img/face_5.jpg", "./img/face_6.jpg"];
-
-var face_img_setter_function = function(id_of_each_image_element, img_path){
-    $(id_of_each_image_element).src(img_path);
-}
-
-ExperimentJS.Trials.setIVsetFunc("Happy faces on left", face_img_setter_function);
-ExperimentJS.Trials.setIVLevels("Happy faces on left", face_images.map( function(elem){ return ["#lh_img", elem] }) );
-
-ExperimentJS.Trials.setIVsetFunc("Happy faces on right", face_img_setter_function);
-ExperimentJS.Trials.setIVLevels("Happy faces on right", face_images.map( function(elem){ return ["#rh_img", elem] }) );
-
-$(window).keydown(function(event){
-    if (event.which === 37){ // left arrow key
-        ExperimentJS.Trials.runNextTrial({dv_value: 'selected left'});
-    }
-    else if (event.which === 39 ){ // right arrow key
-        ExperimentJS.Trials.runNextTrial({dv_value: 'selected right'});
-    }
-});
-
-ExperimentJS.Components.Instructions("Choose the more happy face. Use the left and right arrow keys to respond");
-
-```
 
 
 ### PRESETS
@@ -125,7 +135,7 @@ These presets are loose wrappers around the core experimental code above,
 
 ```javascript
 
-ExperimentJS.Stimuli.ImageStimuliIV("Gendered faces", ["./img/face_1.jpg", "./img/face_2.jpg", "./img/face_3.jpg", "./img/face_4.jpg", "./img/face_5.jpg", "./img/face_6.jpg"]);
+ExperimentJS.Stimuli.ImageStimuliIV("Happy faces", ["./img/face_1.jpg", "./img/face_2.jpg", "./img/face_3.jpg", "./img/face_4.jpg", "./img/face_5.jpg", "./img/face_6.jpg"]);
 
 ExperimentJS.Components.Instructions("Is this face happy? Press the Y or N keys to respond.");
 

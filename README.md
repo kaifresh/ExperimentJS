@@ -70,7 +70,7 @@ In less than 20 lines of code, you have created an experiment like this
 
 ### FLEXIBILITY
 
-ExperimentJS is highly customisable. Individual components can be wired together in many different ways to
+ExperimentJS is *highly customisable*. Individual components can be wired together in many different ways to
 create a wide variety of experimental paradigms.
 
 For example, the experiment above can be easily converted into a forced choice comparison format:
@@ -119,6 +119,7 @@ ExperimentJS.Trials.shuffleTrials = function(all_trials_array){ ... }
 ### DATA
 
 When your experiment completes, by default the browser will download a CSV formatted output of the current participant's results.
+
 | Participant Name | Participant Number | IV0_Emotion faces | DV_value |
 |------------------|--------------------|-------------------|----------|
 | unnamed_ppt      | 0                  | ./img/face_5.jpg  | yes      |
@@ -128,7 +129,9 @@ When your experiment completes, by default the browser will download a CSV forma
 | unnamed_ppt      | 0                  | ./img/face_3.jpg  | yes      |
 | unnamed_ppt      | 0                  | ./img/face_2.jpg  | no       |
 
-This behaviour can also be overridden, should you choose to do something else with the data.
+
+This automatic downloading behaviour can also be overridden, should you choose
+to do something else with the data.
 For example, if you wanted to upload participant data to your server:
 
 ```javascript
@@ -138,8 +141,7 @@ Trials.OutputResponses = function(csv_data_string){
 ```
 
 
-
-### PRESETS
+### PRESET STIMULI
 To further speed up development, ExperimentJS contains a range of predefined components for creating frequently
 used stimuli types.
 
@@ -164,21 +166,32 @@ ExperimentJS.Trials.runNextTrial();
 
 ```
 
-ExperimentJS also provides built-in support for a variety of experimental paradigms (such as Two Alternative Forced Choice).
-[Click here](TODO) to view usage instructions and demos.
+Presets are simply a loose wrapper around `ExperimentJS.Trials.setIVsetFunc` and `ExperimentJS.Trials.setIVLevels`.
+These core elements are highly customisable and can be wrapped to produce many different types of stimuli.
 
 
+### PRESET PARADIGMS
+ExperimentJS also provides built-in support for a variety of experimental paradigms
+(such as Two Alternative Forced Choice).
 
-### ADD ONS
-- csv formatted output
-- repsonse time tracking
-- instructions
-- saves
-- getting participant info
-- interstimulus pause
-- callbacks
 
-# INSERT GRAPH FLOW IMAGE HERE
-1. Build independent variables - provide functions and data to manipulate them
-2. Capture participants' responses
-3. Set additional
+[Click here](TODO) to view a full list of presets, usage instructions and demos.
+
+
+### ADDITIONAL FEATURES
+
+ExperimentJS supports a variety of other commonly required features:
+
+- Response time tracking
+- Displaying IVs in different phases (e.g. in [backwards masking paradigms](https://en.wikipedia.org/wiki/Backward_masking))
+- Experimental instructions
+- Saving participants' progress
+- Getting participant information
+- Interstimulus pause (black screen between trials)
+- Callbacks (defining custom behaviours at the start, middle and end of your experiment)
+
+
+<!-- # INSERT GRAPH FLOW IMAGE HERE -->
+<!-- 1. Build independent variables - provide functions and data to manipulate them -->
+<!-- 2. Capture participants' responses -->
+<!-- 3. Set additional -->

@@ -33,7 +33,7 @@
     ExperimentJS.Trials.setIVLevels("Emotion faces on left", face_images.map( function(img_path){ ExperimentJS.Utils.PreloadImage(img_path); return ["#lh_img", img_path] }) );
 
     ExperimentJS.Trials.setIVsetFunc("Emotion faces on right", face_img_setter_function);
-    ExperimentJS.Trials.setIVLevels("Emotion faces on right", face_images.map( function(img_path){ return ["#rh_img", img_path] }) );
+    ExperimentJS.Trials.setIVLevels("Emotion faces on right", face_images.map( function(img_path){ ExperimentJS.Utils.PreloadImage(img_path); return ["#rh_img", img_path] }) );
 
     $(window).keydown(function(event){
         if (event.which === 37){                                                // left arrow key

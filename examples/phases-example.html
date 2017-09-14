@@ -51,7 +51,6 @@
 
     ExperimentJS.Trials.setIVLevels("Run first also", ["OKAY"].map(function(elem){ return [elem] }));
     ExperimentJS.Trials.setIVsetFunc("Run first also", function(word){
-        console.log("Phase 1 is being run!", word);
         $("#std").text( $("#std").text() + word);
 
         $("#std").css({'background': "#8866dd"});

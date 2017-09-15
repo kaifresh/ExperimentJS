@@ -4,11 +4,15 @@
 
 import { ImageStimuli, ImageStimuliIV } from "./ImageStimuli.js";
 
-var Stimuli = {
-    ImageStimuli: ImageStimuli,
-    ImageStimuliIV: ImageStimuliIV
-};
-
+/**
+ * 
+ * Stimuli Module
+ * @exports ExperimentJS.Stimuli
+ * @namespace Stimuli
+ */
+var Stimuli = {};
+Stimuli.ImageStimuli = ImageStimuli;
+Stimuli.ImageStimuliIV =  ImageStimuliIV;
 
 export { Stimuli };
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: core/GetPptInfo.js</title>
+    <title>JSDoc: Source: stimuli/stimuli.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: core/GetPptInfo.js</h1>
+    <h1 class="page-title">Source: stimuli/stimuli.js</h1>
 
     
 
@@ -27,44 +27,25 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * Created by kai on 6/7/17.
+ * Created by kai on 4/8/17.
  */
-import { Trials } from "./Trials.js";
 
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                      Experiment Lifecycle - Get Participant Info
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
-export var _pptName = "unnamed_ppt";
-export var _pptNo = 0;
+import { ImageStimuli, ImageStimuliIV } from "./ImageStimuli.js";
 
 /**
- * Get participant number and name.
+ * 
+ * Stimuli Module
+ * @exports ExperimentJS.Stimuli
+ * @namespace Stimuli
  */
-Trials.getPptInfo = function () {
-    
-    while (true) {
-        _pptName = prompt("Please enter your name").trim();
-        console.log("name was", _pptName);
-        if (_pptName === "" || _pptName === null) {
-            alert("Name cannot be blank");
-        } else {
-            break;
-        }
-    }
+var Stimuli = {};
+Stimuli.ImageStimuli = ImageStimuli;
+Stimuli.ImageStimuliIV =  ImageStimuliIV;
 
-    while (true) {
-        _pptNo = parseInt(prompt("Please enter your participant number"));
-        console.log("ppt number was", _pptNo);
-        if (isNaN(_pptNo)) {
-            alert("Participant number must be an integer");
-        } else {
-            break;
-        }
-    }
+export { Stimuli };
 
-    console.log("Participant name: ", _pptName, "\tParticipant number: ", _pptNo);
-};</code></pre>
+
+</code></pre>
         </article>
     </section>
 

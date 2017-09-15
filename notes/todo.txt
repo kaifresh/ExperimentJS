@@ -12,26 +12,8 @@
 
 Components                          [X]
 Utils                               [ ]
-Methods                             [ ]
+Methods                             [X]
 Pause                               [X]
 Saves                               [X]
 Stimuli                             [ ]
 Trials                              [X]
-:
-(...)
-
-:
-(...)
-
-:
-(...)
-
-:
-
-:
-(...)
-
-:
-
-:
-(...)

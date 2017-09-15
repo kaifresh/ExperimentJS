@@ -1,7 +1,39 @@
-import { Trials } from "../core/Trials.js";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: methods/TwoAFC.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: methods/TwoAFC.js</h1>
+
+    
 
 
-var _2AFC = {};
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Trials } from "../core/Trials.js";
+
+
+/**
+ * @exports ExperimentJS.Components.Two_AFC
+ * @namespace Methods
+ */
+var TwoAFC = {};
 
 /*
  * 2AFC Module.
@@ -14,15 +46,21 @@ var _2AFC = {};
 // ================================== Standard ==================================
 
 var _didSetStandard = false;
+// /**
+//
+//  * Set the fucking standard
+//  * @param iv_name {string}
+//  * @param std_func {function}  the standard setter function
+//  * @param std_func_args {array} array of arguments to be passed to the standard setter function
+//  * @namespace Methods
+//  */
 /**
- * @module Methods
- * @namespace Methods
+ *
  * @param iv_name
- * @param {function} std_func - the standard setter function
- * @param {array} std_func_args - array of arguments to be passed to the standard setter function
- * @constructor
+ * @param std_func
+ * @param std_func_args
  */
-_2AFC.SetStandard = function(iv_name, std_func, std_func_args){
+TwoAFC.SetStandard = function(iv_name, std_func, std_func_args){
 
     if (typeof iv_name !== "string" || typeof std_func !== "function" || !Array.isArray(std_func_args) ){
         throw new Error("[ 2AFC SetStandard Error ] - usage = (string iv_name, function std_func, array std_func_args)");
@@ -38,13 +76,11 @@ _2AFC.SetStandard = function(iv_name, std_func, std_func_args){
 
 // Usage: (string iv_name, function parser_func);
 /**
- * TODO: WRITE
- * @namespace Methods
- * @param iv_name
- * @param parser_func
- * @constructor
+ * Set a parser function for the independent variable that manipulates the standard
+ * @param iv_name {string}
+ * @param parser_func {function}
  */
-_2AFC.SetStandardParserFunc = function(iv_name, parser_func){
+TwoAFC.SetStandardParserFunc = function(iv_name, parser_func){
     Trials.setIVResponseParserFunc("std_"+iv_name, parser_func);
 };
 
@@ -53,13 +89,11 @@ _2AFC.SetStandardParserFunc = function(iv_name, parser_func){
 var _didSetVarying = false;
 // Usage: ( string, function, array of arrays (of args) )
 /**
- * @namespace Methods
  * @param iv_name
  * @param varying_func
  * @param varying_func_levels
- * @constructor
  */
-_2AFC.SetVarying = function(iv_name, varying_func, varying_func_levels){
+TwoAFC.SetVarying = function(iv_name, varying_func, varying_func_levels){
 
     if (typeof iv_name !== "string" || typeof varying_func !== "function" || !Array.isArray(varying_func_levels) || !Array.isArray(varying_func_levels[0]) ){
         throw new Error("[ 2AFC SetVarying Error ] - usage = (string iv_name, function varying_func, array varying_func_levels)");
@@ -73,19 +107,17 @@ _2AFC.SetVarying = function(iv_name, varying_func, varying_func_levels){
 };
 
 // Usage: (string iv_name, function parser_func);
-_2AFC.SetVaryingParserFunc = Trials.setIVResponseParserFunc;
+TwoAFC.SetVaryingParserFunc = Trials.setIVResponseParserFunc;
 
 // ================================== Counter Balancer ==================================
 
 var _didSetCounterBalance = false;
 /**
- * @namespace Methods
  * @param iv_name
  * @param counterbalance_func
  * @param counterbalance_func_levels
- * @constructor
  */
-_2AFC.SetCounterBalancePresentation = function(iv_name, counterbalance_func, counterbalance_func_levels){
+TwoAFC.SetCounterBalancePresentation = function(iv_name, counterbalance_func, counterbalance_func_levels){
 
     if (typeof iv_name !== "string" || typeof counterbalance_func !== "function" || !Array.isArray(counterbalance_func_levels) || !Array.isArray(counterbalance_func_levels[0]) ){
         throw new Error("[ 2AFC CounterBalancePresentation Error ] - usage = (string iv_name, function varying_func, array varying_func_levels)");
@@ -101,28 +133,45 @@ _2AFC.SetCounterBalancePresentation = function(iv_name, counterbalance_func, cou
 
 // Usage: (string iv_name, function parser_func);
 /**
- *
  * @param iv_name
  * @param parser_func
- * @constructor
  */
-_2AFC.SetCounterBalanceParserFunc = function(iv_name, parser_func){
+TwoAFC.SetCounterBalanceParserFunc = function(iv_name, parser_func){
     Trials.setIVResponseParserFunc("counterbalance_"+iv_name, parser_func);
 };
 
 /**
- *
- * @namespace Methods
  * @param print
- * @constructor
  */
-_2AFC.BuildExperiment = function(print){
+TwoAFC.BuildExperiment = function(print){
 
-    if ( !(_didSetCounterBalance && _didSetStandard && _didSetVarying) ){
+    if ( !(_didSetCounterBalance &amp;&amp; _didSetStandard &amp;&amp; _didSetVarying) ){
         throw new Error("[ 2AFC BuildExperiment Error ] - To run a 2AFC experiment a standard variable, varying variable and counterbalancer must be set");
     }
 
     Trials.BuildExperiment(print);
 };
 
-export { _2AFC }
+export { TwoAFC }</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Components.html">Components</a></li><li><a href="Methods.html">Methods</a></li><li><a href="Pause.html">Pause</a></li><li><a href="Saves.html">Saves</a></li><li><a href="Trials.html">Trials</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.3</a> on Fri Sep 15 2017 10:33:18 GMT+1000 (AEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -9,6 +9,8 @@ ExperimentJS solves this by providing a framework that greatly simplifies this p
 ExperimentJS takes care of the small details in implementing experiments and lets you focus on the big picture,
 like working on stimulus design and experimental structure.
 
+With ExperimentJS the standard procedure involves setting
+
 To run a basic experiment, all you need to do is:
 
 Include `experimentJS.js` or `experimentJS.min.js` from /dist.

@@ -17155,7 +17155,7 @@ Object.keys(_utils_public).forEach(function (key) {
 
 require("./utils/utils.js");
 
-},{"./components/components.js":4,"./core/core.js":13,"./methods/methods.js":18,"./stimuli/stimuli.js":20,"./utils/utils.js":28,"./utils/utils_public.js":29}],3:[function(require,module,exports){
+},{"./components/components.js":4,"./core/core.js":13,"./methods/methods.js":17,"./stimuli/stimuli.js":19,"./utils/utils.js":27,"./utils/utils_public.js":28}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17167,6 +17167,13 @@ var _Trials = require("../core/Trials.js");
 
 var instructions_iv_key = "%%INSTRUCTIONS%%";
 
+/**
+ * Set some instructions text for your participants. This text will be displayed on every trial.<br>
+ * If you wish to edit the CSS of the instructions &lt;div&gt;, it can be accessed by the ID "#%%INSTRUCTIONS%%"
+ * @param instructions_text
+ * @module Components
+ * @namespace Components
+ */
 function Instructions(instructions_text) {
 
     _Trials.Trials.setIVLevels(instructions_iv_key, [[instructions_text]]);
@@ -17207,15 +17214,21 @@ exports.Instructions = Instructions;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 exports.Components = undefined;
 
 var _Instructions = require("./Instructions.js");
 
-var Components = {
-    Instructions: _Instructions.Instructions
-};
+/**
+ * Components Module
+ * @module Components
+ * @exports ExperimentJS.Components
+ * @namespace Components
+ */
+var Components = {};
+
+Components.Instructions = _Instructions.Instructions;
 
 exports.Components = Components;
 
@@ -17308,9 +17321,15 @@ var _blackOut = _createInterstimulusPause();
 document.body.appendChild(_blackOut);
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//                                  Interstimulus Pause - use
+//                                  Interstimulus Pause
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
+/**
+ * Interstimulus Pause Module
+ * @module Interstimulus Pause
+ * @exports ExperimentJS.Pause
+ * @namespace Pause
+ */
 var Pause = {};
 
 /**
@@ -17342,7 +17361,7 @@ Pause.setPauseTime = function (pause_duration) {
 var _shouldInterstimulusPause = exports._shouldInterstimulusPause = true; //used in: RunExperiment.js
 /**
  * Turn the interstimulus pause on or off
- * @param {bool} - value
+ * @param {bool}
  */
 Pause.setShouldInterstimulusPause = function (value) {
     if (typeof value === "boolean") {
@@ -17386,7 +17405,7 @@ function _showInterstimulusPause(blackout) {
 
 exports.Pause = Pause;
 
-},{"../utils/SetCSSOnElement.js":25,"./RunExperiment.js":9}],7:[function(require,module,exports){
+},{"../utils/SetCSSOnElement.js":24,"./RunExperiment.js":9}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17566,7 +17585,7 @@ function _FormatStoredResponses(responses) {
     return formatted_responses;
 }
 
-},{"../utils/StringUtils.js":27,"./Trials":11,"./UnserializableMap.js":12}],8:[function(require,module,exports){
+},{"../utils/StringUtils.js":26,"./Trials":11,"./UnserializableMap.js":12}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17590,7 +17609,8 @@ var _ = require("lodash"); // Browserify will resolve this package
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 /**
- * Download participant's responses as a csv
+ * Download participant's responses as a csv. This can be called at any time during the experiment
+ * to obtain participant data before all trials are complete. 
  */
 _Trials.Trials.forceOutputResponses = function () {
     console.log("Forcing output of _responses");
@@ -17653,7 +17673,7 @@ function _createCSVLinkAndDownload(csvContent) {
     a.click();
 }
 
-},{"../utils/CreateDownloadLink.js":21,"./GetPptInfo.js":5,"./ResponseHandler.js":7,"./Trials.js":11,"lodash":1}],9:[function(require,module,exports){
+},{"../utils/CreateDownloadLink.js":20,"./GetPptInfo.js":5,"./ResponseHandler.js":7,"./Trials.js":11,"lodash":1}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17709,13 +17729,14 @@ var _shouldRunNextTrial = exports._shouldRunNextTrial = true; // used by: Inters
 var _didStartExperiment = exports._didStartExperiment = false;
 
 /**
- * Call Trials.runNextTrial both to start the experiment and to progress to the next trial.
+ * Call `ExperimentJS.Trials.runNextTrial()` both to start the experiment and to progress to the next trial.
  * To store participant's response, an object should be passed in as the first arg.
  * This object should contain the key "dv_value", with its value being the participant's response
  * to the trial that was just run.
  *
- * Example:
- *      ExperimentJS.Trials.runNextTrial({ dv_value: "left" });
+ * @example
+ * ExperimentJS.Trials.runNextTrial();                                          // To start the experiment
+ * ExperimentJS.Trials.runNextTrial({ dv_value: "participant's response" });    // To store participant's response and progress to next trial
  *      
  * @param {object} options - must contain field "dv_value"
  */
@@ -17773,7 +17794,7 @@ _Trials.Trials.runNextTrial = function (options) {
 //                        Experiment Lifecycle - Displaying The Next Trial
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
-/** Where view-level elements are set - this is like the CONTROLLER method interfacing between MODEL and VIEW*/
+/* Where view-level elements are set - this is like the CONTROLLER method interfacing between MODEL and VIEW*/
 function _displayNextTrial() {
 
     // Deep copy the trial before you replace its tokens.
@@ -17861,6 +17882,10 @@ function _fireIVSetFuncWithArgs(cur_iv) {
 //
 var _should_track_response_time = false;
 
+/**
+ * Turn tracking of response time on or off.
+ * @param shouldTrackResponseTime {bool}
+ */
 _Trials.Trials.setShouldTrackResponseTime = function (shouldTrackResponseTime) {
 
     if (typeof window.performance === 'undefined' || typeof window.performance.now === 'undefined') {
@@ -17900,8 +17925,8 @@ function _getResponseTimeDelta() {
 
 var _startCallback = null;
 /**
- * Set a callback to be run at the start of the experiment.
- * @param {function} start_callback
+ * Set a custom behaviour to be run at the start of the experiment.
+ * @param {function} start_callback - callback function implementing this behaviour
  */
 _Trials.Trials.setStartCallback = function (start_callback) {
 
@@ -17933,8 +17958,8 @@ function _shouldRunStartCallback() {
 
 var _midCallback = null;
 /**
- * Set a callback to be run at the midpoint of the experiment
- * @param fn
+ * Set a custom behaviour to be run at the midpoint of the experiment.
+ * @param {function} A callback function implementing this behaviour
  */
 _Trials.Trials.setMidpointCallback = function (fn) {
 
@@ -17965,17 +17990,20 @@ function _shouldRunMidCallback() {
 
 /**
  * Function to output URI encoded csv.
- * Can be re-assigned or overridden to provide additional
+ * This function can be overridden to support different
  * functionality (e.g. sending the CSV to a server).
- * Overriding this function must conform to the interface.
  * @param {string} uri_csv_string
+ * @example
+ * Trials.OutputResponses = function(uri_csv_string){
+ *      $.post("/custom_uploader.php", {data: uri_csv_string});
+ * };
  */
 _Trials.Trials.OutputResponses = function (uri_csv_string) {
     (0, _ResponsesOutput._createCSVLinkAndDownload)(uri_csv_string);
 };
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-//             Experiment Lifecycle - End Callback (a behaviour at the end of the experiment)
+//             Experiment Lifecycle - End Callback (custom behaviour at the end of the experiment)
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 var _endCallBack = function _endCallBack() {
@@ -17986,8 +18014,8 @@ var _endCallBack = function _endCallBack() {
 };
 
 /**
- * Set a callback to be run at the end of the experiment, after responses are output.
- * @param {function} end_callback
+ * Set a custom behaviour to be run at the end of the experiment, after responses are output.
+ * @param {function} A function implementing this behaviour
  */
 _Trials.Trials.setEndCallback = function (end_callback) {
     if (typeof end_callback === "function") {
@@ -17997,7 +18025,7 @@ _Trials.Trials.setEndCallback = function (end_callback) {
     }
 };
 
-},{"../utils/DOMUtils.js":22,"../utils/StringUtils.js":27,"./../errors/ErrorIfDidStartExperiment.js":14,"./InterstimulusPause.js":6,"./ResponseHandler.js":7,"./ResponsesOutput.js":8,"./Trials.js":11,"./UnserializableMap.js":12,"lodash":1}],10:[function(require,module,exports){
+},{"../utils/DOMUtils.js":21,"../utils/StringUtils.js":26,"./../errors/ErrorIfDidStartExperiment.js":14,"./InterstimulusPause.js":6,"./ResponseHandler.js":7,"./ResponsesOutput.js":8,"./Trials.js":11,"./UnserializableMap.js":12,"lodash":1}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18013,6 +18041,12 @@ var _SetCSSOnElement = require("../utils/SetCSSOnElement.js");
 
 var _DOMUtils = require("../utils/DOMUtils.js");
 
+/**
+ * Saves Module
+ * @module Saves
+ * @exports ExperimentJS.Saves
+ * @namespace Saves
+ */
 /* = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
  *
  *   Store repsonses in localStorage.
@@ -18034,7 +18068,8 @@ Saves.clearSaves = function () {
 };
 
 /**
- * Save the remaining trials and stored responses in local storage.
+ * Save the remaining trials and stored responses in local storage. <br>
+ * A dialogue box will appear requesting a message to identify the saved data. This is stored along with the date.
  */
 Saves.saveBuiltTrialsAndResponses = function () {
 
@@ -18179,7 +18214,7 @@ function _createDropDownSelect(all_saves) {
 
 exports.Saves = Saves;
 
-},{"../utils/DOMUtils.js":22,"../utils/SetCSSOnElement.js":25,"./ResponseHandler.js":7,"./Trials.js":11}],11:[function(require,module,exports){
+},{"../utils/DOMUtils.js":21,"../utils/SetCSSOnElement.js":24,"./ResponseHandler.js":7,"./Trials.js":11}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18303,21 +18338,27 @@ Trials.setDVName = function (dvName) {
 };
 
 /**
- * In some cases, the arguments that you pass into your Independent Variable (IV) setter function will not be useful
+ * In some cases, the arguments that you pass into your independent variable (IV) setter function will not be useful
  * to include in the output at the end of the experiment.
  * `setIVResponseParserFunc` allows you to set a function that parses the arguments passed to the setter function
  *  into one (or more) output values (with more descriptive value). See example for more detail on output..
  *
  * @param {string} ivname - The name of the independent variable (IV).
  * @param {function} parserFunc - Function to parse responses. Must conform to the interface in the example..
+ * @returns {string|object} One (string) or more (object) columns of parsed output data
  * @example
  * Trials.setIVResponseParserFunc("iv name",
  *      function ( args_passed_to_this_IV_for_this_trial..., index){
  *
  *          // Parse the arguments for this independent variable...
  *
- *          // eg. three numbers representing a  RGB triplet could be condensed into a color name:
- *          // out = (arg1 === 255 && arg2 === 0 && arg3 === 0) ? "red" : "not red";
+ *          // eg. three numbers representing an RGB triplet could be condensed into a color name:
+ *          var output;
+ *          if (arg1 === 255 && arg2 === 0 && arg3 === 0){
+ *              output = "red";
+ *          } else {
+ *              output = "not red";
+ *          }
  *
  *          // return either a:
  *                              string -    output a single column of parsed data, in string form
@@ -18339,7 +18380,7 @@ Trials.setIVResponseParserFunc = function (ivname, parserFunc) {
 
 /**
  * Set the number of repeats in the experiment.
- * @param {int} nRepeats
+ * @param {int}
  */
 Trials.setRepeats = function (nRepeats) {
 
@@ -18380,13 +18421,24 @@ var _isUsingPhases = exports._isUsingPhases = false;
 Trials.Phases = [];
 
 /**
- * Present IVs sequentially by assigning each IV name to an ordinally numbered phase.
+ * Present IVs sequentially by assigning each independent variable (IV) name to an ordinally numbered phase.
  * To transition between phases, a function or a delay (in milliseconds) must be provided.
- * If a function is provided, its first argument is the callback that should be called
- * to transition to the next phase.
+ * If a function is provided, it must receive a callback as its first argument.
+ * This callback should be called to transition to the next phase.
  * @param {int} phase_num - ordinal number of the phase
  * @param {array} array_of_iv_names - array of IV names for this phase
  * @param {function | number} transition_func_or_delay - function to handle transition between phases, or duration until next phase
+ * @example
+ * // Using a function
+ * ExperimentJS.Trials.setIVPhases(0, ["Name of an IV to run in phase 0", "Another one"], function(continue_to_next_phase){
+ *      if(some_condition_is_satisified){
+ *          continue_to_next_phase();
+ *      }
+ * });
+ *
+ * // Using a number (i.e. a timeout delay)
+ * ExperimentJS.Trials.setIVPhases(0, ["Name of an IV to run in phase 0", "Another one"], 2000); // after two seconds go to the next phase
+ * ExperimentJS.Trials.setIVPhases(1, ["An IV in the second phase"]); // after two seconds go to the next phase
  */
 Trials.setIVPhases = function (phase_num, array_of_iv_names) {
     var transition_func_or_delay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
@@ -18446,7 +18498,7 @@ function _setAllTrials(alltrials) {
 
 /**
  * Returns a deep copy of the trials array
- * @returns {array} - a copy of the trials array
+ * @returns {array}
  */
 Trials.getTrials = function () {
     if (_allTrials.length > 0) {
@@ -18570,7 +18622,7 @@ function _buildTrials() {
 var _shouldShuffle = true;
 /**
  * Determine whether the trials should be shuffled.
- * @param {bool} - shouldShuffle
+ * @param {bool}
  */
 Trials.setShuffle = function (shouldShuffle) {
     if (typeof shouldShuffle === "boolean") {
@@ -18583,7 +18635,7 @@ Trials.setShuffle = function (shouldShuffle) {
 /**
  * Shuffles trials using the Fisher Yates algorithm.
  * If you wish to alter the shuffling behaviour, this function can be overridden (see example below).
- * @param {array} - unshuffled trials
+ * @param {array} - an array of unshuffled trials
  * @example
  * Trials.shuffleTrials = function(all_trials){
  *       // shuffle all_trials in some way...
@@ -18618,7 +18670,7 @@ function _csvIllegalCharCheck(string) {
 
 exports.Trials = Trials;
 
-},{"../utils/NumberUtils":24,"./../errors/ErrorIfTrialsAreBuilt.js":15,"./UnserializableMap.js":12,"lodash":1}],12:[function(require,module,exports){
+},{"../utils/NumberUtils":23,"./../errors/ErrorIfTrialsAreBuilt.js":15,"./UnserializableMap.js":12,"lodash":1}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18837,11 +18889,26 @@ function _ErrorIfTrialsAreBuilt() {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports._2AFC = undefined;
+exports.TwoAFC = undefined;
 
 var _Trials = require("../core/Trials.js");
 
-var _2AFC = {};
+/**
+ * TwoAFC is a sub module of ExperimentJS.Methods that implements the
+ * [Two Alternative Forced Choice experimental paradigm]{@link https://en.wikipedia.org/wiki/Two-alternative_forced_choice}<br>
+ * Broadly speaking, two AFC is a comparison between a standard display (which never changes) and a varying display.
+ * Typically, participants report whether the varying or standard displays are stronger/weaker on some measured dimension.<br>
+ * A counterbalancing measure (e.g. swapping the sides on which the standard and varying displays are presented)
+ * is also typically employed to prevent response bias.
+ * @module Methods
+ * @exports ExperimentJS.Methods.TwoAFC
+ * @namespace TwoAFC
+ * @example
+ * ExperimentJS.Methods.TwoAFC.SetStandard("standard display", function(arg_1, arg_2){ ... } , [arg_1, arg_2]);
+ * ExperimentJS.Methods.TwoAFC.SetVarying()
+ * ExperimentJS.Methods.TwoAFC.SetCounterBalancePresentation()
+ */
+var TwoAFC = {};
 
 /*
  * 2AFC Module.
@@ -18855,8 +18922,15 @@ var _2AFC = {};
 
 var _didSetStandard = false;
 
-// Usage: (string, function, array of args)
-_2AFC.SetStandard = function (iv_name, std_func, std_func_args) {
+/**
+ * Set the function that manipulates the standard display (which the varying display is compared to each trial).<br>
+ * Supply a function to set the display as well as the arguments that set it. As the standard display does not vary,
+ * only a single array of arguments need to be supplied
+ * @param iv_name {string}
+ * @param std_func {function} function that sets the standard stimulus in your display
+ * @param std_func_args {array} array of arguments to be passed to the standard setter function
+ */
+TwoAFC.SetStandard = function (iv_name, std_func, std_func_args) {
 
     if (typeof iv_name !== "string" || typeof std_func !== "function" || !Array.isArray(std_func_args)) {
         throw new Error("[ 2AFC SetStandard Error ] - usage = (string iv_name, function std_func, array std_func_args)");
@@ -18871,7 +18945,12 @@ _2AFC.SetStandard = function (iv_name, std_func, std_func_args) {
 };
 
 // Usage: (string iv_name, function parser_func);
-_2AFC.SetStandardParserFunc = function (iv_name, parser_func) {
+/**
+ * Set a parser function for the independent variable that manipulates the standard
+ * @param iv_name {string}
+ * @param parser_func {function} function to parse the arguments (for the standard setter function) into a more useful format
+ */
+TwoAFC.SetStandardParserFunc = function (iv_name, parser_func) {
     _Trials.Trials.setIVResponseParserFunc("std_" + iv_name, parser_func);
 };
 
@@ -18879,7 +18958,13 @@ _2AFC.SetStandardParserFunc = function (iv_name, parser_func) {
 
 var _didSetVarying = false;
 // Usage: ( string, function, array of arrays (of args) )
-_2AFC.SetVarying = function (iv_name, varying_func, varying_func_levels) {
+/**
+ * Provide the data and setter function for the display that varies, and is compared to the standard.
+ * @param {string} iv_name
+ * @param {function} varying_func - function that sets the varying independent variable (IV)
+ * @param {array} varying_func_levels - an array of arrays of arguments for `varying_func`, that set the various levels of the varying display.
+ */
+TwoAFC.SetVarying = function (iv_name, varying_func, varying_func_levels) {
 
     if (typeof iv_name !== "string" || typeof varying_func !== "function" || !Array.isArray(varying_func_levels) || !Array.isArray(varying_func_levels[0])) {
         throw new Error("[ 2AFC SetVarying Error ] - usage = (string iv_name, function varying_func, array varying_func_levels)");
@@ -18892,12 +18977,17 @@ _2AFC.SetVarying = function (iv_name, varying_func, varying_func_levels) {
 };
 
 // Usage: (string iv_name, function parser_func);
-_2AFC.SetVaryingParserFunc = _Trials.Trials.setIVResponseParserFunc;
+TwoAFC.SetVaryingParserFunc = _Trials.Trials.setIVResponseParserFunc;
 
 // ================================== Counter Balancer ==================================
 
 var _didSetCounterBalance = false;
-_2AFC.SetCounterBalancePresentation = function (iv_name, counterbalance_func, counterbalance_func_levels) {
+/**
+ * @param iv_name
+ * @param counterbalance_func
+ * @param counterbalance_func_levels
+ */
+TwoAFC.SetCounterBalancePresentation = function (iv_name, counterbalance_func, counterbalance_func_levels) {
 
     if (typeof iv_name !== "string" || typeof counterbalance_func !== "function" || !Array.isArray(counterbalance_func_levels) || !Array.isArray(counterbalance_func_levels[0])) {
         throw new Error("[ 2AFC CounterBalancePresentation Error ] - usage = (string iv_name, function varying_func, array varying_func_levels)");
@@ -18912,11 +19002,19 @@ _2AFC.SetCounterBalancePresentation = function (iv_name, counterbalance_func, co
 };
 
 // Usage: (string iv_name, function parser_func);
-_2AFC.SetCounterBalanceParserFunc = function (iv_name, parser_func) {
+/**
+ * @param iv_name
+ * @param parser_func
+ */
+TwoAFC.SetCounterBalanceParserFunc = function (iv_name, parser_func) {
     _Trials.Trials.setIVResponseParserFunc("counterbalance_" + iv_name, parser_func);
 };
 
-_2AFC.BuildExperiment = function (print) {
+/**
+ * Build the 2AFC Experiment. 
+ * @param {bool} print - Determines whether the built trials will be output
+ */
+TwoAFC.BuildExperiment = function (print) {
 
     if (!(_didSetCounterBalance && _didSetStandard && _didSetVarying)) {
         throw new Error("[ 2AFC BuildExperiment Error ] - To run a 2AFC experiment a standard variable, varying variable and counterbalancer must be set");
@@ -18925,24 +19023,9 @@ _2AFC.BuildExperiment = function (print) {
     _Trials.Trials.BuildExperiment(print);
 };
 
-exports._2AFC = _2AFC;
+exports.TwoAFC = TwoAFC;
 
 },{"../core/Trials.js":11}],17:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.ConstantStimuli = undefined;
-
-var _Trials = require("../core/Trials.js");
-
-var ConstantStimuli = {}; /**
-                           * Created by kai on 19/7/17.
-                           */
-exports.ConstantStimuli = ConstantStimuli;
-
-},{"../core/Trials.js":11}],18:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18952,22 +19035,23 @@ exports.Methods = undefined;
 
 var _Trials = require("../core/Trials.js");
 
-var _AFC = require("./2AFC.js");
+var _TwoAFC = require("./TwoAFC.js");
 
-var _ConstantStimuli = require("./ConstantStimuli.js");
+// import { ConstantStimuli } from "./ConstantStimuli.js";
 
-var Methods = {
-  _2AFC: _AFC._2AFC,
-  ConstantStimuli: _ConstantStimuli.ConstantStimuli
-};
-
-// The fields of ExperimentJS
 /**
  * Created by kai on 17/7/17.
  */
+var Methods = {};
+Methods.TwoAFC = _TwoAFC.TwoAFC;
+
+// Methods.ConstantStimuli = ConstantStimuli;
+
+
+// The fields of ExperimentJS
 exports.Methods = Methods;
 
-},{"../core/Trials.js":11,"./2AFC.js":16,"./ConstantStimuli.js":17}],19:[function(require,module,exports){
+},{"../core/Trials.js":11,"./TwoAFC.js":16}],18:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19041,7 +19125,7 @@ function _ImageIVParser(img_elem) {
     return img_elem.src.split(/[\\/]/).pop();
 }
 
-},{"../core/Trials.js":11}],20:[function(require,module,exports){
+},{"../core/Trials.js":11}],19:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19060,7 +19144,7 @@ var Stimuli = {
 
 exports.Stimuli = Stimuli;
 
-},{"./ImageStimuli.js":19}],21:[function(require,module,exports){
+},{"./ImageStimuli.js":18}],20:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19077,7 +19161,7 @@ function createDownloadLink(filename, data) {
     return a;
 }
 
-},{}],22:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19085,10 +19169,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports._ApplyFunctionToHTMLChildren = _ApplyFunctionToHTMLChildren;
 exports.DOM_remove = DOM_remove;
-/**
- * Created by kai on 6/7/17.
- */
-
 function _ApplyFunctionToHTMLChildren(elem, func) {
 
     if (elem.children === undefined || typeof func !== "function") {
@@ -19104,17 +19184,13 @@ function DOM_remove(elem) {
     elem.parentNode.removeChild(elem); //Remove select from dom
 }
 
-},{}],23:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.preloadImage = preloadImage;
-/**
- * Created by kai on 14/9/17.
- */
-
 function preloadImage(path) {
     return new Promise(function (resolve, reject) {
         var img = new Image();
@@ -19128,7 +19204,7 @@ function preloadImage(path) {
     });
 }
 
-},{}],24:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19136,9 +19212,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.isFloat = isFloat;
 exports.isInt = isInt;
-/**
- * Created by kai on 5/1/17.
- */
 function isFloat(n) {
     return Number(n) === n && n % 1 !== 0;
 }
@@ -19151,16 +19224,13 @@ function isInt(value) {
     return (x | 0) === x;
 }
 
-},{}],25:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.SetCSSOnElement = SetCSSOnElement;
-/**
- * Created by kai on 6/7/17.
- */
 function SetCSSOnElement(elem, css) {
     var keys = Object.keys(css);
     for (var i = 0; i < keys.length; i++) {
@@ -19169,7 +19239,7 @@ function SetCSSOnElement(elem, css) {
     }
 }
 
-},{}],26:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 "use strict";
 
 // - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
@@ -19200,7 +19270,7 @@ Array.prototype.back = function () {
     }
 };
 
-},{}],27:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19251,7 +19321,7 @@ String.prototype.formatUnicorn = String.prototype.formatUnicorn || function () {
     return str;
 };
 
-},{}],28:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 "use strict";
 
 require("./CreateDownloadLink.js");
@@ -19264,7 +19334,9 @@ require("./StringUtils.js");
 
 require("./ImageUtils.js");
 
-},{"./CreateDownloadLink.js":21,"./ImageUtils.js":23,"./NumberUtils.js":24,"./Shuffle.js":26,"./StringUtils.js":27}],29:[function(require,module,exports){
+require("./DOMUtils.js");
+
+},{"./CreateDownloadLink.js":20,"./DOMUtils.js":21,"./ImageUtils.js":22,"./NumberUtils.js":23,"./Shuffle.js":25,"./StringUtils.js":26}],28:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19285,5 +19357,5 @@ var Utils = {
 
 exports.Utils = Utils;
 
-},{"./ImageUtils.js":23}]},{},[2])(2)
+},{"./ImageUtils.js":22}]},{},[2])(2)
 });

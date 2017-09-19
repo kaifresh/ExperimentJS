@@ -1,13 +1,17 @@
 # ExperimentJS
 
-Running behavioural experiments in your browser harnesses the internet to make them more accessible to participants,
-portable across computers/operating systems, and leverages the simplicity of HTML5 primitives (buttons, images, videos, etc) to build interfaces and stimuli.
+Running behavioural experiments in your browser harnesses the internet. This improves their accessibility to participants,
+portablility across devices/operating systems, and leverages the simplicity of HTML5 primitives (buttons, images, videos, etc)
+to build interfaces and stimuli.
+
 The problem is, writing experiments can be time consuming and small changes in your experimental design can result in big
- changes to your code.
+changes to your code.
 
 ExperimentJS solves this by providing a framework that greatly simplifies building and running experiments.
 ExperimentJS takes care of the small details in implementing experiments and lets you focus on the big picture,
 like working on stimulus design and experimental structure.
+
+***
 
 To run a basic experiment, all you need to do is:
 
@@ -22,7 +26,7 @@ Create the necessary elements to view the stimuli in your HTML. In this example 
 ```
 
 Now, create your first [Independent Variable](https://en.wikipedia.org/wiki/Dependent_and_independent_variables).
-Write an *IVsetFunc* (i.e. a setter function) that will manage the image that is displayed in this element.
+Write an *IVsetFunc* (i.e. a setter function) that will manage the data (i.e. an image) that is displayed in this element.
 
 ```javascript
 ExperimentJS.Trials.setIVsetFunc("Emotion faces", function(img_path){         // (iv name, setter function)

@@ -1,6 +1,7 @@
 import * as NumUtils from "../utils/NumberUtils";
 import { _Unserializable_Var2Token, _Unserializable_ParserFunc2Token } from "./UnserializableMap.js";
 import { _ErrorIfTrialsAreBuilt } from "./../errors/ErrorIfTrialsAreBuilt.js";
+import { _UseCSSStyle } from "../components/Style.js";
 var _ = require("lodash");
 
 /*
@@ -286,6 +287,7 @@ Trials.BuildExperiment = function (printTrials = false) {
         throw new Error("[ buildExperiment ERROR ] - buildExperiment should only be called once!");
     } else {
         _buildTrials( printTrials );
+        _UseCSSStyle();
     }
 };
 

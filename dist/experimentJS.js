@@ -17155,7 +17155,7 @@ Object.keys(_utils_public).forEach(function (key) {
 
 require("./utils/utils.js");
 
-},{"./components/components.js":4,"./core/core.js":13,"./methods/methods.js":17,"./stimuli/stimuli.js":20,"./utils/utils.js":28,"./utils/utils_public.js":29}],3:[function(require,module,exports){
+},{"./components/components.js":5,"./core/core.js":14,"./methods/methods.js":18,"./stimuli/stimuli.js":21,"./utils/utils.js":29,"./utils/utils_public.js":30}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17215,7 +17215,46 @@ function _CreateInstructionsInDOM() {
 
 exports.Instructions = Instructions;
 
-},{"../core/Trials.js":11}],4:[function(require,module,exports){
+},{"../core/Trials.js":12}],4:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports._UseCSSStyle = _UseCSSStyle;
+exports.SetShouldUseCSS = SetShouldUseCSS;
+/**
+ * Created by kai on 19/9/17.
+ */
+
+var _did_add_css = false;
+function _UseCSSStyle() {
+
+    if (!_should_use_css_style) return;
+    if (_did_add_css) return;
+
+    var link = document.createElement("link");
+    link.href = "https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/flat-ui.css";
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    link.media = "screen,print";
+    link.id = "ExperimentJS-css";
+
+    document.getElementsByTagName("head")[0].appendChild(link);
+
+    _did_add_css = true;
+}
+
+var _should_use_css_style = true;
+function SetShouldUseCSS(should_use_css) {
+    if (typeof use_style !== "boolean") {
+        throw new Error("[ SetShouldUseCSSStyle ERROR] : usage (bool should_use_css)");
+    }
+
+    _should_use_css_style = should_use_css;
+}
+
+},{}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17225,12 +17264,15 @@ exports.Components = undefined;
 
 var _Instructions = require("./Instructions.js");
 
+var _Style = require("./Style.js");
+
 var Components = {};
 Components.Instructions = _Instructions.Instructions;
+Components.SetShouldUseCSS = _Style.SetShouldUseCSS;
 
 exports.Components = Components;
 
-},{"./Instructions.js":3}],5:[function(require,module,exports){
+},{"./Instructions.js":3,"./Style.js":4}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17277,7 +17319,7 @@ _Trials.Trials.getPptInfo = function () {
     console.log("Participant name: ", _pptName, "\tParticipant number: ", _pptNo);
 };
 
-},{"./Trials.js":11}],6:[function(require,module,exports){
+},{"./Trials.js":12}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17403,7 +17445,7 @@ function _showInterstimulusPause(blackout) {
 
 exports.Pause = Pause;
 
-},{"../utils/SetCSSOnElement.js":25,"./RunExperiment.js":9}],7:[function(require,module,exports){
+},{"../utils/SetCSSOnElement.js":26,"./RunExperiment.js":10}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17583,7 +17625,7 @@ function _FormatStoredResponses(responses) {
     return formatted_responses;
 }
 
-},{"../utils/StringUtils.js":27,"./Trials":11,"./UnserializableMap.js":12}],8:[function(require,module,exports){
+},{"../utils/StringUtils.js":28,"./Trials":12,"./UnserializableMap.js":13}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17671,7 +17713,7 @@ function _createCSVLinkAndDownload(csvContent) {
     a.click();
 }
 
-},{"../utils/CreateDownloadLink.js":21,"./GetPptInfo.js":5,"./ResponseHandler.js":7,"./Trials.js":11,"lodash":1}],9:[function(require,module,exports){
+},{"../utils/CreateDownloadLink.js":22,"./GetPptInfo.js":6,"./ResponseHandler.js":8,"./Trials.js":12,"lodash":1}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18023,7 +18065,7 @@ _Trials.Trials.setEndCallback = function (end_callback) {
     }
 };
 
-},{"../utils/DOMUtils.js":22,"../utils/StringUtils.js":27,"./../errors/ErrorIfDidStartExperiment.js":14,"./InterstimulusPause.js":6,"./ResponseHandler.js":7,"./ResponsesOutput.js":8,"./Trials.js":11,"./UnserializableMap.js":12,"lodash":1}],10:[function(require,module,exports){
+},{"../utils/DOMUtils.js":23,"../utils/StringUtils.js":28,"./../errors/ErrorIfDidStartExperiment.js":15,"./InterstimulusPause.js":7,"./ResponseHandler.js":8,"./ResponsesOutput.js":9,"./Trials.js":12,"./UnserializableMap.js":13,"lodash":1}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18212,7 +18254,7 @@ function _createDropDownSelect(all_saves) {
 
 exports.Saves = Saves;
 
-},{"../utils/DOMUtils.js":22,"../utils/SetCSSOnElement.js":25,"./ResponseHandler.js":7,"./Trials.js":11}],11:[function(require,module,exports){
+},{"../utils/DOMUtils.js":23,"../utils/SetCSSOnElement.js":26,"./ResponseHandler.js":8,"./Trials.js":12}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18232,6 +18274,8 @@ var NumUtils = _interopRequireWildcard(_NumberUtils);
 var _UnserializableMap = require("./UnserializableMap.js");
 
 var _ErrorIfTrialsAreBuilt2 = require("./../errors/ErrorIfTrialsAreBuilt.js");
+
+var _Style = require("../components/Style.js");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -18521,6 +18565,7 @@ Trials.BuildExperiment = function () {
         throw new Error("[ buildExperiment ERROR ] - buildExperiment should only be called once!");
     } else {
         _buildTrials(printTrials);
+        (0, _Style._UseCSSStyle)();
     }
 };
 
@@ -18671,7 +18716,7 @@ function _csvIllegalCharCheck(string) {
 
 exports.Trials = Trials;
 
-},{"../utils/NumberUtils":24,"./../errors/ErrorIfTrialsAreBuilt.js":15,"./UnserializableMap.js":12,"lodash":1}],12:[function(require,module,exports){
+},{"../components/Style.js":4,"../utils/NumberUtils":25,"./../errors/ErrorIfTrialsAreBuilt.js":16,"./UnserializableMap.js":13,"lodash":1}],13:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18793,7 +18838,7 @@ function _Unserializable_ParserFunc2Token(parserfunc, iv_name) {
     return unserializable_parserfunc_token;
 }
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18823,7 +18868,7 @@ exports.Trials = _Trials.Trials; //Needs ./ to treat it as an internal (not exte
 exports.Pause = _InterstimulusPause.Pause;
 exports.Saves = _Saves.Saves;
 
-},{"./GetPptInfo.js":5,"./InterstimulusPause.js":6,"./ResponsesOutput.js":8,"./RunExperiment.js":9,"./Saves.js":10,"./Trials.js":11}],14:[function(require,module,exports){
+},{"./GetPptInfo.js":6,"./InterstimulusPause.js":7,"./ResponsesOutput.js":9,"./RunExperiment.js":10,"./Saves.js":11,"./Trials.js":12}],15:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18854,7 +18899,7 @@ function _ErrorIfDidStartExperiment() {
    * Created by kai on 4/8/17.
    */
 
-},{"./../core/RunExperiment.js":9}],15:[function(require,module,exports){
+},{"./../core/RunExperiment.js":10}],16:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18884,7 +18929,7 @@ function _ErrorIfTrialsAreBuilt() {
    * Created by kai on 4/8/17.
    */
 
-},{"./../core/Trials.js":11}],16:[function(require,module,exports){
+},{"./../core/Trials.js":12}],17:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19032,7 +19077,7 @@ TwoAFC.BuildExperiment = function (print) {
 
 exports.TwoAFC = TwoAFC;
 
-},{"../core/Trials.js":11}],17:[function(require,module,exports){
+},{"../core/Trials.js":12}],18:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19058,7 +19103,7 @@ Methods.TwoAFC = _TwoAFC.TwoAFC;
 // The fields of ExperimentJS
 exports.Methods = Methods;
 
-},{"../core/Trials.js":11,"./TwoAFC.js":16}],18:[function(require,module,exports){
+},{"../core/Trials.js":12,"./TwoAFC.js":17}],19:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19149,7 +19194,7 @@ function _ImageIVParser(img_elem) {
     return img_elem.src.split(/[\\/]/).pop();
 }
 
-},{"../core/Trials.js":11}],19:[function(require,module,exports){
+},{"../core/Trials.js":12}],20:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19159,9 +19204,13 @@ exports.SurveyStimuliIV = SurveyStimuliIV;
 
 var _Trials = require("../core/Trials.js");
 
-var SurveyStimWraps = {}; /**
-                           * Created by kai on 19/9/17.
-                           */
+var _DOMUtils = require("../utils/DOMUtils.js");
+
+/**
+ * Created by kai on 19/9/17.
+ */
+
+var SurveyStimWraps = {};
 
 function _SetQuestionOnScreen(iv_name, question, list_of_response_options) {
 
@@ -19169,7 +19218,7 @@ function _SetQuestionOnScreen(iv_name, question, list_of_response_options) {
         // make the wrap if it doesn't exist
         SurveyStimWraps[iv_name] = document.createElement("div");
         SurveyStimWraps[iv_name].classList.add("survey-stimulus-wrap");
-        SurveyStimWraps[iv_name].id = iv_name + "-survey-wrap";
+        SurveyStimWraps[iv_name].id = escape(iv_name) + "-survey-wrap";
         document.body.appendChild(SurveyStimWraps[iv_name]);
 
         // Here would be a good place to set the style...
@@ -19180,19 +19229,23 @@ function _SetQuestionOnScreen(iv_name, question, list_of_response_options) {
         SurveyStimWraps[iv_name].removeChild(SurveyStimWraps[iv_name].firstChild);
     }
 
+    // Add a question
     var qu = document.createElement("h3");
-    qu.classList.add(iv_name + "survey-question");
+    qu.classList.add(escape(iv_name) + "survey-question");
     qu.classList.add("survey-question");
     qu.textContent = question;
     SurveyStimWraps[iv_name].appendChild(qu);
 
+    // Add all responses
     list_of_response_options.map(function (response, i, all) {
 
         var resp = document.createElement("p");
         resp.textContent = response;
-        resp.classList.add(iv_name + "survey-response");
+        resp.classList.add(escape(iv_name) + "survey-response");
         resp.classList.add("survey-response");
-        resp.addEventListener("click", _GoToNextTrial.apply(resp, response));
+        resp.addEventListener("click", _GoToNextTrial.bind(resp, response));
+
+        SurveyStimWraps[iv_name].appendChild(resp);
     });
 }
 
@@ -19220,13 +19273,17 @@ function SurveyStimuliIV(iv_name, list_of_questions, list_of_response_options) {
     _Trials.Trials.setIVLevels(iv_name, questions_as_args);
     _Trials.Trials.setIVsetFunc(iv_name, _SetQuestionOnScreen);
     _Trials.Trials.setIVResponseParserFunc(iv_name, _SurveyIVParser);
+
+    var css = ".survey-response { cursor : pointer; } ";
+
+    (0, _DOMUtils._CreateAndAppendStyleTagsWithCSS)(css);
 }
 
 function _SurveyIVParser(iv_name, question, list_of_response_options) {
     return question;
 }
 
-},{"../core/Trials.js":11}],20:[function(require,module,exports){
+},{"../core/Trials.js":12,"../utils/DOMUtils.js":23}],21:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19250,10 +19307,11 @@ var _SurveyStimuli = require("./SurveyStimuli.js");
 var Stimuli = {};
 Stimuli.ImageStimuli = _ImageStimuli.ImageStimuli;
 Stimuli.ImageStimuliIV = _ImageStimuli.ImageStimuliIV;
+Stimuli.SurveyStimuliIV = _SurveyStimuli.SurveyStimuliIV;
 
 exports.Stimuli = Stimuli;
 
-},{"./ImageStimuli.js":18,"./SurveyStimuli.js":19}],21:[function(require,module,exports){
+},{"./ImageStimuli.js":19,"./SurveyStimuli.js":20}],22:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19270,7 +19328,7 @@ function createDownloadLink(filename, data) {
     return a;
 }
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19278,6 +19336,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports._ApplyFunctionToHTMLChildren = _ApplyFunctionToHTMLChildren;
 exports.DOM_remove = DOM_remove;
+exports._CreateAndAppendStyleTagsWithCSS = _CreateAndAppendStyleTagsWithCSS;
 function _ApplyFunctionToHTMLChildren(elem, func) {
 
     if (elem.children === undefined || typeof func !== "function") {
@@ -19293,7 +19352,23 @@ function DOM_remove(elem) {
     elem.parentNode.removeChild(elem); //Remove select from dom
 }
 
-},{}],23:[function(require,module,exports){
+function _CreateAndAppendStyleTagsWithCSS(css) {
+    var head = document.head || document.getElementsByTagName('head')[0],
+        style = document.createElement('style');
+
+    style.type = 'text/css';
+    if (style.styleSheet) {
+        style.styleSheet.cssText = css;
+    } else {
+        style.appendChild(document.createTextNode(css));
+    }
+
+    head.appendChild(style);
+
+    return style;
+}
+
+},{}],24:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19322,7 +19397,7 @@ function preloadImage(path) {
     });
 }
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19342,7 +19417,7 @@ function isInt(value) {
     return (x | 0) === x;
 }
 
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19357,7 +19432,7 @@ function SetCSSOnElement(elem, css) {
     }
 }
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 "use strict";
 
 // - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -  - - - - -
@@ -19388,7 +19463,7 @@ Array.prototype.back = function () {
     }
 };
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19439,7 +19514,7 @@ String.prototype.formatUnicorn = String.prototype.formatUnicorn || function () {
     return str;
 };
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 "use strict";
 
 require("./CreateDownloadLink.js");
@@ -19454,7 +19529,7 @@ require("./ImageUtils.js");
 
 require("./DOMUtils.js");
 
-},{"./CreateDownloadLink.js":21,"./DOMUtils.js":22,"./ImageUtils.js":23,"./NumberUtils.js":24,"./Shuffle.js":26,"./StringUtils.js":27}],29:[function(require,module,exports){
+},{"./CreateDownloadLink.js":22,"./DOMUtils.js":23,"./ImageUtils.js":24,"./NumberUtils.js":25,"./Shuffle.js":27,"./StringUtils.js":28}],30:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19477,5 +19552,5 @@ Utils.PreloadImage = _ImageUtils.preloadImage;
 // Fields of ExperimentJS
 exports.Utils = Utils;
 
-},{"./ImageUtils.js":23}]},{},[2])(2)
+},{"./ImageUtils.js":24}]},{},[2])(2)
 });

@@ -13,6 +13,7 @@ import { SurveyStimuliIV } from "./SurveyStimuli.js";
 var Stimuli = {};
 Stimuli.ImageStimuli = ImageStimuli;
 Stimuli.ImageStimuliIV =  ImageStimuliIV;
+Stimuli.SurveyStimuliIV = SurveyStimuliIV;
 
 export { Stimuli };
 

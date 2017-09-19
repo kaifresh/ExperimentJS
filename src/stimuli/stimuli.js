@@ -3,6 +3,7 @@
  */
 
 import { ImageStimuli, ImageStimuliIV } from "./ImageStimuli.js";
+import { SurveyStimuliIV } from "./SurveyStimuli.js";
 
 /**
  * 

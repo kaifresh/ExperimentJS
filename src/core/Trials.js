@@ -116,13 +116,14 @@ Trials.setDVName = function(dvName){
  * @returns {string|object} One (string) or more (object) columns of parsed output data
  * @example
  * Trials.setIVResponseParserFunc("iv name",
- *      function ( args_passed_to_this_IV_for_this_trial..., index){
+ *      function ( r, g, b..., index){
+ *      // Here R, G & B are the arguments passed to the setter function 
  *
  *          // Parse the arguments for this independent variable...
  *
  *          // eg. three numbers representing an RGB triplet could be condensed into a color name:
  *          var output;
- *          if (arg1 === 255 && arg2 === 0 && arg3 === 0){
+ *          if (r === 255 && g === 0 && b === 0){
  *              output = "red";
  *          } else {
  *              output = "not red";

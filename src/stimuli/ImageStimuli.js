@@ -1,7 +1,8 @@
 import { Trials } from "../core/Trials.js";
 
 /**
- * Creates a javascript Image object for each path
+ * Creates a javascript Image object for each path.<br>
+ * This will not create an independent variable, thus additional code is required.
  * @param list_of_img_paths {array} - array of string image paths
  * @returns array of images
  * @memberof Stimuli

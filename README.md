@@ -9,12 +9,6 @@ ExperimentJS solves this by providing a framework that greatly simplifies buildi
 ExperimentJS takes care of the small details in implementing experiments and lets you focus on the big picture,
 like working on stimulus design and experimental structure.
 
-ExperimentJS follows a standard procedure of binding setter functions and data,
-binding additional settings (e.g. number of repeats) and gathering participant info,
- and finally, running the experiment itself.
-
-![alt text](/notes/ExJS_process_map.png "process map image")
-
 To run a basic experiment, all you need to do is:
 
 Include `experimentJS.js` or `experimentJS.min.js`, located in `/dist`.
@@ -244,6 +238,14 @@ ExperimentJS also provides built-in support for a variety of experimental paradi
 (such as Two Alternative Forced Choice).
 
 [//]: # ( [Click here](TODO) to view a full list of presets, usage instructions and demos.)
+
+### ExperimentJS Experiment Flow
+
+ExperimentJS follows a standard procedure of binding setter functions and data,
+binding additional settings (e.g. number of repeats) and gathering participant info,
+ and finally, running the experiment itself.
+
+![alt text](/notes/ExJS_process_map.png "process map image")
 
 ### ADDITIONAL FEATURES
 

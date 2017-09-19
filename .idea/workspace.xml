@@ -2,31 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="15a95f82-d721-497f-925e-739aed3019c5" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/examples/css/flat-ui.css" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/experimentJS.js" afterPath="$PROJECT_DIR$/dist/experimentJS.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/experimentJS.min.js" afterPath="$PROJECT_DIR$/dist/experimentJS.min.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/ExperimentJS.Components.Instructions.html" afterPath="$PROJECT_DIR$/docs/ExperimentJS.Components.Instructions.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/Pause.html" afterPath="$PROJECT_DIR$/docs/Pause.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/Saves.html" afterPath="$PROJECT_DIR$/docs/Saves.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/Stimuli.html" afterPath="$PROJECT_DIR$/docs/Stimuli.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/Trials.html" afterPath="$PROJECT_DIR$/docs/Trials.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/TwoAFC.html" afterPath="$PROJECT_DIR$/docs/TwoAFC.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/Utils.html" afterPath="$PROJECT_DIR$/docs/Utils.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/components_Instructions.js.html" afterPath="$PROJECT_DIR$/docs/components_Instructions.js.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/core_GetPptInfo.js.html" afterPath="$PROJECT_DIR$/docs/core_GetPptInfo.js.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/core_InterstimulusPause.js.html" afterPath="$PROJECT_DIR$/docs/core_InterstimulusPause.js.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/core_ResponsesOutput.js.html" afterPath="$PROJECT_DIR$/docs/core_ResponsesOutput.js.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/core_RunExperiment.js.html" afterPath="$PROJECT_DIR$/docs/core_RunExperiment.js.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/core_Saves.js.html" afterPath="$PROJECT_DIR$/docs/core_Saves.js.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/core_Trials.js.html" afterPath="$PROJECT_DIR$/docs/core_Trials.js.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/global.html" afterPath="$PROJECT_DIR$/docs/global.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/index.html" afterPath="$PROJECT_DIR$/docs/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/methods_TwoAFC.js.html" afterPath="$PROJECT_DIR$/docs/methods_TwoAFC.js.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/stimuli_ImageStimuli.js.html" afterPath="$PROJECT_DIR$/docs/stimuli_ImageStimuli.js.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/stimuli_stimuli.js.html" afterPath="$PROJECT_DIR$/docs/stimuli_stimuli.js.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/utils_ImageUtils.js.html" afterPath="$PROJECT_DIR$/docs/utils_ImageUtils.js.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/utils_utils_public.js.html" afterPath="$PROJECT_DIR$/docs/utils_utils_public.js.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/survey-example.html" afterPath="$PROJECT_DIR$/examples/survey-example.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Style.js" afterPath="$PROJECT_DIR$/src/components/Style.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/stimuli/SurveyStimuli.js" afterPath="$PROJECT_DIR$/src/stimuli/SurveyStimuli.js" />
@@ -49,7 +28,7 @@
     <favorites_list name="ExperimentJS" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
+    <splitter split-orientation="horizontal" split-proportion="0.40729102">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="ImageStimuli.js" pinned="false" current-in-tab="false">
@@ -116,21 +95,21 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="survey-example.html" pinned="false" current-in-tab="true">
+          <file leaf-file-name="survey-example.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/examples/survey-example.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="165">
-                  <caret line="11" column="41" selection-start-line="11" selection-start-column="41" selection-end-line="11" selection-end-column="41" />
+                <state relative-caret-position="225">
+                  <caret line="28" column="215" selection-start-line="28" selection-start-column="215" selection-end-line="28" selection-end-column="215" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Style.js" pinned="false" current-in-tab="false">
+          <file leaf-file-name="Style.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/components/Style.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+                <state relative-caret-position="390">
+                  <caret line="26" column="107" selection-start-line="26" selection-start-column="107" selection-end-line="26" selection-end-column="107" />
                   <folding />
                 </state>
               </provider>
@@ -177,11 +156,93 @@
           <file leaf-file-name="SurveyStimuli.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/stimuli/SurveyStimuli.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="270">
-                  <caret line="41" column="19" selection-start-line="41" selection-start-column="19" selection-end-line="41" selection-end-column="19" />
+                <state relative-caret-position="180">
+                  <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
                   <folding>
                     <element signature="e#39#82#0" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/README.md">
+              <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+                <state split_layout="FIRST">
+                  <first_editor relative-caret-position="383">
+                    <caret line="224" column="19" selection-start-line="224" selection-start-column="19" selection-end-line="224" selection-end-column="19" />
+                    <folding>
+                      <marker date="1505800364000" expanded="true" signature="1418:1518" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="1929:2029" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="2175:2457" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="2204:2316" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="2350:2455" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="3440:3498" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="4098:4445" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="4127:4270" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="4304:4443" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="5447:5522" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="6694:7164" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="6694:7516" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="6694:7517" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="6694:7592" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="6694:7693" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="6694:7694" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="6696:6788" placeholder="//..." />
+                      <marker date="1505800364000" expanded="true" signature="6696:6907" placeholder="//..." />
+                      <marker date="1505800364000" expanded="true" signature="6696:6913" placeholder="//..." />
+                      <marker date="1505800364000" expanded="true" signature="6696:6937" placeholder="//..." />
+                      <marker date="1505800364000" expanded="true" signature="6696:6979" placeholder="//..." />
+                      <marker date="1505800364000" expanded="true" signature="7026:7162" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="7026:7164" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="7296:7319" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="7296:7516" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="8345:8563" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="8374:8451" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="8485:8561" placeholder="{...}" />
+                    </folding>
+                  </first_editor>
+                  <second_editor>
+                    <js_state />
+                  </second_editor>
+                </state>
+              </provider>
+              <provider editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+                <state split_layout="SPLIT">
+                  <first_editor relative-caret-position="15">
+                    <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+                    <folding>
+                      <marker date="1505800364000" expanded="true" signature="1418:1518" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="1929:2029" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="2175:2457" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="2204:2316" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="2350:2455" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="3440:3498" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="4098:4445" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="4127:4270" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="4304:4443" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="5447:5522" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="6694:7164" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="6694:7516" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="6694:7517" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="6694:7592" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="6694:7693" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="6694:7694" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="6696:6788" placeholder="//..." />
+                      <marker date="1505800364000" expanded="true" signature="6696:6907" placeholder="//..." />
+                      <marker date="1505800364000" expanded="true" signature="6696:6913" placeholder="//..." />
+                      <marker date="1505800364000" expanded="true" signature="6696:6937" placeholder="//..." />
+                      <marker date="1505800364000" expanded="true" signature="6696:6979" placeholder="//..." />
+                      <marker date="1505800364000" expanded="true" signature="7026:7162" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="7026:7164" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="7296:7319" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="7296:7516" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="8345:8563" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="8374:8451" placeholder="{...}" />
+                      <marker date="1505800364000" expanded="true" signature="8485:8561" placeholder="{...}" />
+                    </folding>
+                  </first_editor>
+                  <second_editor />
                 </state>
               </provider>
             </entry>
@@ -239,7 +300,6 @@
         <option value="$PROJECT_DIR$/src/core/Saves.js" />
         <option value="$PROJECT_DIR$/src/methods/2AFC.js" />
         <option value="$PROJECT_DIR$/src/methods/methods.js" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/src/methods/TwoAFC.js" />
         <option value="$PROJECT_DIR$/src/components/Instructions.js" />
         <option value="$PROJECT_DIR$/src/utils/utils_public.js" />
@@ -253,8 +313,9 @@
         <option value="$PROJECT_DIR$/src/utils/DOMUtils.js" />
         <option value="$PROJECT_DIR$/src/components/components.js" />
         <option value="$PROJECT_DIR$/src/core/Trials.js" />
-        <option value="$PROJECT_DIR$/src/components/Style.js" />
         <option value="$PROJECT_DIR$/examples/survey-example.html" />
+        <option value="$PROJECT_DIR$/src/components/Style.js" />
+        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/src/stimuli/SurveyStimuli.js" />
       </list>
     </option>
@@ -702,16 +763,16 @@
       <workItem from="1502426434970" duration="1859000" />
       <workItem from="1502856419080" duration="10000" />
       <workItem from="1505346330910" duration="27812000" />
-      <workItem from="1505785712158" duration="9964000" />
+      <workItem from="1505785712158" duration="11733000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="198811000" />
+    <option name="totallyTimeSpent" value="200580000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="1173" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17135416" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -719,7 +780,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.442029" sideWeight="0.49791667" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.442029" sideWeight="0.49791667" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -945,36 +1006,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="300">
-            <caret line="20" column="62" selection-start-line="20" selection-start-column="58" selection-end-line="20" selection-end-column="62" />
-            <folding>
-              <marker date="1505790863000" expanded="true" signature="6757:6975" placeholder="{...}" />
-              <marker date="1505790863000" expanded="true" signature="6786:6863" placeholder="{...}" />
-              <marker date="1505790863000" expanded="true" signature="6897:6973" placeholder="{...}" />
-            </folding>
-          </first_editor>
-          <second_editor>
-            <js_state />
-          </second_editor>
-        </state>
-      </provider>
-      <provider editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="15">
-            <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-            <folding>
-              <marker date="1505790863000" expanded="true" signature="6757:6975" placeholder="{...}" />
-              <marker date="1505790863000" expanded="true" signature="6786:6863" placeholder="{...}" />
-              <marker date="1505790863000" expanded="true" signature="6897:6973" placeholder="{...}" />
-            </folding>
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/methods/TwoAFC.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="213">
@@ -1147,26 +1178,56 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Style.js">
+    <entry file="file://$PROJECT_DIR$/examples/survey-example.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+        <state relative-caret-position="225">
+          <caret line="28" column="215" selection-start-line="28" selection-start-column="215" selection-end-line="28" selection-end-column="215" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples/survey-example.html">
+    <entry file="file://$PROJECT_DIR$/src/components/Style.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="41" selection-start-line="11" selection-start-column="41" selection-end-line="11" selection-end-column="41" />
+        <state relative-caret-position="390">
+          <caret line="26" column="107" selection-start-line="26" selection-start-column="107" selection-end-line="26" selection-end-column="107" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="383">
+            <caret line="224" column="19" selection-start-line="224" selection-start-column="19" selection-end-line="224" selection-end-column="19" />
+            <folding>
+              <marker date="1505800364000" expanded="true" signature="8345:8563" placeholder="{...}" />
+              <marker date="1505800364000" expanded="true" signature="8374:8451" placeholder="{...}" />
+              <marker date="1505800364000" expanded="true" signature="8485:8561" placeholder="{...}" />
+            </folding>
+          </first_editor>
+          <second_editor>
+            <js_state />
+          </second_editor>
+        </state>
+      </provider>
+      <provider editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="15">
+            <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+            <folding>
+              <marker date="1505800364000" expanded="true" signature="8345:8563" placeholder="{...}" />
+              <marker date="1505800364000" expanded="true" signature="8374:8451" placeholder="{...}" />
+              <marker date="1505800364000" expanded="true" signature="8485:8561" placeholder="{...}" />
+            </folding>
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/stimuli/SurveyStimuli.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="41" column="19" selection-start-line="41" selection-start-column="19" selection-end-line="41" selection-end-column="19" />
+        <state relative-caret-position="180">
+          <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
           <folding>
             <element signature="e#39#82#0" expanded="true" />
           </folding>

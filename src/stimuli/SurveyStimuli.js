@@ -39,16 +39,19 @@ function _SetQuestionOnScreen(iv_name, question, list_of_response_options){
     qu_row.append(qu);
     SurveyStimWraps[iv_name].appendChild(qu_row);
 
-    // Row wrapper to play nice with the grid system
-    var response_row = document.createElement("div");
-    response_row.classList.add("row");
-    response_row.classList.add("text-center");
 
     // Add all responses
     list_of_response_options.map(function(response,i, all){
 
-        var wrap = document.createElement("div");
-        wrap.classList.add("col-xs-3");                         // bootstrap class
+        // Row
+        var response_row = document.createElement("div");
+        response_row.classList.add("row");
+        response_row.classList.add("text-center");
+
+        // Col
+        var col = document.createElement("div");
+        col.classList.add("col-xs-6");                         // bootstrap class
+        col.classList.add("col-xs-offset-3");                         // bootstrap class
 
         var resp = document.createElement("a");
         resp.style.marginBottom = "2vh";
@@ -61,11 +64,10 @@ function _SetQuestionOnScreen(iv_name, question, list_of_response_options){
 
         resp.addEventListener("click", _GoToNextTrial.bind(resp, response));
 
-        wrap.appendChild(resp);
-        response_row.appendChild(wrap);
+        col.appendChild(resp);
+        response_row.appendChild(col);
+        SurveyStimWraps[iv_name].appendChild(response_row);
     });
-
-    SurveyStimWraps[iv_name].appendChild(response_row);
 }
 
 function _GoToNextTrial(clicked_response_text){

@@ -23,7 +23,8 @@ export function _UseCSSStyle(){
     if (!_should_use_css_style) return;
 
     var link_flatui = _CreateLink("https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/flat-ui.css", "ExperimentJS-css");
-    var link_bootstrap = _CreateLink("https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/vendor/bootstrap/css/bootstrap.min.css", "Bootstrap-css");
+    // var link_bootstrap = _CreateLink("https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/vendor/bootstrap/css/bootstrap.min.css", "Bootstrap-css");
+    var link_bootstrap = _CreateLink("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css", "Bootstrap-css");
 
     // Prepend, so that users can overwrite styles as required
     var head = document.getElementsByTagName( "head" )[0];

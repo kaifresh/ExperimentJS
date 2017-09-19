@@ -17248,7 +17248,8 @@ function _UseCSSStyle() {
     if (!_should_use_css_style) return;
 
     var link_flatui = _CreateLink("https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/flat-ui.css", "ExperimentJS-css");
-    var link_bootstrap = _CreateLink("https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/vendor/bootstrap/css/bootstrap.min.css", "Bootstrap-css");
+    // var link_bootstrap = _CreateLink("https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/vendor/bootstrap/css/bootstrap.min.css", "Bootstrap-css");
+    var link_bootstrap = _CreateLink("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css", "Bootstrap-css");
 
     // Prepend, so that users can overwrite styles as required
     var head = document.getElementsByTagName("head")[0];
@@ -19253,8 +19254,9 @@ function _SetQuestionOnScreen(iv_name, question, list_of_response_options) {
     var qu_row = document.createElement("div");
     qu_row.classList.add("row");
 
-    // Add a question
+    // Add a question (+ style)
     var qu = document.createElement("h3");
+    qu.style.marginBottom = "2vh";
     qu.classList.add(escape(iv_name) + "survey-question");
     qu.classList.add("survey-question");
     qu.classList.add("text-center");
@@ -19263,16 +19265,18 @@ function _SetQuestionOnScreen(iv_name, question, list_of_response_options) {
     qu_row.append(qu);
     SurveyStimWraps[iv_name].appendChild(qu_row);
 
-    // Wrappers to play nice with the grid system
-    var response_row = document.createElement("div");
-    response_row.classList.add("row");
-    response_row.classList.add("text-center");
-
     // Add all responses
     list_of_response_options.map(function (response, i, all) {
 
-        var wrap = document.createElement("div");
-        wrap.classList.add("col-xs-3"); // bootstrap class
+        // Row
+        var response_row = document.createElement("div");
+        response_row.classList.add("row");
+        response_row.classList.add("text-center");
+
+        // Col
+        var col = document.createElement("div");
+        col.classList.add("col-xs-6"); // bootstrap class
+        col.classList.add("col-xs-offset-3"); // bootstrap class
 
         var resp = document.createElement("a");
         resp.style.marginBottom = "2vh";
@@ -19285,11 +19289,10 @@ function _SetQuestionOnScreen(iv_name, question, list_of_response_options) {
 
         resp.addEventListener("click", _GoToNextTrial.bind(resp, response));
 
-        wrap.appendChild(resp);
-        response_row.appendChild(wrap);
+        col.appendChild(resp);
+        response_row.appendChild(col);
+        SurveyStimWraps[iv_name].appendChild(response_row);
     });
-
-    SurveyStimWraps[iv_name].appendChild(response_row);
 }
 
 function _GoToNextTrial(clicked_response_text) {

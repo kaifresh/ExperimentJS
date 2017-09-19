@@ -26,11 +26,16 @@
 <script>
 
 
-    var questions = ["Do you feel happy every day", "Do you ever have dreams of electric sheep?"];
+    var questions = ["I like running experiments in the browser", "I find it enjoyable to spend hours performing small tedious changes to my code", "I enjoy having a platform which takes care of these details for me"];
 
-    var responses = ["Never", "Rarely", "Sometimes", "Often", "Always"];
+    var likert_5_responses = [
+        "Strongly Disagree",
+        "Somewhat Disagree",
+        "Neither Agree Nor Disagree",
+        "Somewhat Agree",
+        "Strongly Agree"];
 
-    ExperimentJS.Stimuli.SurveyStimuliIV("survey questions", questions, responses);
+    ExperimentJS.Stimuli.SurveyStimuliIV("survey questions", questions, likert_5_responses);
 
     ExperimentJS.Trials.runNextTrial();
 

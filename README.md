@@ -120,7 +120,20 @@ ExperimentJS.Trials.shuffleTrials = function(all_trials_array){ ... }
 
 ### DATA
 
-When a participant completes all trials in the experiment, the browser will download a CSV formatted output of the current participant's results.
+When a participant completes all trials in the experiment, the browser will download a CSV formatted output of the current participant's results.This automatic downloading of CSV data can also be overridden, should you choose
+to do something else with the data.
+For example, if you wanted to upload participant data to your server:
+
+```javascript
+Trials.OutputResponses = function(csv_data_string){
+    $.post("/upload.php", {ExperimentJS_output_data: csv_data_string});
+}
+```
+
+
+Data is output in the following format.  Rows represent trials. Columns represent demographic information,
+the dependent (measured) variable, and the input arguments for each independent variable in a trial.
+For every IV, each input argument to the setter function will be represented as a separate column.
 
 | Participant Name | Participant Number | IV0_Emotion faces | DV_value |
 |------------------|--------------------|-------------------|----------|
@@ -131,16 +144,42 @@ When a participant completes all trials in the experiment, the browser will down
 | billy            | 0                  | ./img/face_3.jpg  | yes      |
 | billy            | 0                  | ./img/face_2.jpg  | no       |
 
+#### Output Parser Functions
 
-This automatic downloading behaviour can also be overridden, should you choose
-to do something else with the data.
-For example, if you wanted to upload participant data to your server:
+In some cases however, all the input arguments to your setter function might not be that useful, and could be discarded
+or parsed from the output. At these times, you need *Parser Functions*.
 
 ```javascript
-Trials.OutputResponses = function(csv_data_string){
-    $.post("/upload.php", {ExperimentJS_output_data: csv_data_string});
+function some_color_setter(r, g, b){ // do some setting };
+
+// A parser function receives the same arguments as a setter function
+// The parser should output a dictionary.
+// Each key of the dictionary will be represented as a column in the output.
+
+// R, G, B are converted to a single column with the name of the color
+function some_color_parser_one_column(r, g, b){
+    if (r === 255 && g == 0 && b === 0) return { "color": "red" };
+    if (r === 0 && g == 0 && b === 255) return { "color": "blue" };
 }
+
+// Here two columns will be created in the output "color" & "total luminance"
+function some_color_parser_multiple_columns(r, g, b){
+    var output = {};
+
+    if (r === 255 && g == 0 && b === 0) output['color'] = "red";
+    if (r === 0 && g == 0 && b === 255) output['color'] = "blue";
+
+    output['total luminance'] = r + g + b;
+
+    return output;
+}
+
+
+ExperimentJS.Trials.setIVsetFunc("Set come colours!", some_color_setter);
+ExperimentJS.Trials.setIVResponseParserFunc("Set come colours!", some_color_parser_multiple_columns);
 ```
+
+
 
 ### PRESET STIMULI
 To further speed up development, ExperimentJS contains a range of predefined components for creating frequently

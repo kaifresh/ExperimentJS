@@ -5,7 +5,7 @@ portable across computers/operating systems, and leverages the simplicity of HTM
 The problem is, writing experiments can be time consuming and small changes in your experimental design can result in big
  changes to your code.
 
-ExperimentJS solves this by providing a framework that greatly simplifies this process of building and running experiments.
+ExperimentJS solves this by providing a framework that greatly simplifies building and running experiments.
 ExperimentJS takes care of the small details in implementing experiments and lets you focus on the big picture,
 like working on stimulus design and experimental structure.
 
@@ -13,7 +13,7 @@ With ExperimentJS the standard procedure involves setting
 
 To run a basic experiment, all you need to do is:
 
-Include `experimentJS.js` or `experimentJS.min.js` from /dist.
+Include `experimentJS.js` or `experimentJS.min.js`, located in `/dist`.
 ```HTML
 <script src="experimentJS.js"></script>
 ```
@@ -70,7 +70,7 @@ ExperimentJS.Trials.runNextTrial();
 ```
 
 In less than 20 lines of code, you have created an experiment like this
-![alt text](../examples/gifs/basic_example_demo_vid.gif "Video of basic example")
+![alt text](/kaifresh/ExperimentJS/examples/gifs/basic_example_1.gif "Video of basic example")
 
 
 ### FLEXIBILITY
@@ -150,13 +150,15 @@ In some cases however, all the input arguments to your setter function might not
 or parsed from the output. At these times, you need *Parser Functions*.
 
 ```javascript
-function some_color_setter(r, g, b){ // do some setting };
+function some_color_setter(r, g, b){
+        // set your rgb color on something in your display
+};
 
 // A parser function receives the same arguments as a setter function
 // The parser should output a dictionary.
 // Each key of the dictionary will be represented as a column in the output.
 
-// R, G, B are converted to a single column with the name of the color
+// R, G, B are output as a single column "color", whose field is the name of that rgb color
 function some_color_parser_one_column(r, g, b){
     if (r === 255 && g == 0 && b === 0) return { "color": "red" };
     if (r === 0 && g == 0 && b === 255) return { "color": "blue" };
@@ -165,12 +167,9 @@ function some_color_parser_one_column(r, g, b){
 // Here two columns will be created in the output "color" & "total luminance"
 function some_color_parser_multiple_columns(r, g, b){
     var output = {};
-
     if (r === 255 && g == 0 && b === 0) output['color'] = "red";
     if (r === 0 && g == 0 && b === 255) output['color'] = "blue";
-
     output['total luminance'] = r + g + b;
-
     return output;
 }
 

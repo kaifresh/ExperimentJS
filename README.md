@@ -41,9 +41,9 @@ var face_images = ["./img/face_1.jpg", "./img/face_2.jpg", "./img/face_3.jpg", "
 
 // setIVLevels() accepts an array of arrays (of arguments to the setter function), so using .map() is useful here.
 ExperimentJS.Trials.setIVLevels("Emotion faces", face_images.map(function(img_path){      // (iv name, levels)
-
-    return [ img_path ]     // This is the array of arguments that will be passed to your setter function on each trial
-
+    // This is the array of arguments that will
+    // be passed to your setter function on each trial
+    return [ img_path ]
 }));
 ```
 

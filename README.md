@@ -7,8 +7,8 @@ and leverages the simplicity of HTML5 primitives (buttons, images, videos, etc) 
 The problem is, writing experiments can be time consuming and small changes in your experimental design can result in big
 changes to your code.
 
-ExperimentJS solves this by providing a lightweight framework that greatly simplifies building and running experiments.
-ExperimentJS takes care of the small details in implementing experiments and lets you focus on the big picture issues
+*ExperimentJS* solves this by providing a lightweight framework that greatly simplifies building and running experiments.
+*ExperimentJS* takes care of the small details in implementing experiments and lets you focus on the big picture issues
 like stimulus design.
 
 ***
@@ -80,7 +80,7 @@ In less than 20 lines of code, you have created an experiment like this:
 
 ### FLEXIBILITY
 
-ExperimentJS is *highly customisable*. Individual components can be wired together in many different ways to
+*ExperimentJS* is *highly customisable*. Individual components can be wired together in many different ways to
 create a wide variety of experimental paradigms.
 
 For example, the experiment above can be easily converted into a forced choice comparison format:
@@ -119,7 +119,7 @@ The code above quickly produces a comparison based experiment:
 
 ### FULL FACTORIAL RANDOMISED DESIGNS
 
-When you set two or more IVs, ExperimentJS will create a randomised, [full factorial design](https://en.wikipedia.org/wiki/Factorial_experiment).
+When you set two or more IVs, *ExperimentJS* will create a randomised, [full factorial design](https://en.wikipedia.org/wiki/Factorial_experiment).
 Trials are randomised using the Fischer-Yates shuffle, by default.
 If you wish to customise the behaviour of the trial randomiser, simply override *shuffleTrials*:
 ```javascript
@@ -190,7 +190,7 @@ ExperimentJS.Trials.setIVResponseParserFunc("Set come colours!", some_color_pars
 
 
 ### PRESET STIMULI
-To further speed up development, ExperimentJS contains a range of predefined components for creating frequently
+To further speed up development, *ExperimentJS* contains a range of predefined components for creating frequently
 used stimulus types.
 
 For example, the image based independent variable in the basic experiment above can be rewritten as a one-liner, using the `ExperimentJS.Stimuli.ImageStimuliIV` preset:
@@ -212,7 +212,7 @@ $(window).keydown(function(event){
 ExperimentJS.Trials.runNextTrial();
 ```
 
-ExperimentJS also comes with the SurveyStimuliIV preset, which makes it very quick to get question-based experiments up and running!
+*ExperimentJS* also comes with the SurveyStimuliIV preset, which makes it very quick to get question-based experiments up and running!
 ```javascript
   var questions = [
   "I like running experiments in the browser",
@@ -241,10 +241,10 @@ In future iterations, more presets will be added to ExperimentJS.
 
 
 ### PRESET PARADIGMS
-ExperimentJS also provides built-in support for a variety of experimental paradigms
+*ExperimentJS* also provides built-in support for a variety of experimental paradigms
 (such as Two Alternative Forced Choice).
 
-[//]: # ( [Click here](TODO) to view a full list of presets, usage instructions and demos.)
+( [Click here](TODO) to view a full list of presets, usage instructions and demos.)
 
 ### ExperimentJS Experiment Flow
 
@@ -256,7 +256,7 @@ binding additional settings (e.g. number of repeats) and gathering participant i
 
 ### ADDITIONAL FEATURES
 
-ExperimentJS supports a variety of other commonly required features:
+*ExperimentJS* supports a variety of other commonly required features:
 
 - Response time tracking
 - Displaying IVs in different phases (e.g. in [backwards masking paradigms](https://en.wikipedia.org/wiki/Backward_masking))

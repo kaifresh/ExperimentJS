@@ -109,6 +109,9 @@ ExperimentJS.Components.Instructions("Choose the happier face. Use the left and 
 ExperimentJS.Trials.runNextTrial();
 ```
 
+The code above produces an experiment lke this
+![alt text](/examples/gifs/basic_example_2.gif "Video of basic example 2")
+
 ### FULL FACTORIAL RANDOMISED DESIGNS
 
 When you set two or more IVs, ExperimentJS will create a randomised, [full factorial design](https://en.wikipedia.org/wiki/Factorial_experiment).

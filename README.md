@@ -70,7 +70,7 @@ ExperimentJS.Trials.runNextTrial();
 ```
 
 In less than 20 lines of code, you have created an experiment like this
-![alt text](/kaifresh/ExperimentJS/examples/gifs/basic_example_1.gif "Video of basic example")
+![alt text](/examples/gifs/basic_example_1.gif "Video of basic example")
 
 
 ### FLEXIBILITY

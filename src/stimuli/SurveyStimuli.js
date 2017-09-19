@@ -12,6 +12,7 @@ function _SetQuestionOnScreen(iv_name, question, list_of_response_options){
     if (SurveyStimWraps[iv_name] === undefined){                                                   // make the wrap if it doesn't exist
         SurveyStimWraps[iv_name] = document.createElement("div");
         SurveyStimWraps[iv_name].classList.add("survey-stimulus-wrap");
+        SurveyStimWraps[iv_name].classList.add("container");                // bootstrap
         SurveyStimWraps[iv_name].id = escape(iv_name) + "-survey-wrap";
         document.body.appendChild(SurveyStimWraps[iv_name]);
 
@@ -23,25 +24,48 @@ function _SetQuestionOnScreen(iv_name, question, list_of_response_options){
         SurveyStimWraps[iv_name].removeChild(SurveyStimWraps[iv_name].firstChild);
     }
 
-    // Add a question
+    // Question wrap
+    var qu_row = document.createElement("div");
+    qu_row.classList.add("row");
+
+    // Add a question (+ style)
     var qu = document.createElement("h3");
+    qu.style.marginBottom = "2vh";
     qu.classList.add(escape(iv_name)+"survey-question");
     qu.classList.add("survey-question");
+    qu.classList.add("text-center");
     qu.textContent = question;
-    SurveyStimWraps[iv_name].appendChild(qu);
 
+    qu_row.append(qu);
+    SurveyStimWraps[iv_name].appendChild(qu_row);
+
+    // Row wrapper to play nice with the grid system
+    var response_row = document.createElement("div");
+    response_row.classList.add("row");
+    response_row.classList.add("text-center");
 
     // Add all responses
     list_of_response_options.map(function(response,i, all){
 
-        var resp = document.createElement("p");
+        var wrap = document.createElement("div");
+        wrap.classList.add("col-xs-3");                         // bootstrap class
+
+        var resp = document.createElement("a");
+        resp.style.marginBottom = "2vh";
         resp.textContent = response;
         resp.classList.add(escape(iv_name)+"survey-response");
+        resp.classList.add("btn");                              // flatui class
+        resp.classList.add("btn-lg");                           // flatui class
+        resp.classList.add("btn-primary");                      // flatui class
         resp.classList.add("survey-response");
+
         resp.addEventListener("click", _GoToNextTrial.bind(resp, response));
 
-        SurveyStimWraps[iv_name].appendChild(resp);
+        wrap.appendChild(resp);
+        response_row.appendChild(wrap);
     });
+
+    SurveyStimWraps[iv_name].appendChild(response_row);
 }
 
 function _GoToNextTrial(clicked_response_text){
@@ -51,7 +75,15 @@ function _GoToNextTrial(clicked_response_text){
     });
 }
 
-
+/**
+ * Automatically create an independent variable from the questions & responses provided.
+ * Each question will be displayed with the available responses presented as buttons, in the order
+ * that they are supplied.
+ * @param iv_name {string}
+ * @param list_of_questions {array} - Array of questions (string)
+ * @param list_of_response_options {array} - Array of response options that will be displayed for all questions (string)
+ * @memberof Stimuli
+ */
 export function SurveyStimuliIV(iv_name, list_of_questions, list_of_response_options){
 
     if (typeof iv_name !== "string" || !Array.isArray(list_of_questions) || !Array.isArray(list_of_response_options)){
@@ -69,12 +101,6 @@ export function SurveyStimuliIV(iv_name, list_of_questions, list_of_response_opt
     Trials.setIVLevels(iv_name, questions_as_args);
     Trials.setIVsetFunc(iv_name, _SetQuestionOnScreen);
     Trials.setIVResponseParserFunc(iv_name, _SurveyIVParser);
-
-    var css = ".survey-response { cursor : pointer; } ";
-
-
-    _CreateAndAppendStyleTagsWithCSS(css);
-    
 }
 
 function _SurveyIVParser(iv_name, question, list_of_response_options){

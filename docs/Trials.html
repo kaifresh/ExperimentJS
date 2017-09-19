@@ -72,7 +72,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line20">line 20</a>
+        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line21">line 21</a>
     </li></ul></dd>
     
 
@@ -213,7 +213,7 @@ prior to running the experiment.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line281">line 281</a>
+        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line283">line 283</a>
     </li></ul></dd>
     
 
@@ -472,7 +472,7 @@ to obtain participant data before all trials are complete.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line270">line 270</a>
+        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line272">line 272</a>
     </li></ul></dd>
     
 
@@ -914,7 +914,7 @@ ExperimentJS.Trials.runNextTrial({ dv_value: "participant's response" });    // 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line99">line 99</a>
+        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line100">line 100</a>
     </li></ul></dd>
     
 
@@ -1210,7 +1210,7 @@ Each sub array is the arguments passed to the setter function:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line43">line 43</a>
+        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line44">line 44</a>
     </li></ul></dd>
     
 
@@ -1403,7 +1403,7 @@ This callback should be called to transition to the next phase.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line212">line 212</a>
+        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line214">line 214</a>
     </li></ul></dd>
     
 
@@ -1578,7 +1578,7 @@ to include in the output at the end of the experiment.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line138">line 138</a>
+        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line140">line 140</a>
     </li></ul></dd>
     
 
@@ -1633,13 +1633,14 @@ to include in the output at the end of the experiment.
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>Trials.setIVResponseParserFunc("iv name",
-     function ( args_passed_to_this_IV_for_this_trial..., index){
+     function ( r, g, b..., index){
+     // Here R, G &amp; B are the arguments passed to the setter function 
 
          // Parse the arguments for this independent variable...
 
          // eg. three numbers representing an RGB triplet could be condensed into a color name:
          var output;
-         if (arg1 === 255 &amp;&amp; arg2 === 0 &amp;&amp; arg3 === 0){
+         if (r === 255 &amp;&amp; g === 0 &amp;&amp; b === 0){
              output = "red";
          } else {
              output = "not red";
@@ -1787,7 +1788,7 @@ The arguments this function receives must correspond to the elements in the sub-
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line76">line 76</a>
+        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line77">line 77</a>
     </li></ul></dd>
     
 
@@ -2063,7 +2064,7 @@ ExperimentJS.Trials.setIVLevels("iv name", [ [arg1_a, arg2_a, arg3_a], [arg1_b, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line153">line 153</a>
+        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line155">line 155</a>
     </li></ul></dd>
     
 
@@ -2333,7 +2334,7 @@ ExperimentJS.Trials.setIVLevels("iv name", [ [arg1_a, arg2_a, arg3_a], [arg1_b, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line386">line 386</a>
+        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line389">line 389</a>
     </li></ul></dd>
     
 
@@ -2604,7 +2605,7 @@ If you wish to alter the shuffling behaviour, this function can be overridden (s
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line405">line 405</a>
+        <a href="core_Trials.js.html">core/Trials.js</a>, <a href="core_Trials.js.html#line408">line 408</a>
     </li></ul></dd>
     
 
@@ -2656,13 +2657,13 @@ If you wish to alter the shuffling behaviour, this function can be overridden (s
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="ExperimentJS.Components.Instructions.html">Instructions</a></li><li><a href="Pause.html">Pause</a></li><li><a href="Saves.html">Saves</a></li><li><a href="Stimuli.html">Stimuli</a></li><li><a href="Trials.html">Trials</a></li><li><a href="TwoAFC.html">TwoAFC</a></li><li><a href="Utils.html">Utils</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="ExperimentJS.Components.Instructions.html">Instructions</a></li><li><a href="ExperimentJS.Components.Style.html">Style</a></li><li><a href="Pause.html">Pause</a></li><li><a href="Saves.html">Saves</a></li><li><a href="Stimuli.html">Stimuli</a></li><li><a href="Trials.html">Trials</a></li><li><a href="TwoAFC.html">TwoAFC</a></li><li><a href="Utils.html">Utils</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.3</a> on Tue Sep 19 2017 13:12:47 GMT+1000 (AEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.3</a> on Tue Sep 19 2017 14:31:11 GMT+1000 (AEST)
 </footer>
 
 <script> prettyPrint(); </script>

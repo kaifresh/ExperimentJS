@@ -17223,34 +17223,53 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports._UseCSSStyle = _UseCSSStyle;
 exports.SetShouldUseCSS = SetShouldUseCSS;
+
 /**
- * Created by kai on 19/9/17.
+ * @namespace ExperimentJS.Components.Style
  */
+
+function _CreateLink(href, id) {
+    id = id || "";
+    href = href || "";
+
+    var link = document.createElement("link");
+    link.href = href;
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    link.media = "screen,print";
+    link.id = id;
+    return link;
+}
 
 var _did_add_css = false;
 function _UseCSSStyle() {
 
-    if (!_should_use_css_style) return;
     if (_did_add_css) return;
+    if (!_should_use_css_style) return;
 
-    var link = document.createElement("link");
-    link.href = "https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/flat-ui.css";
-    link.type = "text/css";
-    link.rel = "stylesheet";
-    link.media = "screen,print";
-    link.id = "ExperimentJS-css";
+    var link_flatui = _CreateLink("https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/flat-ui.css", "ExperimentJS-css");
+    var link_bootstrap = _CreateLink("https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/vendor/bootstrap/css/bootstrap.min.css", "Bootstrap-css");
 
-    document.getElementsByTagName("head")[0].appendChild(link);
+    // Prepend, so that users can overwrite styles as required
+    var head = document.getElementsByTagName("head")[0];
+    head.insertBefore(link_flatui, head.firstChild);
+    head.insertBefore(link_bootstrap, link_flatui);
 
     _did_add_css = true;
 }
 
 var _should_use_css_style = true;
+
+/**
+ * Set whether ExperimentJS should include its default stylesheet.
+ * This stylesheet is written into the DOM and references Designmodo FlatUI and Bootstrap.
+ * @param should_use_css {bool}
+ * @memberof ExperimentJS.Components.Style
+ */
 function SetShouldUseCSS(should_use_css) {
     if (typeof use_style !== "boolean") {
         throw new Error("[ SetShouldUseCSSStyle ERROR] : usage (bool should_use_css)");
     }
-
     _should_use_css_style = should_use_css;
 }
 
@@ -19218,6 +19237,7 @@ function _SetQuestionOnScreen(iv_name, question, list_of_response_options) {
         // make the wrap if it doesn't exist
         SurveyStimWraps[iv_name] = document.createElement("div");
         SurveyStimWraps[iv_name].classList.add("survey-stimulus-wrap");
+        SurveyStimWraps[iv_name].classList.add("container"); // bootstrap
         SurveyStimWraps[iv_name].id = escape(iv_name) + "-survey-wrap";
         document.body.appendChild(SurveyStimWraps[iv_name]);
 
@@ -19229,24 +19249,47 @@ function _SetQuestionOnScreen(iv_name, question, list_of_response_options) {
         SurveyStimWraps[iv_name].removeChild(SurveyStimWraps[iv_name].firstChild);
     }
 
+    // Question wrap
+    var qu_row = document.createElement("div");
+    qu_row.classList.add("row");
+
     // Add a question
     var qu = document.createElement("h3");
     qu.classList.add(escape(iv_name) + "survey-question");
     qu.classList.add("survey-question");
+    qu.classList.add("text-center");
     qu.textContent = question;
-    SurveyStimWraps[iv_name].appendChild(qu);
+
+    qu_row.append(qu);
+    SurveyStimWraps[iv_name].appendChild(qu_row);
+
+    // Wrappers to play nice with the grid system
+    var response_row = document.createElement("div");
+    response_row.classList.add("row");
+    response_row.classList.add("text-center");
 
     // Add all responses
     list_of_response_options.map(function (response, i, all) {
 
-        var resp = document.createElement("p");
+        var wrap = document.createElement("div");
+        wrap.classList.add("col-xs-3"); // bootstrap class
+
+        var resp = document.createElement("a");
+        resp.style.marginBottom = "2vh";
         resp.textContent = response;
         resp.classList.add(escape(iv_name) + "survey-response");
+        resp.classList.add("btn"); // flatui class
+        resp.classList.add("btn-lg"); // flatui class
+        resp.classList.add("btn-primary"); // flatui class
         resp.classList.add("survey-response");
+
         resp.addEventListener("click", _GoToNextTrial.bind(resp, response));
 
-        SurveyStimWraps[iv_name].appendChild(resp);
+        wrap.appendChild(resp);
+        response_row.appendChild(wrap);
     });
+
+    SurveyStimWraps[iv_name].appendChild(response_row);
 }
 
 function _GoToNextTrial(clicked_response_text) {
@@ -19256,6 +19299,15 @@ function _GoToNextTrial(clicked_response_text) {
     });
 }
 
+/**
+ * Automatically create an independent variable from the questions & responses provided.
+ * Each question will be displayed with the available responses presented as buttons, in the order
+ * that they are supplied.
+ * @param iv_name {string}
+ * @param list_of_questions {array} - Array of questions (string)
+ * @param list_of_response_options {array} - Array of response options that will be displayed for all questions (string)
+ * @memberof Stimuli
+ */
 function SurveyStimuliIV(iv_name, list_of_questions, list_of_response_options) {
 
     if (typeof iv_name !== "string" || !Array.isArray(list_of_questions) || !Array.isArray(list_of_response_options)) {
@@ -19273,10 +19325,6 @@ function SurveyStimuliIV(iv_name, list_of_questions, list_of_response_options) {
     _Trials.Trials.setIVLevels(iv_name, questions_as_args);
     _Trials.Trials.setIVsetFunc(iv_name, _SetQuestionOnScreen);
     _Trials.Trials.setIVResponseParserFunc(iv_name, _SurveyIVParser);
-
-    var css = ".survey-response { cursor : pointer; } ";
-
-    (0, _DOMUtils._CreateAndAppendStyleTagsWithCSS)(css);
 }
 
 function _SurveyIVParser(iv_name, question, list_of_response_options) {

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Namespace: Instructions</title>
+    <title>JSDoc: Namespace: Style</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Namespace: Instructions</h1>
+    <h1 class="page-title">Namespace: Style</h1>
 
     
 
@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2>Instructions</h2>
+        <h2>Style</h2>
         
     
 </header>
@@ -70,7 +70,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_Instructions.js.html">components/Instructions.js</a>, <a href="components_Instructions.js.html#line7">line 7</a>
+        <a href="components_Style.js.html">components/Style.js</a>, <a href="components_Style.js.html#line2">line 2</a>
     </li></ul></dd>
     
 
@@ -109,7 +109,7 @@
     
 
     
-    <h4 class="name" id=".Instructions"><span class="type-signature">(static) </span>Instructions<span class="signature">(instructions_text)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".exports.SetShouldUseCSS"><span class="type-signature">(static) </span>exports.SetShouldUseCSS<span class="signature">(should_use_css)</span><span class="type-signature"></span></h4>
     
 
     
@@ -117,8 +117,8 @@
 
 
 <div class="description">
-    Set some instructions text for your participants. This text will be displayed on every trial.<br>
-If you wish to edit the CSS of the instructions &lt;div&gt;, it can be accessed by the ID "#%%INSTRUCTIONS%%"
+    Set whether ExperimentJS should include its default stylesheet.
+This stylesheet is written into the DOM and references the Flat UI stylesheet by DesignModo
 </div>
 
 
@@ -154,13 +154,13 @@ If you wish to edit the CSS of the instructions &lt;div&gt;, it can be accessed 
 
         <tr>
             
-                <td class="name"><code>instructions_text</code></td>
+                <td class="name"><code>should_use_css</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">bool</span>
 
 
             
@@ -170,7 +170,7 @@ If you wish to edit the CSS of the instructions &lt;div&gt;, it can be accessed 
 
             
 
-            <td class="description last">instructions to be displayed to particpants on every trial</td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -211,7 +211,7 @@ If you wish to edit the CSS of the instructions &lt;div&gt;, it can be accessed 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_Instructions.js.html">components/Instructions.js</a>, <a href="components_Instructions.js.html#line19">line 19</a>
+        <a href="components_Style.js.html">components/Style.js</a>, <a href="components_Style.js.html#line36">line 36</a>
     </li></ul></dd>
     
 
@@ -236,11 +236,6 @@ If you wish to edit the CSS of the instructions &lt;div&gt;, it can be accessed 
 
 
 
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>ExperimentJS.Components.Instructions("Use the left &amp; right arrow keys to indicate which box appears brighter");</code></pre>
 
 
 

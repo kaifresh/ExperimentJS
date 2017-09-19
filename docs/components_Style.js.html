@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: utils/ImageUtils.js</title>
+    <title>JSDoc: Source: components/Style.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: utils/ImageUtils.js</h1>
+    <h1 class="page-title">Source: components/Style.js</h1>
 
     
 
@@ -28,20 +28,44 @@
         <article>
             <pre class="prettyprint source linenums"><code>
 /**
- * To speed up the loading of a
- * @param path {string} - path to image file (on disk or a URL) that will be set as the image source
- * @memberof Utils
+ * @namespace ExperimentJS.Components.Style
  */
-export function preloadImage(path){
-    return new Promise(function(resolve, reject){
-        var img = new Image();
-        img.onload = function(){ resolve() };
-        img.onerror = function(){ reject() };
-        img.src = path;
 
-        img.style.visibility = "hidden";
-        document.body.appendChild(img);
-    });
+
+var _did_add_css = false;
+export function _UseCSSStyle(){
+
+    if (_did_add_css) return;
+    if (!_should_use_css_style) return;
+
+    var link = document.createElement( "link" );
+    link.href = "https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/flat-ui.css";
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    link.media = "screen,print";
+    link.id = "ExperimentJS-css";
+
+
+    // Prepend, so that users can overwrite styles as required
+    var head = document.getElementsByTagName( "head" )[0];
+    head.insertBefore(link, head.firstChild);
+
+    _did_add_css = true;
+}
+
+var _should_use_css_style = true;
+
+/**
+ * Set whether ExperimentJS should include its default stylesheet.
+ * This stylesheet is written into the DOM and references the Flat UI stylesheet by DesignModo
+ * @param should_use_css {bool}
+ * @memberof ExperimentJS.Components.Style
+ */
+export function SetShouldUseCSS(should_use_css){
+    if (typeof use_style !== "boolean"){
+        throw new Error("[ SetShouldUseCSSStyle ERROR] : usage (bool should_use_css)");
+    }
+    _should_use_css_style = should_use_css;
 }</code></pre>
         </article>
     </section>

@@ -9,7 +9,11 @@ ExperimentJS solves this by providing a framework that greatly simplifies buildi
 ExperimentJS takes care of the small details in implementing experiments and lets you focus on the big picture,
 like working on stimulus design and experimental structure.
 
-With ExperimentJS the standard procedure involves setting
+ExperimentJS follows a standard procedure of binding setter functions and data,
+binding additional settings (e.g. number of repeats) and gathering participant info,
+ and finally, running the experiment itself.
+
+![alt text](/notes/ExJS process map.png "process map image")
 
 To run a basic experiment, all you need to do is:
 

@@ -123,7 +123,10 @@ When you set two or more IVs, *ExperimentJS* will create a randomised, [full fac
 Trials are randomised using the Fischer-Yates shuffle, by default.
 If you wish to customise the behaviour of the trial randomiser, simply override *shuffleTrials*:
 ```javascript
-ExperimentJS.Trials.shuffleTrials = function(all_trials_array){ ... }
+ExperimentJS.Trials.shuffleTrials = function(all_trials_array){
+    all_trials_array = your_shuffling_function(all_trials_array);
+    return all_trials_array;
+}
 ```
 
 ### DATA

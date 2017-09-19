@@ -69,7 +69,7 @@ And of course, run the experiment!
 ExperimentJS.Trials.runNextTrial();
 ```
 
-In less than 20 lines of code, you have created an experiment like this
+In less than 20 lines of code, you have created an experiment like this:
 ![alt text](/examples/gifs/basic_example_1.gif "Video of basic example")
 
 
@@ -109,7 +109,7 @@ ExperimentJS.Components.Instructions("Choose the happier face. Use the left and 
 ExperimentJS.Trials.runNextTrial();
 ```
 
-The code above produces an experiment lke this
+The code above quickly produces a comparison based experiment:
 ![alt text](/examples/gifs/basic_example_2.gif "Video of basic example 2")
 
 ### FULL FACTORIAL RANDOMISED DESIGNS

@@ -123,8 +123,10 @@ ExperimentJS.Trials.shuffleTrials = function(all_trials_array){ ... }
 
 ### DATA
 
-When a participant completes all trials in the experiment, the browser will download a CSV formatted output of the current participant's results.This automatic downloading of CSV data can also be overridden, should you choose
-to do something else with the data.
+#### Handling
+When a participant completes all trials in the experiment, the browser will download a CSV formatted output
+of their results.
+This automatic CSV data download can also be overridden, should you choose to do something else with the data.
 For example, if you wanted to upload participant data to your server:
 
 ```javascript
@@ -133,7 +135,7 @@ Trials.OutputResponses = function(csv_data_string){
 }
 ```
 
-
+#### Format
 Data is output in the following format.  Rows represent trials. Columns represent demographic information,
 the dependent (measured) variable, and the input arguments for each independent variable in a trial.
 For every IV, each input argument to the setter function will be represented as a separate column.
@@ -182,7 +184,6 @@ ExperimentJS.Trials.setIVResponseParserFunc("Set come colours!", some_color_pars
 ```
 
 
-
 ### PRESET STIMULI
 To further speed up development, ExperimentJS contains a range of predefined components for creating frequently
 used stimulus types.
@@ -206,10 +207,32 @@ $(window).keydown(function(event){
 ExperimentJS.Trials.runNextTrial();
 ```
 
-Presets are simply a loose wrapper around `ExperimentJS.Trials.setIVsetFunc` and `ExperimentJS.Trials.setIVLevels`.
+ExperimentJS also comes with the SurveyStimuliIV preset, which makes it very quick to get question-based experiments up and running!
+```javascript
+  var questions = [
+  "I like running experiments in the browser",
+  "I find it enjoyable to spend hours performing small tedious changes to my code",
+  "I enjoy having a platform which takes care of these details for me"
+  ];
+
+    var likert_5_responses = [
+        "Strongly Disagree",
+        "Somewhat Disagree",
+        "Neither Agree Nor Disagree",
+        "Somewhat Agree",
+        "Strongly Agree"];
+
+    ExperimentJS.Stimuli.SurveyStimuliIV("survey questions", questions, likert_5_responses);
+
+    ExperimentJS.Trials.runNextTrial();
+```
+![alt text](/examples/gifs/survey_example.gif "Video of survey example")
+
+
+Presets are simply loose wrappers around `ExperimentJS.Trials.setIVsetFunc` and `ExperimentJS.Trials.setIVLevels`.
 These core elements are highly customisable and can be wrapped with various functionalities to produce many different types of stimuli.
 
-[//]: # ([Click here](TODO) to view a full list of stimuli presets.)
+In future iterations, more presets will be added to ExperimentJS.
 
 
 ### PRESET PARADIGMS

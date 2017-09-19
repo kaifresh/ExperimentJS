@@ -13,7 +13,7 @@ ExperimentJS follows a standard procedure of binding setter functions and data,
 binding additional settings (e.g. number of repeats) and gathering participant info,
  and finally, running the experiment itself.
 
-![alt text](/notes/ExJS process map.png "process map image")
+![alt text](/notes/ExJS_process_map.png "process map image")
 
 To run a basic experiment, all you need to do is:
 

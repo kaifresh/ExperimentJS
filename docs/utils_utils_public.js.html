@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: utils/ImageUtils.js</title>
+    <title>JSDoc: Source: utils/utils_public.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: utils/ImageUtils.js</h1>
+    <h1 class="page-title">Source: utils/utils_public.js</h1>
 
     
 
@@ -26,23 +26,25 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>
-/**
- * To speed up the loading of a
- * @param path {string} - path to image file (on disk or a URL) that will be set as the image source
- * @memberof Utils
+            <pre class="prettyprint source linenums"><code>/**
+ * Created by kai on 14/9/17.
  */
-export function preloadImage(path){
-    return new Promise(function(resolve, reject){
-        var img = new Image();
-        img.onload = function(){ resolve() };
-        img.onerror = function(){ reject() };
-        img.src = path;
 
-        img.style.visibility = "hidden";
-        document.body.appendChild(img);
-    });
-}</code></pre>
+import { preloadImage } from "./ImageUtils.js";
+
+
+/**
+ * Utilities Module
+ * @namespace Utils
+ */
+var Utils = {};
+
+
+Utils.PreloadImage = preloadImage;
+
+
+// Fields of ExperimentJS
+export { Utils }</code></pre>
         </article>
     </section>
 

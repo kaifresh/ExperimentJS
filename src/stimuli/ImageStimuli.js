@@ -3,16 +3,15 @@ import { Trials } from "../core/Trials.js";
 /**
  * Creates a javascript Image object for each path
  * @param list_of_img_paths {array} - array of string image paths
- * @namespace Stimuli
  * @returns array of images
+ * @memberof Stimuli
  */
 export function ImageStimuli(list_of_img_paths){
 
     return list_of_img_paths.map(function(img_path){
         var img = new Image();
         img.src = img_path;
-
-
+        
         return img;
 
     });
@@ -26,7 +25,7 @@ export function ImageStimuli(list_of_img_paths){
  * or manipulated as required for your experiment.
  * @param iv_name {string}
  * @param list_of_img_paths {array}
- * @namespace Stimuli
+ * @memberof Stimuli
  */
 export function ImageStimuliIV(iv_name, list_of_img_paths){
 

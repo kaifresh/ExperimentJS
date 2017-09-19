@@ -7,7 +7,6 @@ import { ImageStimuli, ImageStimuliIV } from "./ImageStimuli.js";
 /**
  * 
  * Stimuli Module
- * @exports ExperimentJS.Stimuli
  * @namespace Stimuli
  */
 var Stimuli = {};

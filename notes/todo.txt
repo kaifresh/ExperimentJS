@@ -11,9 +11,9 @@
 
 
 Components                          [X]
-Utils                               [ ]
+Utils                               [X]
 Methods                             [X]
 Pause                               [X]
 Saves                               [X]
-Stimuli                             [ ]
+Stimuli                             [X]
 Trials                              [X]

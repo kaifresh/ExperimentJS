@@ -19,7 +19,6 @@ var _ = require("lodash");
 
 /**
  * Trials Module
- * @module Trials
  * @exports ExperimentJS.Trials
  * @namespace Trials
  */
@@ -39,6 +38,7 @@ var _expRepeats = 1;
  * ExperimentJS.Trials.setIVLevels("iv name", [ [arg1_a, arg2_a, arg3_a], [arg1_b, arg2_b, arg3_b], ...]);
  * @param {string} ivname - The name of the IV.
  * @param {array} levels - Array of arrays of arguments passed to the set function.
+ * @memberof Trials
  */
 Trials.setIVLevels = function ( ivname, levels) {
 
@@ -65,11 +65,13 @@ Trials.setIVLevels = function ( ivname, levels) {
  * `setIVsetFunc` is called to set the function that will be used to set that IV in the display.
  * The levels it receives are set by `setIVLevels`.
  * The arguments this function receives must correspond to the elements in the sub-arrays passed to `setIVLevels`.
+ * @memberof Trials
  * @param {string} ivname - The name of the IV.
  * @param {function} setFunc - Function used to set levels in the display.
  * @example
  * ExperimentJS.Trials.setIVsetFunc("iv name", function(arg1, arg2, arg3){ ... });
  * ExperimentJS.Trials.setIVLevels("iv name", [ [arg1_a, arg2_a, arg3_a], [arg1_b, arg2_b, arg3_b], ...]);
+
  */
 Trials.setIVsetFunc = function(ivname, setFunc) {
 

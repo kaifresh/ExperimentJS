@@ -127,7 +127,7 @@ TwoAFC.SetCounterBalanceParserFunc = function(iv_name, parser_func){
 
 /**
  * Build the 2AFC Experiment.
- * @param {bool} print - Determines whether the built trials will be output
+ * @param {bool} print - Determines whether the built trials will be printed to console
  */
 TwoAFC.BuildExperiment = function(print){
 

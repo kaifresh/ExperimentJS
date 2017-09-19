@@ -268,7 +268,7 @@ function _shouldRunStartCallback() {
 var _midCallback = null;
 /**
  * Set a custom behaviour to be run at the midpoint of the experiment.
- * @param {function} A callback function implementing this behaviour
+ * @param {function} midpoint_callback - A callback function implementing this behaviour
  */
 Trials.setMidpointCallback = function (fn) {
 
@@ -326,7 +326,7 @@ var _endCallBack = function(){                                                  
 
 /**
  * Set a custom behaviour to be run at the end of the experiment, after responses are output.
- * @param {function} A function implementing this behaviour
+ * @param {function} end_callback - A function implementing this behaviour
  */
 Trials.setEndCallback = function (end_callback) {
     if (typeof end_callback === "function"){

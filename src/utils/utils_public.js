@@ -4,9 +4,16 @@
 
 import { preloadImage } from "./ImageUtils.js";
 
-var Utils = {
-    PreloadImage: preloadImage
-};
+
+/**
+ * Utilities Module
+ * @namespace Utils
+ */
+var Utils = {};
+
+
+Utils.PreloadImage = preloadImage;
+
 
 // Fields of ExperimentJS
 export { Utils }

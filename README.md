@@ -1,36 +1,36 @@
 # ExperimentJS
 
-Running behavioural experiments in your browser harnesses the internet. This improves their accessibility to participants,
-portablility across devices/operating systems, and leverages the simplicity of HTML5 primitives (buttons, images, videos, etc)
-to build interfaces and stimuli.
+Running behavioural experiments in your browser harnesses the power of the internet.
+This improves your experiment's accessibility to participants, portablility across devices/operating systems,
+and leverages the simplicity of HTML5 primitives (buttons, images, videos, etc) to build interfaces and stimuli.
 
 The problem is, writing experiments can be time consuming and small changes in your experimental design can result in big
 changes to your code.
 
-ExperimentJS solves this by providing a framework that greatly simplifies building and running experiments.
-ExperimentJS takes care of the small details in implementing experiments and lets you focus on the big picture,
-like working on stimulus design and experimental structure.
+ExperimentJS solves this by providing a lightweight framework that greatly simplifies building and running experiments.
+ExperimentJS takes care of the small details in implementing experiments and lets you focus on the big picture issues
+like stimulus design.
 
 ***
 
-To run a basic experiment, all you need to do is:
+To run a basic experiment in your browser, all you need to do is:
 
 Include `experimentJS.js` or `experimentJS.min.js`, located in `/dist`.
 ```HTML
 <script src="experimentJS.js"></script>
 ```
 
-Create the necessary elements to view the stimuli in your HTML. In this example lets create an image:
+Create the necessary elements to view the stimuli in your HTML. In this example lets use images for our stimuli:
 ```HTML
-<img id="your-target-image-element"/>
+<img id="your-stimulus-image-element"/>
 ```
 
-Now, create your first [Independent Variable](https://en.wikipedia.org/wiki/Dependent_and_independent_variables).
+Now, create your first [Independent Variable](https://en.wikipedia.org/wiki/Dependent_and_independent_variables)...
 Write an *IVsetFunc* (i.e. a setter function) that will manage the data (i.e. an image) that is displayed in this element.
 
 ```javascript
 ExperimentJS.Trials.setIVsetFunc("Emotion faces", function(img_path){         // (iv name, setter function)
-    $("#your-target-image-element").attr("src", img_path);
+    $("#your-stimulus-image-element").attr("src", img_path);
 });
 ```
 
@@ -39,11 +39,18 @@ Provide the *levels* (i.e. the data) that will be passed to your setter function
 ```javascript
 var face_images = ["./img/face_1.jpg", "./img/face_2.jpg", "./img/face_3.jpg", "./img/face_4.jpg", "./img/face_5.jpg", "./img/face_6.jpg"];
 
-// setIVLevels() accepts an array of arrays (of arguments to the setter function)
+// setIVLevels() accepts an array of arrays (of arguments to the setter function), so using .map() is useful here.
 ExperimentJS.Trials.setIVLevels("Emotion faces", face_images.map(function(img_path){      // (iv name, levels)
-    ExperimentJS.Utils.PreloadImage(img_path);
-    return [ img_path ]
+
+    return [ img_path ]     // This is the array of arguments that will be passed to your setter function on each trial
+
 }));
+```
+
+Add instructions for your participants.
+
+```javascript
+ExperimentJS.Components.Instructions("Is this face happy? Press the Y or N keys to respond.");
 ```
 
 Write an event handler to capture participants' responses (i.e. the dependent variable).
@@ -59,11 +66,7 @@ $(window).keydown(function(event){
 });
 ```
 
-Optionally, add instructions for your participants.
 
-```javascript
-ExperimentJS.Components.Instructions("Is this face happy? Press the Y or N keys to respond.");
-```
 
 And of course, run the experiment!
 

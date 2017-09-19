@@ -104,7 +104,7 @@ $(window).keydown(function(event){
     if (event.which === 37){                                                // left arrow key
         ExperimentJS.Trials.runNextTrial({dv_value: 'selected left'});
     }
-    else if (event.which === 39 ){                                          // right arrow key
+    else if (event.which === 39){                                          // right arrow key
         ExperimentJS.Trials.runNextTrial({dv_value: 'selected right'});
     }
 });
@@ -261,10 +261,10 @@ binding additional settings (e.g. number of repeats) and gathering participant i
 
 *ExperimentJS* supports a variety of other commonly required features:
 
-- Response time tracking
-- Displaying IVs in different phases (e.g. in [backwards masking paradigms](https://en.wikipedia.org/wiki/Backward_masking))
-- Experimental instructions
-- Saving participants' progress
-- Getting participant information
-- Interstimulus pause (black screen between trials)
-- Callbacks (defining custom behaviours at the start, middle and end of your experiment)
+- [Response time tracking](https://kaifresh.github.io/ExperimentJS/Trials.html#.setShouldTrackResponseTime)
+- [Displaying IVs in different phases](https://kaifresh.github.io/ExperimentJS/Trials.html#.setIVPhases) (e.g. in [backwards masking paradigms](https://en.wikipedia.org/wiki/Backward_masking))
+- [Experimental instructions](https://kaifresh.github.io/ExperimentJS/ExperimentJS.Components.Instructions.html#.Instructions)
+- [Saving participants' progress](https://kaifresh.github.io/ExperimentJS/Saves.html)
+- [Getting participant information](https://kaifresh.github.io/ExperimentJS/Trials.html#.getPptInfo)
+- [Interstimulus pause (black screen between trials)](https://kaifresh.github.io/ExperimentJS/Pause.html)
+- [Callbacks](https://kaifresh.github.io/ExperimentJS/Trials.html#.setMidpointCallback) (defining custom behaviours at the start, middle and end of your experiment)

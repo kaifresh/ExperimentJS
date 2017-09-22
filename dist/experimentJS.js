@@ -17637,7 +17637,7 @@ function _FormatStoredResponses(responses) {
             responseFormatted["response_time_ms"] = Number(responses[resp_idx].response_time.toFixed(5));
         }
 
-        console.log("FORMATTED THIS RESPONSE: ", responseFormatted);
+        // console.log("FORMATTED THIS RESPONSE: ", responseFormatted);
 
         formatted_responses.push(responseFormatted); // _responses by one
     }

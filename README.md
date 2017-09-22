@@ -78,8 +78,10 @@ In less than 20 lines of code, you have created an experiment like this:
 ![alt text](/examples/gifs/basic_example_1.gif "Video of basic example")
 
 
-In this example we used `<img>` elements, but it is just as simple to use a `<canvas>` with a WebGL library to create
-  and display much more complex stimuli.
+In this example we used `<img>` elements, but the process would be identical if you wanted to use a `<canvas>` with a WebGL library to create
+  much more complex stimuli. For each independent variable, just write one setter function to manipulate your display, and provide it with levels (data/arguments to that function)...
+
+---
 
 ### FLEXIBILITY
 

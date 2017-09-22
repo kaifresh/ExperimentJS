@@ -20,7 +20,7 @@ Include `experimentJS.js` or `experimentJS.min.js`, located in `/dist`.
 <script src="experimentJS.js"></script>
 ```
 
-Create the necessary elements to view the stimuli in your HTML. In this example lets use images for our stimuli:
+Create the necessary elements to view the stimuli in your HTML. In this example we're images for our stimuli:
 ```HTML
 <img id="your-stimulus-image-element"/>
 ```
@@ -77,6 +77,9 @@ ExperimentJS.Trials.runNextTrial();
 In less than 20 lines of code, you have created an experiment like this:
 ![alt text](/examples/gifs/basic_example_1.gif "Video of basic example")
 
+
+In this example we used `<img>` elements, but it is just as simple to use a `<canvas>` with a WebGL library to create
+  and display much more complex stimuli.
 
 ### FLEXIBILITY
 
@@ -268,3 +271,11 @@ binding additional settings (e.g. number of repeats) and gathering participant i
 - [Getting participant information](https://kaifresh.github.io/ExperimentJS/Trials.html#.getPptInfo)
 - [Interstimulus pause (black screen between trials)](https://kaifresh.github.io/ExperimentJS/Pause.html)
 - [Callbacks](https://kaifresh.github.io/ExperimentJS/Trials.html#.setMidpointCallback) (defining custom behaviours at the start, middle and end of your experiment)
+
+***
+
+### NEWS
+
+#### 22/09/17
+- *ExperimentJS* is currently in beta, if you experience any issues with this library please feel free to raise an issue or contribute your own fix!
+- New stimuli & experimental paradigms will be added in future versions!
